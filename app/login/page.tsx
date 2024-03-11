@@ -37,6 +37,7 @@ function LogIn() {
           label="Password"
           type="password" 
           variant="underlined"
+          description=""
         />
         <div className="flex justify-center mt-6">
           <Button color="primary" >Log In</Button>
@@ -71,7 +72,7 @@ function SignUp() {
 
   const passwordMessage = React.useMemo(() => {
     if(password === '') 
-      return <span></span>;
+      return '';
 
     const result = validatePassword(password);
 
