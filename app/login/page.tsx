@@ -1,12 +1,61 @@
 "use client";
 
 import React from "react";
-import { Button, Card, CardHeader, CardBody, Divider, Input, CardFooter } from "@nextui-org/react";
-import { validateEmail, validatePassword } from "@/lib/validate";
+import { Button, Card, CardBody, Input, Tabs, Tab } from "@nextui-org/react";
+import { validateUsername, validateEmail, validatePassword } from "@/lib/validate";
 
-export default function SignUp() {
+
+export default function App() {
+  return (
+    <main className="flex justify-center items-start h-screen w-screen mt-40">
+      <Card className="w-96 py-2 px-4">
+        <CardBody>
+          <Tabs variant="underlined" className="flex justify-center">
+            <Tab key="login" title="Log In" className="text-xl">
+              <LogIn />
+            </Tab>
+            <Tab key="signUp" title="Sign Up" className="text-xl">
+              <SignUp />
+            </Tab>
+          </Tabs>
+        </CardBody>
+      </Card>
+    </main>
+  );
+}
+
+
+function LogIn() {
+	return (
+    <div>
+        <Input 
+          label="Username" 
+          type="text"
+          variant="underlined"
+        />
+        <Input 
+          label="Password"
+          type="password" 
+          variant="underlined"
+        />
+        <div className="flex justify-center mt-6">
+          <Button color="primary" >Log In</Button>
+        </div>
+    </div>
+	);
+}
+
+
+function SignUp() {
   const [email, setEmail] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const invalidUsername = React.useMemo(() => {
+    if (username === "") return false;
+
+    return !validateUsername(username);
+  }, [username]);
 
   const invalidEmail = React.useMemo(() => {
     if (email === "") return false;
@@ -34,37 +83,37 @@ export default function SignUp() {
   }, [password]);
 
 	return (
-		<main className="flex justify-center items-center h-screen w-screen">
-			<Card className="w-96 py-2 px-4">
-				<CardHeader className="flex justify-center">
-					<h1 className="text-xl">Sign Up</h1>
-				</CardHeader>
-        <CardBody>
-					<Input 
-            label="Email" 
-            isRequired 
-            value={email}
-            color={invalidEmail ? "danger" : email != "" ? "success" : "default"}
-            errorMessage={invalidEmail && "Please enter a valid email"}
-            onValueChange={setEmail}
-            type="email"
-            variant="underlined"
-          />
-          <Input 
-            label="Password" 
-            isRequired
-            value={password}
-            color={passwordColor}
-            description={passwordMessage}
-            onValueChange={setPassword}
-            type="password" 
-            variant="underlined"
-          />
-				</CardBody>
-        <CardFooter className="flex justify-center">
+    <div>
+        <Input 
+          label="Username" 
+          value={username}
+          color={invalidUsername ? "danger" : username != "" ? "success" : "default"}
+          errorMessage={invalidUsername && "Username can only have letters, numbers, and underscores"}
+          onValueChange={setUsername}
+          type="text"
+          variant="underlined"
+        />
+        <Input 
+          label="Email" 
+          value={email}
+          color={invalidEmail ? "danger" : email != "" ? "success" : "default"}
+          errorMessage={invalidEmail && "Please enter a valid email"}
+          onValueChange={setEmail}
+          type="email"
+          variant="underlined"
+        />
+        <Input 
+          label="Password" 
+          value={password}
+          color={passwordColor}
+          description={passwordMessage}
+          onValueChange={setPassword}
+          type="password" 
+          variant="underlined"
+        />
+        <div className="flex justify-center mt-6">
           <Button color="primary" >Sign Up</Button>
-        </CardFooter>
-			</Card>
-		</main>
+        </div>
+    </div>
 	);
 }
