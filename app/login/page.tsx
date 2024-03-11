@@ -7,7 +7,7 @@ import { validateUsername, validateEmail, validatePassword } from "@/lib/validat
 
 export default function App() {
   return (
-    <main className="flex justify-center items-start h-screen w-screen mt-40">
+    <main className="flex justify-center items-start mt-40">
       <Card className="w-96 py-2 px-4">
         <CardBody>
           <Tabs variant="underlined" className="flex justify-center">

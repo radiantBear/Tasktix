@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Providers } from './providers';
+import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -19,6 +20,22 @@ export default function RootLayout({
     <html lang='en' className='dark'>
       <body className={inter.className}>
         <Providers>
+          <Navbar maxWidth='xl'>
+            <NavbarBrand as={Link} href="/">
+              <p className="font-bold text-lg">TaskTactix</p>
+            </NavbarBrand>
+            <NavbarContent className='justify-center'>
+              <NavbarItem>
+
+              </NavbarItem>
+            </NavbarContent>
+            <NavbarContent justify='end'>
+              <Button as={Link} color="primary" href="/login" variant="flat">
+                Log In
+              </Button>
+            </NavbarContent>
+          </Navbar>
+
           {children}
         </Providers>
       </body>
