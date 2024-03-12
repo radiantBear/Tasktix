@@ -5,7 +5,7 @@ import { Button, Card, CardBody, Input, Tabs, Tab } from "@nextui-org/react";
 import { validateUsername, validateEmail, validatePassword } from "@/lib/validate";
 
 
-export default function App() {
+export default function Page() {
   return (
     <main className="flex justify-center items-start mt-40">
       <Card className="w-96 py-2 px-4">
