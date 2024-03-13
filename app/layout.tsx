@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
+import Snackbar from '@/lib/components/Snackbar';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' className='dark'>
-      <body className={inter.className}>
+      <body >
         <Providers>
           <Navbar maxWidth='xl'>
             <NavbarBrand as={Link} href="/">
@@ -37,6 +35,8 @@ export default function RootLayout({
           </Navbar>
 
           {children}
+          
+          <Snackbar />
         </Providers>
       </body>
     </html>
