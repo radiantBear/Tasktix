@@ -48,67 +48,65 @@ function LogIn() {
 
 
 function SignUp() {
-  const [email, setEmail] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [inputs, setInputs] = React.useState({ email: "", username: "", password: "" });
 
   const invalidUsername = React.useMemo(() => {
-    if (username === "") return false;
+    if (inputs.username === "") return false;
 
-    return !validateUsername(username);
-  }, [username]);
+    return !validateUsername(inputs.username);
+  }, [inputs.username]);
 
   const invalidEmail = React.useMemo(() => {
-    if (email === "") return false;
+    if (inputs.email === "") return false;
 
-    return !validateEmail(email);
-  }, [email]);
+    return !validateEmail(inputs.email);
+  }, [inputs.email]);
 
   const passwordColor = React.useMemo(() => {
-    if (password === "") return 'default';
+    if (inputs.password === "") return 'default';
 
-    return validatePassword(password).color;
-  }, [password]);
+    return validatePassword(inputs.password).color;
+  }, [inputs.password]);
 
   const passwordMessage = React.useMemo(() => {
-    if(password === '') 
+    if(inputs.password === '') 
       return '';
 
-    const result = validatePassword(password);
+    const result = validatePassword(inputs.password);
 
     return (
       <span className={`text-${result.color}`}>
         Password is {result.strength}
       </span>
     )
-  }, [password]);
+  }, [inputs.password]);
 
 	return (
     <div>
         <Input 
           label="Username" 
-          value={username}
-          color={invalidUsername ? "danger" : username != "" ? "success" : "default"}
+          value={inputs.username}
+          color={invalidUsername ? "danger" : inputs.username != "" ? "success" : "default"}
           errorMessage={invalidUsername && "Username can only have letters, numbers, and underscores"}
-          onValueChange={setUsername}
+          onValueChange={val => setInputs({...inputs, username: val})}
           type="text"
           variant="underlined"
         />
         <Input 
           label="Email" 
-          value={email}
-          color={invalidEmail ? "danger" : email != "" ? "success" : "default"}
+          value={inputs.email}
+          color={invalidEmail ? "danger" : inputs.email != "" ? "success" : "default"}
           errorMessage={invalidEmail && "Please enter a valid email"}
-          onValueChange={setEmail}
+          onValueChange={val => setInputs({...inputs, email: val})}
           type="email"
           variant="underlined"
         />
         <Input 
           label="Password" 
-          value={password}
+          value={inputs.password}
           color={passwordColor}
           description={passwordMessage}
-          onValueChange={setPassword}
+          onValueChange={val => setInputs({...inputs, password: val})}
           type="password" 
           variant="underlined"
         />
