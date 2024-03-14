@@ -3,6 +3,8 @@
 import { getUsernameMessage, getEmailMessage, getPasswordMessage } from '../messages';
 import Message, { InputMessage } from '@/components/input_message';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
+import { register } from '@/lib/actions/register';
+import { addSnackbar } from '@/components/snackbar';
 import React from 'react';
 import { Button, Input } from '@nextui-org/react';
 
@@ -44,6 +46,14 @@ export default function SignUp() {
       setInputMsgs(messages);
       return;
     }
+
+    register(inputs.username, inputs.email, inputs.password)
+      .then((res) => {
+        addSnackbar(res.message, 'success');
+      })
+      .catch((err) => {
+        addSnackbar(err.message, 'error');
+      })
   }
 
 	return (
