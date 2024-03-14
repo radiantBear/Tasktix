@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Providers } from './providers';
 import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
-import Snackbar from '@/lib/components/Snackbar';
+import Snackbar from '@/components/snackbar';
 import './globals.css';
 
 export const metadata: Metadata = {

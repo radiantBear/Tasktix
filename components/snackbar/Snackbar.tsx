@@ -1,22 +1,12 @@
 'use client';
 
+import { SnackbarFns, SnackbarMessage } from "./types";
 import { useCallback, useEffect, useState } from "react";
-import { generateId } from "../generateId";
+import { generateId } from "@/lib/generateId";
 import { setTimeout } from "timers";
-
-interface SnackbarFns {
-  add: (message: SnackbarMessage['message'], color: SnackbarMessage['color']) => string;
-  remove: (id: string) => void;
-}
 
 export let addSnackbar: SnackbarFns['add'];
 export let removeSnackbar: SnackbarFns['remove'];
-
-interface SnackbarMessage {
-  id: string;
-  message: string;
-  color: 'default'|'success'|'warning'|'error';
-}
 
 export default function Snackbar() {
   const [snackbarQueue, setSnackbarQueue] = useState<SnackbarMessage[]>([]);
