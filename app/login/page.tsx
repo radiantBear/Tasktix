@@ -1,20 +1,85 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Button, Card, CardBody, Input, Tabs, Tab } from "@nextui-org/react";
-import { validateUsername, validateEmail, validatePassword } from "@/lib/validate";
+import React from 'react';
+import { Button, Card, CardBody, Input, Tabs, Tab } from '@nextui-org/react';
+import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
+import { addSnackbar } from '@/lib/components/Snackbar';
+
+
+interface InputMessage {
+  message: React.ReactNode|string;
+  color: 'default'|'success'|'warning'|'danger';
+}
+
+
+function getUsernameMessage(input: string): InputMessage {
+  console.log(!!input)
+  
+  if(input)
+    if(!validateUsername(input))
+      return {
+        message: 'Username can only have letters, numbers, and underscores',
+        color: 'danger'
+      };
+    else
+      return {
+        message: '',
+        color: 'success'
+      };
+  else
+    return {
+      message: 'Username is required',
+      color: 'danger'
+    };
+}
+
+
+function getEmailMessage(input: string): InputMessage {
+  if(input)
+    if(!validateEmail(input))
+      return {
+        message: 'Please enter a valid email',
+        color: 'danger'
+      };
+    else
+      return {
+        message: '',
+        color: 'success'
+      };
+  else
+    return {
+      message: 'Email address is required',
+      color: 'danger'
+    };
+}
+
+
+function getPasswordMessage(input: string): InputMessage {
+  if(input) {
+    const passwordResult = validatePassword(input);
+    return {
+      message: `Password is ${passwordResult.strength}`,
+      color: passwordResult.color
+    };
+  }
+  else
+    return {
+      message: `Password is required`,
+      color: 'danger'
+    };
+}
 
 
 export default function Page() {
   return (
-    <main className="flex justify-center items-start mt-40">
-      <Card className="w-96 py-2 px-4">
+    <main className='flex justify-center items-start mt-40'>
+      <Card className='w-96 py-2 px-4'>
         <CardBody>
-          <Tabs variant="underlined" className="flex justify-center">
-            <Tab key="login" title="Log In" className="text-xl">
+          <Tabs variant='underlined' className='flex justify-center'>
+            <Tab key='login' title='Log In' className='text-xl'>
               <LogIn />
             </Tab>
-            <Tab key="signUp" title="Sign Up" className="text-xl">
+            <Tab key='signUp' title='Sign Up' className='text-xl'>
               <SignUp />
             </Tab>
           </Tabs>
@@ -29,18 +94,18 @@ function LogIn() {
 	return (
     <div>
         <Input 
-          label="Username" 
-          type="text"
-          variant="underlined"
+          label='Username' 
+          type='text'
+          variant='underlined'
         />
         <Input 
-          label="Password"
-          type="password" 
-          variant="underlined"
-          description=""
+          label='Password'
+          type='password' 
+          variant='underlined'
+          description=''
         />
-        <div className="flex justify-center mt-6">
-          <Button color="primary" >Log In</Button>
+        <div className='flex justify-center mt-6'>
+          <Button color='primary' >Log In</Button>
         </div>
     </div>
 	);
@@ -48,71 +113,87 @@ function LogIn() {
 
 
 function SignUp() {
-  const [inputs, setInputs] = React.useState({ email: "", username: "", password: "" });
+  interface InputMessages {
+    username: InputMessage;
+    email: InputMessage;
+    password: InputMessage;
+  }
 
-  const invalidUsername = React.useMemo(() => {
-    if (inputs.username === "") return false;
+  const defaultMessage: InputMessage = {message: '', color: 'default'};
 
-    return !validateUsername(inputs.username);
-  }, [inputs.username]);
+  const [inputs, setInputs] = React.useState({ email: '', username: '', password: '' });
+  const [inputMsgs, setInputMsgs] = React.useState<InputMessages>({ email: defaultMessage, username: defaultMessage, password: defaultMessage });
 
-  const invalidEmail = React.useMemo(() => {
-    if (inputs.email === "") return false;
+  function handleUsernameInput(input: string) {
+    setInputs({...inputs, username: input})
+    setInputMsgs({...inputMsgs, username: getUsernameMessage(input)});
+  }
+  
+  function handleEmailInput(input: string) {
+    setInputs({...inputs, email: input});
+    setInputMsgs({...inputMsgs, email: getEmailMessage(input)});
+  }
+  
+  function handlePasswordInput(input: string) {
+    setInputs({...inputs, password: input});
+    setInputMsgs({...inputMsgs, password: getPasswordMessage(input)});
+  }
 
-    return !validateEmail(inputs.email);
-  }, [inputs.email]);
+  function handleSubmit() {
+    if(!validateUsername(inputs.username) || !validateEmail(inputs.email) || !validatePassword(inputs.password).valid) {
+      /* Ensure inputs that have never received input still get the appropriate error message */
+      const messages = {
+        username: getUsernameMessage(inputs.username),
+        email: getEmailMessage(inputs.email),
+        password: getPasswordMessage(inputs.password)
+      };
+      setInputMsgs(messages);
+      return;
+    }
 
-  const passwordColor = React.useMemo(() => {
-    if (inputs.password === "") return 'default';
-
-    return validatePassword(inputs.password).color;
-  }, [inputs.password]);
-
-  const passwordMessage = React.useMemo(() => {
-    if(inputs.password === '') 
-      return '';
-
-    const result = validatePassword(inputs.password);
-
-    return (
-      <span className={`text-${result.color}`}>
-        Password is {result.strength}
-      </span>
-    )
-  }, [inputs.password]);
+    addSnackbar('User Created', 'success');
+  }
 
 	return (
     <div>
         <Input 
-          label="Username" 
+          label='Username' 
           value={inputs.username}
-          color={invalidUsername ? "danger" : inputs.username != "" ? "success" : "default"}
-          errorMessage={invalidUsername && "Username can only have letters, numbers, and underscores"}
-          onValueChange={val => setInputs({...inputs, username: val})}
-          type="text"
-          variant="underlined"
+          color={inputMsgs.username.color}
+          description={<Message data={inputMsgs.username} />}
+          onValueChange={handleUsernameInput}
+          type='text'
+          variant='underlined'
         />
         <Input 
-          label="Email" 
+          label='Email' 
           value={inputs.email}
-          color={invalidEmail ? "danger" : inputs.email != "" ? "success" : "default"}
-          errorMessage={invalidEmail && "Please enter a valid email"}
-          onValueChange={val => setInputs({...inputs, email: val})}
-          type="email"
-          variant="underlined"
+          color={inputMsgs.email.color}
+          description={<Message data={inputMsgs.email} />}
+          onValueChange={handleEmailInput}
+          type='email'
+          variant='underlined'
         />
         <Input 
-          label="Password" 
+          label='Password' 
           value={inputs.password}
-          color={passwordColor}
-          description={passwordMessage}
-          onValueChange={val => setInputs({...inputs, password: val})}
-          type="password" 
-          variant="underlined"
+          color={inputMsgs.password.color}
+          description={<Message data={inputMsgs.password} />}
+          onValueChange={handlePasswordInput}
+          type='password' 
+          variant='underlined'
         />
-        <div className="flex justify-center mt-6">
-          <Button color="primary" >Sign Up</Button>
+        <div className='flex justify-center mt-6'>
+          <Button color='primary' onPress={handleSubmit}>Sign Up</Button>
         </div>
     </div>
 	);
+}
+
+function Message({data}: {data: InputMessage}) {
+  return (
+    <span className={`text-${data.color}`}>
+      {data.message}
+    </span>
+  );
 }

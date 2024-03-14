@@ -1,6 +1,7 @@
-class PasswordResult {
-  color: 'success' | 'warning' | 'danger' | 'default' = 'default';
-  strength: string = '';
+interface PasswordResult {
+    valid: boolean;
+    color: 'success' | 'warning' | 'danger' | 'default';
+    strength: string;
 }
 
 export function validateUsername(username: string): boolean {
@@ -16,9 +17,9 @@ export function validateEmail(email: string): boolean {
 
 export function validatePassword(password: string): PasswordResult {
     if(password.length >= 16)
-        return { color: 'success', strength: 'strong'};
+        return { valid: true, color: 'success', strength: 'strong' };
     else if(password.length >= 10)
-        return { color: 'warning', strength: 'acceptable' };
+        return { valid: true, color: 'warning', strength: 'acceptable' };
     else
-        return { color: 'danger', strength: 'weak' };
+        return { valid: false, color: 'danger', strength: 'weak' };
 }
