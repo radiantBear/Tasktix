@@ -1,7 +1,8 @@
 'use server';
 
 import User from '@/lib/model/user';
-import mysql, { ResultSetHeader, RowDataPacket } from 'mysql2/promise'
+import { RowDataPacket } from 'mysql2/promise'
+import { execute, query } from './db_connect';
 
 interface DB_User extends RowDataPacket {
   u_id: string;
@@ -13,135 +14,70 @@ interface DB_User extends RowDataPacket {
 }
 
 export async function createUser(user: User): Promise<boolean> {
-  try
-  {
-    const conn = await mysql.createConnection({
-      user     : 'root',
-      host     : 'localhost',
-      password : 'db-password',
-      database : 'todo'
-    });
-
-    const sql = `
-      INSERT INTO \`user\`(
-        \`u_id\`,
-        \`u_username\`,
-        \`u_email\`,
-        \`u_password\`,
-        \`u_dateCreated\`,
-        \`u_dateLogin\`
-      )
-      VALUES (
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?
-      );
-    `;
-    const params = [
-      user.id,
-      user.username,
-      user.email,
-      user.password,
-      user.dateCreated,
-      user.dateLogin
-    ];
-
-    await conn.execute<ResultSetHeader>(sql, params);
-    await conn.end();
-    
-    return true;
-  }
-  catch(err) 
-  {
+  const sql = `
+    INSERT INTO \`user\`(
+      \`u_id\`,
+      \`u_username\`,
+      \`u_email\`,
+      \`u_password\`,
+      \`u_dateCreated\`,
+      \`u_dateLogin\`
+    )
+    VALUES (:id, :username, :email, :password, :dateCreated, :dateLogin);
+  `;
+  
+  const result = await execute(sql, user);
+  
+  if(!result)
     return false;
-  }
+  
+  return true;
 }
 
 export async function getUserById(id: string): Promise<User|false> {
-  try 
-  {
-    const conn = await mysql.createConnection({
-      user     : 'root',
-      host     : 'localhost',
-      password : 'db-password',
-      database : 'todo'
-    });
-
-    const sql = `
-      SELECT * FROM \`user\`
-      WHERE \`u_id\` = ?
-    `;
-    const params = [id];
-
-    const [ result ] = await conn.query<DB_User[]>(sql, params);
-    await conn.end();
-    
-    return ExtractUserFromRow(result[0]);
-  } 
-  catch(err:any) 
-  {
+  const sql = `
+    SELECT * FROM \`user\`
+    WHERE \`u_id\` = :id
+  `;
+  
+  const result = await query<DB_User>(sql, { id });
+  
+  if(!result)
     return false;
-  }
+
+  return extractUserFromRow(result[0]);
 }
 
 export async function getUserByUsername(username: string): Promise<User|false> {
-  try 
-  {
-    const conn = await mysql.createConnection({
-      user     : 'root',
-      host     : 'localhost',
-      password : 'db-password',
-      database : 'todo'
-    });
-
-    const sql = `
-      SELECT * FROM \`user\`
-      WHERE \`u_username\` = ?
-    `;
-    const params = [username];
-
-    const [ result ] = await conn.query<DB_User[]>(sql, params);
-    await conn.end();
+  const sql = `
+    SELECT * FROM \`user\`
+    WHERE \`u_username\` = :username
+  `;
+  
+  const result = await query<DB_User>(sql, { username });
     
-    return ExtractUserFromRow(result[0]);
-  } 
-  catch(err:any) 
-  {
+  if(!result)
     return false;
-  }
+
+  return extractUserFromRow(result[0]);
+  
 }
 
 export async function getUserByEmail(email: string): Promise<User|false> {
-  try 
-  {
-    const conn = await mysql.createConnection({
-      user     : 'root',
-      host     : 'localhost',
-      password : 'db-password',
-      database : 'todo'
-    });
-
-    const sql = `
-      SELECT * FROM \`user\`
-      WHERE \`u_email\` = ?
-    `;
-    const params = [email];
-
-    const [ result ] = await conn.query<DB_User[]>(sql, params);
-    await conn.end();
-    
-    return ExtractUserFromRow(result[0]);
-  } 
-  catch(err:any) 
-  {
+  const sql = `
+    SELECT * FROM \`user\`
+    WHERE \`u_email\` = :email
+  `;
+  
+  const result = await query<DB_User>(sql, { email });
+  
+  if(!result)
     return false;
-  }
+
+  return extractUserFromRow(result[0]);
 }
 
-function ExtractUserFromRow(row: DB_User): User {
+function extractUserFromRow(row: DB_User): User {
   const user = new User(row.u_id);
   user.username = row.u_username;
   user.email = row.u_email;
