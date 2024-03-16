@@ -15,7 +15,7 @@ interface DB_User extends RowDataPacket {
 
 export async function createUser(user: User): Promise<boolean> {
   const sql = `
-    INSERT INTO \`user\`(
+    INSERT INTO \`users\`(
       \`u_id\`,
       \`u_username\`,
       \`u_email\`,
@@ -36,7 +36,7 @@ export async function createUser(user: User): Promise<boolean> {
 
 export async function getUserById(id: string): Promise<User|false> {
   const sql = `
-    SELECT * FROM \`user\`
+    SELECT * FROM \`users\`
     WHERE \`u_id\` = :id
   `;
   
@@ -50,7 +50,7 @@ export async function getUserById(id: string): Promise<User|false> {
 
 export async function getUserByUsername(username: string): Promise<User|false> {
   const sql = `
-    SELECT * FROM \`user\`
+    SELECT * FROM \`users\`
     WHERE \`u_username\` = :username
   `;
   
@@ -65,7 +65,7 @@ export async function getUserByUsername(username: string): Promise<User|false> {
 
 export async function getUserByEmail(email: string): Promise<User|false> {
   const sql = `
-    SELECT * FROM \`user\`
+    SELECT * FROM \`users\`
     WHERE \`u_email\` = :email
   `;
   
