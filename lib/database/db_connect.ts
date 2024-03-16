@@ -2,10 +2,10 @@ import mysql, { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 async function connect(): Promise<mysql.Connection> {
   const conn = await mysql.createConnection({
-    user     : 'root',
-    host     : 'localhost',
-    password : 'db-password',
-    database : 'todo'
+    host     : process.env.DB_HOST,
+    database : process.env.DB_DATABASE,
+    user     : process.env.DB_USER,
+    password : process.env.DB_PASSWORD
   });
 
   conn.config.namedPlaceholders = true;
