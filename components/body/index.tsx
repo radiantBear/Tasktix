@@ -35,7 +35,7 @@ export default function Body({ children }: { children: ReactNode }) {
 
       <Snackbar />
     </>
-  )
+  );
 }
 
 function AccountButton({ isLoggedIn }: { isLoggedIn: boolean }) {
