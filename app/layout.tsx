@@ -3,6 +3,7 @@ import { Providers } from './providers';
 import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
 import Snackbar from '@/components/snackbar';
 import './globals.css';
+import { getUser } from '@/lib/actions/session';
 
 export const metadata: Metadata = {
   title: 'Tasktix',
@@ -28,9 +29,7 @@ export default function RootLayout({
               </NavbarItem>
             </NavbarContent>
             <NavbarContent justify='end'>
-              <Button as={Link} color="primary" href="/login" variant="flat">
-                Log In
-              </Button>
+              <UserPanel />
             </NavbarContent>
           </Navbar>
 
@@ -41,4 +40,21 @@ export default function RootLayout({
       </body>
     </html>
   );
+}
+
+async function UserPanel() {
+  const user = await getUser();
+
+  if(!user)
+    return (
+      <Button as={Link} color="primary" href="/login" variant="flat">
+        Log In
+      </Button>
+    )
+  
+  return (
+    <Button as={Link} color="primary" href="/logout" variant="flat">
+      Log Out
+    </Button>
+  )
 }

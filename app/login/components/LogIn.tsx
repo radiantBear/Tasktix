@@ -1,9 +1,10 @@
 'use client';
 
-import { login } from '@/lib/actions/user/login';
+import { login } from '@/lib/actions/user';
 import Message, { InputMessage } from '@/components/input_message';
 import { Button, Input } from '@nextui-org/react';
 import { useState } from 'react';
+import { addSnackbar } from '@/components/snackbar';
 
 export default function LogIn() {
   interface InputMessages {
@@ -25,7 +26,8 @@ export default function LogIn() {
   }
 
 	function handleSubmit() {
-    login(inputs.username, inputs.password);
+    login(inputs.username, inputs.password)
+      .catch(err => addSnackbar(err.message, 'error'));
   }
 
   return (

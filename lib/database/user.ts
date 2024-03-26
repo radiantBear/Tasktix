@@ -1,7 +1,7 @@
 'use server';
 
 import User from '@/lib/model/user';
-import { RowDataPacket } from 'mysql2/promise'
+import { RowDataPacket } from 'mysql2/promise';
 import { execute, query } from './db_connect';
 
 interface DB_User extends RowDataPacket {
@@ -91,6 +91,29 @@ export async function getUserByEmail(email: string): Promise<User|false> {
   const result = await query<DB_User>(sql, { email });
   
   if(!result)
+    return false;
+
+  return extractUserFromRow(result[0]);
+}
+
+export async function getUserBySessionId(id: string): Promise<User|false> {
+  interface DB_Session extends DB_User {
+    s_id: string;
+    s_dateExpire: Date;
+  }
+  
+  const sql = `
+    SELECT * FROM \`users\`
+      INNER JOIN \`sessions\` ON \`users\`.\`u_id\` = \`sessions\`.\`s_u_id\`
+    WHERE \`s_id\` = :id
+  `;
+  
+  const result = await query<DB_Session>(sql, { id });
+  
+  if(!result)
+    return false;
+
+  if(result[0].s_dateExpire.getTime() < (new Date()).getTime())
     return false;
 
   return extractUserFromRow(result[0]);

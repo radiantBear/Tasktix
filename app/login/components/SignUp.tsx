@@ -3,7 +3,7 @@
 import { getUsernameMessage, getEmailMessage, getPasswordMessage } from '../messages';
 import Message, { InputMessage } from '@/components/input_message';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
-import { register } from '@/lib/actions/user/register';
+import { register } from '@/lib/actions/user';
 import { addSnackbar } from '@/components/snackbar';
 import { useState } from 'react';
 import { Button, Input } from '@nextui-org/react';

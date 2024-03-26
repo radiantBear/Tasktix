@@ -7,6 +7,13 @@ CREATE TABLE `users` (
   `u_dateLogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE `sessions` (
+  `s_id` char(128) NOT NULL PRIMARY KEY,
+  `s_u_id` char(16) NOT NULL,
+  `s_dateExpire` datetime NOT NULL,
+  FOREIGN KEY (`s_u_id`) REFERENCES `users` (`u_id`)
+);
+
 CREATE TABLE `lists` (
   `l_id` char(16) NOT NULL PRIMARY KEY,
   `l_name` varchar(64) NOT NULL,
