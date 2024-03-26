@@ -48,9 +48,6 @@ export default function SignUp() {
     }
 
     register(inputs.username, inputs.email, inputs.password)
-      .then((res) => {
-        addSnackbar(res.message, 'success');
-      })
       .catch((err) => {
         addSnackbar(err.message, 'error');
       })
