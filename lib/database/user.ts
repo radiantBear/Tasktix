@@ -34,6 +34,25 @@ export async function createUser(user: User): Promise<boolean> {
   return true;
 }
 
+export async function updateUser(user: User): Promise<boolean> {
+  const sql = `
+    UPDATE \`users\`
+    SET 
+      \`u_username\` = :username,
+      \`u_email\` = :email,
+      \`u_password\` = :password,
+      \`u_dateLogin\` = :dateLogin
+    WHERE \`u_id\` = :id;
+  `;
+  
+  const result = await execute(sql, user);
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
 export async function getUserById(id: string): Promise<User|false> {
   const sql = `
     SELECT * FROM \`users\`
