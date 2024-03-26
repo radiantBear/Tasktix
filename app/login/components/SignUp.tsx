@@ -3,10 +3,12 @@
 import { getUsernameMessage, getEmailMessage, getPasswordMessage } from '../messages';
 import Message, { InputMessage } from '@/components/input_message';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
-import { register } from '@/lib/actions/user';
 import { addSnackbar } from '@/components/snackbar';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
+import { api } from '@/lib/api';
+import { setLoggedIn } from '@/components/body';
 
 export default function SignUp() {
   interface InputMessages {
@@ -19,6 +21,7 @@ export default function SignUp() {
 
   const [inputs, setInputs] = useState({ email: '', username: '', password: '' });
   const [inputMsgs, setInputMsgs] = useState<InputMessages>({ email: defaultMessage, username: defaultMessage, password: defaultMessage });
+  const router = useRouter();
 
   function handleUsernameInput(input: string) {
     setInputs({...inputs, username: input})
@@ -47,10 +50,20 @@ export default function SignUp() {
       return;
     }
 
-    register(inputs.username, inputs.email, inputs.password)
-      .catch((err) => {
-        addSnackbar(err.message, 'error');
+    api.post('/user', inputs)
+      .then(() => {
+        api.post('/session', inputs)
+        .then(() => {
+          setLoggedIn();
+          router.replace('/home');
+        })
+        .catch(err => {
+          addSnackbar(err.message, 'error');
+        });
       })
+      .catch(err => {
+        addSnackbar(err.message, 'error');
+      });
   }
 
 	return (

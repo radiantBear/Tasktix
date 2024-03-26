@@ -1,10 +1,12 @@
 'use client';
 
-import { login } from '@/lib/actions/user';
 import Message, { InputMessage } from '@/components/input_message';
 import { Button, Input } from '@nextui-org/react';
 import { useState } from 'react';
 import { addSnackbar } from '@/components/snackbar';
+import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { setLoggedIn } from '@/components/body';
 
 export default function LogIn() {
   interface InputMessages {
@@ -16,6 +18,7 @@ export default function LogIn() {
 
   const [inputs, setInputs] = useState({ username: '', password: '' });
   const [inputMsgs, setInputMsgs] = useState<InputMessages>({ username: defaultMessage, password: defaultMessage });
+  const router = useRouter();
 
   function handleUsernameInput(input: string) {
     setInputs({...inputs, username: input})
@@ -26,7 +29,11 @@ export default function LogIn() {
   }
 
 	function handleSubmit() {
-    login(inputs.username, inputs.password)
+    api.post('/session', inputs)
+      .then(() => {
+        setLoggedIn();
+        router.replace('/home');
+      })
       .catch(err => addSnackbar(err.message, 'error'));
   }
 

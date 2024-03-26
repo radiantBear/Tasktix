@@ -4,7 +4,7 @@ import Session from '@/lib/model/session';
 import User from '@/lib/model/user'
 import { cookies } from 'next/headers'
 
-export async function setUser(userId: string): Promise<boolean> {
+export async function setUser(userId: string): Promise<string|false> {
   const session = new Session();
   const date = new Date();
   date.setDate(date.getDate() + 1);
@@ -19,7 +19,7 @@ export async function setUser(userId: string): Promise<boolean> {
 
   cookies().set('user', session.id, { expires: session.dateExpire });
 
-  return true;
+  return session.id;
 }
 
 export async function getUser(): Promise<User|false> {
@@ -34,12 +34,10 @@ export async function getUser(): Promise<User|false> {
 }
 
 export async function clearUser(): Promise<boolean> {
-  const session = new Session();
-
   const sessionId = cookies().get('user')?.value;
 
   if(!sessionId)
-    return true;
+    return false;
   
   const result = await deleteSession(sessionId);
 
