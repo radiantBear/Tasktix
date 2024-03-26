@@ -16,7 +16,7 @@ export function validateEmail(email: string): boolean {
 }
 
 export function validatePassword(password: string): PasswordResult {
-    if(password.length > 256)
+    if(password.length > 128)
         return { valid: false, color: 'danger', strength: 'too long' };
     else if(password.length >= 16)
         return { valid: true, color: 'success', strength: 'strong' };

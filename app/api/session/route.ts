@@ -1,5 +1,6 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
 import { getUserByUsername, updateUser } from '@/lib/database/user';
+import { compare } from '@/lib/security/hash';
 import { setUser, getUser, clearUser } from '@/lib/session';
 
 export async function GET(_: Request) {
@@ -22,7 +23,9 @@ export async function POST(request: Request) {
   user.dateLogin = new Date();
   /* _ = */ await updateUser(user);
 
-  const match = user.password == password;
+  if(!user.password)
+    return ClientError.BadRequest('Invalid username or password');
+  const match = await compare(password, user.password);
   if(!match)
     return ClientError.BadRequest('Invalid username or password');
 

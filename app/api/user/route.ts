@@ -2,6 +2,7 @@ import { Success, ClientError, ServerError } from '@/lib/Response';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
 import { createUser, getUserByUsername, getUserByEmail } from '@/lib/database/user';
 import User from '@/lib/model/user';
+import { hash } from '@/lib/security/hash';
 
 export const dynamic = 'force-dynamic'; // defaults to auto
 
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
     const user = new User();
     user.username = username;
     user.email = email;
-    user.password = password;
+    user.password = await hash(password);
     user.dateCreated = new Date();
     user.dateLogin = new Date();
 
