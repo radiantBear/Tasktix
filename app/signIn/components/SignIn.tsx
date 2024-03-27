@@ -32,7 +32,7 @@ export default function SignIn() {
     api.post('/session', inputs)
       .then(() => {
         setLoggedIn();
-        router.replace('/home');
+        router.replace('/user');
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
