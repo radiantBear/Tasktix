@@ -1,3 +1,5 @@
+'use server';
+
 import { createSession, deleteSession } from '@/lib/database/session';
 import { getUserBySessionId } from '@/lib/database/user';
 import Session from '@/lib/model/session';
@@ -29,7 +31,7 @@ export async function getUser(): Promise<User|false> {
     return false;
   
   const user = await getUserBySessionId(sessionId);
-  
+  console.log(user)
   return user;
 }
 

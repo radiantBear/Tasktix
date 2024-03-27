@@ -11,12 +11,12 @@ export const metadata: Metadata = {
   description: 'For all your to-do needs!',
 };
 
-export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
+export default async function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return (
     <html lang='en' className='dark'>
       <body >
         <Providers>
-          <Body isLoggedInAtStart={!!getUser()}>
+          <Body isLoggedInAtStart={!!await getUser()}>
             {children}
           </Body>
         </Providers>
