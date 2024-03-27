@@ -31,7 +31,7 @@ export async function createSession(session: Session): Promise<boolean> {
 export async function getSessionById(id: string): Promise<Session|false> {
   const sql = `
     SELECT * FROM \`sessions\`
-    WHERE \`s_id\` = :id
+    WHERE \`s_id\` = :id;
   `;
   
   const result = await query<DB_Session>(sql, { id });

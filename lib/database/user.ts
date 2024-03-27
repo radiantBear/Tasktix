@@ -56,7 +56,7 @@ export async function updateUser(user: User): Promise<boolean> {
 export async function getUserById(id: string): Promise<User|false> {
   const sql = `
     SELECT * FROM \`users\`
-    WHERE \`u_id\` = :id
+    WHERE \`u_id\` = :id;
   `;
   
   const result = await query<DB_User>(sql, { id });
@@ -70,7 +70,7 @@ export async function getUserById(id: string): Promise<User|false> {
 export async function getUserByUsername(username: string): Promise<User|false> {
   const sql = `
     SELECT * FROM \`users\`
-    WHERE \`u_username\` = :username
+    WHERE \`u_username\` = :username;
   `;
   
   const result = await query<DB_User>(sql, { username });
@@ -85,7 +85,7 @@ export async function getUserByUsername(username: string): Promise<User|false> {
 export async function getUserByEmail(email: string): Promise<User|false> {
   const sql = `
     SELECT * FROM \`users\`
-    WHERE \`u_email\` = :email
+    WHERE \`u_email\` = :email;
   `;
   
   const result = await query<DB_User>(sql, { email });
@@ -105,7 +105,7 @@ export async function getUserBySessionId(id: string): Promise<User|false> {
   const sql = `
     SELECT * FROM \`users\`
       INNER JOIN \`sessions\` ON \`users\`.\`u_id\` = \`sessions\`.\`s_u_id\`
-    WHERE \`s_id\` = :id
+    WHERE \`s_id\` = :id;
   `;
   
   const result = await query<DB_Session>(sql, { id });
