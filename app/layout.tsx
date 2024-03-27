@@ -3,6 +3,7 @@ import { Providers } from './providers';
 import Body from '@/components/body';
 
 import './globals.css';
+import { getUser } from '@/lib/session';
 
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     <html lang='en' className='dark'>
       <body >
         <Providers>
-          <Body>
+          <Body isLoggedInAtStart={!!getUser()}>
             {children}
           </Body>
         </Providers>

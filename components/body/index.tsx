@@ -10,8 +10,8 @@ import Snackbar from '@/components/snackbar';
 export let setLoggedIn: () => void;
 export let setLoggedOut: () => void;
 
-export default function Body({ children }: { children: ReactNode }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function Body({ children, isLoggedInAtStart }: { children: ReactNode, isLoggedInAtStart: boolean }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInAtStart);
   setLoggedIn = () => setIsLoggedIn(true);
   setLoggedOut = () => setIsLoggedIn(false);
   
@@ -52,13 +52,13 @@ function AccountButton({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   if(!isLoggedIn)
     return (
-      <Button as={Link} color="primary" href="/signIn" variant="flat">
+      <Button key="signIn" as={Link} color="primary" href="/signIn" variant="flat">
         Sign In
       </Button>
     )
   
   return (
-    <Button onPress={handleClick} color="primary" variant="flat">
+    <Button key="signOut" onPress={handleClick} color="primary" variant="flat">
       Sign Out
     </Button>
   )
