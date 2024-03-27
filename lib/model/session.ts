@@ -1,5 +1,4 @@
 import { generateId } from "../generateId";
-import User from "../model/user";
 
 export default class Session {
   id: string;
