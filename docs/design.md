@@ -1,7 +1,12 @@
 # Website Design Decisions
 
 ## Middleware Not Used For Authorization
-A `middleware.ts` file is [the usual way](https://nextjs.org/docs/pages/building-your-application/authentication#protecting-routes-with-middleware) to handle authorization for protected pages. However, the MySQL library requires the 'net' module, which the edge runtime that runs `middleware.ts` does not support. This means it is impossible to verify that the user's session cookie is valid via middleware. Instead, each protected page **must** begin by verifying that the user is authorized or redirect them to `/signIn`.
+A `middleware.ts` file is [the usual way](https://nextjs.org/docs/pages/building-your-application/authentication#protecting-routes-with-middleware) to handle authorization for protected pages. However, the MySQL library requires the 'net' module, which the edge runtime that runs `middleware.ts` does not support. This means it is impossible to verify that the user's session cookie is valid via middleware. 
+
+Instead, each protected page **must** begin by verifying that the user is authorized or redirect them to `/signIn`. This can be accomplished by starting the React component for the page with `await authorize();`.
+> **DANGER:** It is **crucial** that you `await` the response of `authorize()` to prevent loading the page before `authorize()` has determined that it is safe to do so.
+
+This has the benefit of operating in more consistently with API endpoints, which can not use `middleware.ts` for authorization anyway.
 
 ## API Over Server Actions
 This project uses a REST API for communicating with the server instead of the Server Actions built into Next.js. There are a handful of reasons for this; mainly:
