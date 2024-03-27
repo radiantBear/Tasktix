@@ -16,7 +16,7 @@ export default function Body({ children, isLoggedInAtStart }: { children: ReactN
   setLoggedOut = () => setIsLoggedIn(false);
   
   return (
-    <>
+    <div className='flex flex-col h-screen'>
       <Navbar maxWidth='xl'>
         <NavbarBrand as={Link} href="/" className='flex flex-row justify-left items-center gap-2'>
           <Image src='/logo.png' width={100} alt='logo' style={{borderRadius: 0}} />
@@ -34,7 +34,7 @@ export default function Body({ children, isLoggedInAtStart }: { children: ReactN
       {children}
 
       <Snackbar />
-    </>
+    </div>
   );
 }
 
