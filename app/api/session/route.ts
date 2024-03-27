@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   if(!user)
     return ClientError.BadRequest('Invalid username or password');
 
-  user.dateLogin = new Date();
+  user.dateSignedIn = new Date();
   /* _ = */ await updateUser(user);
 
   if(!user.password)

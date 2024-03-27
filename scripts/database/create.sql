@@ -4,7 +4,7 @@ CREATE TABLE `users` (
   `u_email` varchar(128) NOT NULL,
   `u_password` varchar(256) NOT NULL,
   `u_dateCreated` datetime NOT NULL,
-  `u_dateLogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `u_dateSignedIn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `sessions` (

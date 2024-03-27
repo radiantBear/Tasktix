@@ -2,8 +2,6 @@ import { InputMessage } from '@/components/input_message/';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
 
 export function getUsernameMessage(input: string): InputMessage {
-  console.log(!!input)
-  
   if(input)
     if(!validateUsername(input))
       return {

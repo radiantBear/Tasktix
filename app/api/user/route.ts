@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     user.email = email;
     user.password = await hash(password);
     user.dateCreated = new Date();
-    user.dateLogin = new Date();
+    user.dateSignedIn = new Date();
 
     let result = await createUser(user);
     

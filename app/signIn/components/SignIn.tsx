@@ -8,7 +8,7 @@ import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { setLoggedIn } from '@/components/body';
 
-export default function LogIn() {
+export default function SignIn() {
   interface InputMessages {
     username: InputMessage;
     password: InputMessage;
@@ -58,7 +58,7 @@ export default function LogIn() {
         variant='underlined'
       />
       <div className='flex justify-center mt-6'>
-        <Button color='primary' onPress={handleSubmit} >Log In</Button>
+        <Button color='primary' onPress={handleSubmit} >Sign In</Button>
       </div>
     </form>
 	);

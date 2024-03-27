@@ -52,14 +52,14 @@ function AccountButton({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   if(!isLoggedIn)
     return (
-      <Button as={Link} color="primary" href="/login" variant="flat">
-        Log In
+      <Button as={Link} color="primary" href="/signIn" variant="flat">
+        Sign In
       </Button>
     )
   
   return (
-    <Button onPress={handleClick} color="primary" href="/logout" variant="flat">
-      Log Out
+    <Button onPress={handleClick} color="primary" variant="flat">
+      Sign Out
     </Button>
   )
 }

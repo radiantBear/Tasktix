@@ -6,7 +6,7 @@ export default class User {
   email: string|null;
   password: string|null;
   dateCreated: Date|null;
-  dateLogin: Date|null;
+  dateSignedIn: Date|null;
 
   constructor(id?: string) {
     if(!id)
@@ -17,6 +17,6 @@ export default class User {
     this.email = null;
     this.password = null;
     this.dateCreated = null;
-    this.dateLogin = null;
+    this.dateSignedIn = null;
   }
 }

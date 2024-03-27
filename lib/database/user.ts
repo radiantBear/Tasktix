@@ -10,7 +10,7 @@ interface DB_User extends RowDataPacket {
   u_email: string;
   u_password: string;
   u_dateCreated: Date;
-  u_dateLogin: Date;
+  u_dateSignedIn: Date;
 }
 
 export async function createUser(user: User): Promise<boolean> {
@@ -21,9 +21,9 @@ export async function createUser(user: User): Promise<boolean> {
       \`u_email\`,
       \`u_password\`,
       \`u_dateCreated\`,
-      \`u_dateLogin\`
+      \`u_dateSignedIn\`
     )
-    VALUES (:id, :username, :email, :password, :dateCreated, :dateLogin);
+    VALUES (:id, :username, :email, :password, :dateCreated, :dateSignedIn);
   `;
   
   const result = await execute(sql, user);
@@ -41,7 +41,7 @@ export async function updateUser(user: User): Promise<boolean> {
       \`u_username\` = :username,
       \`u_email\` = :email,
       \`u_password\` = :password,
-      \`u_dateLogin\` = :dateLogin
+      \`u_dateSignedIn\` = :dateSignedIn
     WHERE \`u_id\` = :id;
   `;
   
@@ -126,8 +126,8 @@ function extractUserFromRow(row: DB_User): User {
   user.password = row.u_password;
   user.dateCreated = new Date(row.u_dateCreated);
   
-  if(row.u_dateLogin)
-    user.dateLogin = new Date(row.u_dateLogin);
+  if(row.u_dateSignedIn)
+    user.dateSignedIn = new Date(row.u_dateSignedIn);
 
   return user;
 }
