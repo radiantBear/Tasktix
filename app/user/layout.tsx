@@ -1,6 +1,9 @@
 import { ReactNode } from "react";
+import { authorize } from "@/lib/security/authorize";
 
-export default function UserLayout({children}: Readonly<{children: React.ReactNode}>) {
+export default async function UserLayout({children}: Readonly<{children: React.ReactNode}>) {
+  await authorize();
+
   return (
     <div className='flex h-100 grow'>
       <aside className='w-48 bg-content1 p-4'>

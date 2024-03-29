@@ -23,14 +23,16 @@ CREATE TABLE `lists` (
 CREATE TABLE `items` (
   `i_id` char(16) NOT NULL PRIMARY KEY,
   `i_name` varchar(128) NOT NULL,
-  `i_status` ENUM ('Unstarted', 'In Progress', 'Needs Clarification', 'Completed') NOT NULL DEFAULT 'Unstarted',
-  `i_importance` ENUM ('Urgent', 'High', 'Medium', 'Low', 'Unassigned')  NOT NULL DEFAULT 'Unassigned',
+  `i_status` ENUM ('Unstarted', 'In Progress', 'Paused', 'Completed') NOT NULL DEFAULT 'Unstarted',
+  `i_priority` ENUM ('High', 'Medium', 'Low')  NOT NULL DEFAULT 'Low',
+  `i_isUnclear` boolean NOT NULL DEFAULT 0,
   `i_expectedDuration` time NOT NULL,
   `i_elapsedDuration` time NOT NULL DEFAULT '00:00:00',
   `i_parentId` char(16) NOT NULL,
   `i_l_id` char(16) NOT NULL,
   `i_dateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `i_dateDue` datetime NOT NULL,
+  `i_dateStarted` datetime NOT NULL,
   FOREIGN KEY (`i_parentId`) REFERENCES `items` (`i_id`),
   FOREIGN KEY (`i_l_id`) REFERENCES `lists` (`l_id`)
 );

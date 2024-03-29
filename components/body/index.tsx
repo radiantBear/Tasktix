@@ -17,7 +17,7 @@ export default function Body({ children, isLoggedInAtStart }: { children: ReactN
   
   return (
     <div className='flex flex-col h-screen'>
-      <Navbar maxWidth='xl'>
+      <Navbar maxWidth='full'>
         <NavbarBrand as={Link} href="/" className='flex flex-row justify-left items-center gap-2'>
           <Image src='/logo.png' width={100} alt='logo' style={{borderRadius: 0}} />
         </NavbarBrand>

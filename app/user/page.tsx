@@ -1,38 +1,64 @@
-import { authorize } from "@/lib/security/authorize";
-import { Checkbox } from "@nextui-org/react";
-import { ReactNode } from "react";
+'use client';
 
-export default async function Page() {
-  await authorize();
+import User from '@/lib/model/user';
+import Assignee from '@/lib/model/assignee';
+import { List } from '@/components/list';
+
+export default function Page() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const user = new User();
+  user.username = 'radiantBear';
+  const user2 = new User();
+  user2.username = 'Bill Jones';
+  const user3 = new User();
+  user3.username = 'Josh Hawley';
+  const user4 = new User();
+  user4.username = 'Rick Jones';
+  const user5 = new User();
+  user5.username = 'Jeff Bezos';
+  const assignees: Assignee[] = [
+    {
+      user,
+      role: 'Editor',
+      color: 'Amber'
+    },
+    {
+      user: user2,
+      role: 'Editor',
+      color: 'Orange'
+    },
+    {
+      user: user3,
+      role: 'Editor',
+      color: 'Pink'
+    },
+    {
+      user: user4,
+      role: 'Editor',
+      color: 'Yellow'
+    },
+    {
+      user: user5,
+      role: 'Editor',
+      color: 'Yellow'
+    }
+  ];
+
+  const zeroMin = new Date();
+  zeroMin.setTime(0);
+  const fiveMin = new Date();
+  fiveMin.setTime(5000*60);
+  const sixMin = new Date();
+  sixMin.setTime(6000*60);
 
   return (
-    <div className='p-8 w-full'>
-      <List name='Phase 1'>
-        <ListItem text='Plant a garden' />
-        <ListItem text='Harvest tomatoes' />
-      </List>
-    </div>
-  );
-}
-
-function List({ name, children }: { name: string, children: ReactNode }) {
-  return (
-    <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border'>
-      <div className='bg-content3 font-bold p-4'>
-        {name}
-      </div>
-      {children}
-    </div>
-  )
-}
-
-function ListItem({ text }: { text: string }) {
-  return (
-    <div className='border-b-1 border-content3 p-4'>
-      <Checkbox className='mr-0' />
-      <span className='text-sm'>
-        {text}
-      </span>
-    </div>
+    <main className='p-8 w-full'>
+      <List name='Phase 1' listItems={[
+        {id: '1', name: 'Plant a garden', dateDue: new Date(), status: 'Completed', priority: 'High', needsClarification: false, tags: [{id: '1', name: 'Planting', color: 'Lime'}, {id: '2', name: 'Outdoors', color: 'Cyan'}, {id: '3', name: 'Fun', color: 'Pink'}, {id: '4', name: 'One time', color: 'Emerald'}], expectedDuration: sixMin, elapsedDuration: fiveMin, assignees: [assignees[0]]},
+        {id: '2', name: 'Water the garden', dateDue: tomorrow, status: 'Unstarted', priority: 'Low', needsClarification: false, tags: [{id: '2', name: 'Outdoors', color: 'Cyan'}], expectedDuration: fiveMin, elapsedDuration: zeroMin, assignees},
+      ]} />
+    </main>
   );
 }
