@@ -1,8 +1,8 @@
 'use client';
 
 import { ReactNode, useState } from "react";
-import { Button, Input } from "@nextui-org/react";
-import { Check, Sliders2, Plus } from "react-bootstrap-icons";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
+import { Check, Sliders2, Plus, StopwatchFill, CalendarMinus, SortUpAlt } from "react-bootstrap-icons";
 
 export default function Sidebar() {
   const [addingList, setAddingList] = useState(false);
@@ -15,8 +15,8 @@ export default function Sidebar() {
     <aside className='w-48 bg-content1 p-4 flex flex-col gap-4'>
       <NavItem value='Today' isActive={false} />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
-        <NavItem value='List 1' isActive={true} />
-        <NavItem value='List 2' isActive={false} />
+        <NavItem value='List 1' isActive={true} endContent={<ListSettings />} />
+        <NavItem value='List 2' isActive={false} endContent={<ListSettings />} />
         {addingList ? <NewItem finalize={finalize} remove={() => setAddingList(false)} /> : <></>}
       </NavSection>
     </aside>
@@ -61,5 +61,22 @@ function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove
         <Check />
       </Button>
     </form>
+  );
+}
+
+function ListSettings() {
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button color='primary' isIconOnly variant='ghost' className='border-0 text-foreground rounded-lg w-8 h-8 min-w-8 min-h-8'>
+          <Sliders2 />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu>
+        <DropdownItem key='toggleTime' startContent={<StopwatchFill />}>No time tracking</DropdownItem>
+        <DropdownItem key='toggleDueDate' startContent={<CalendarMinus />}>No due dates</DropdownItem>
+        <DropdownItem key='sortCompleted' startContent={<SortUpAlt />}>Sort completed ascending</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }
