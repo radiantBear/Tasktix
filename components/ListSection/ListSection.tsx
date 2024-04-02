@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import {default as ItemType} from '@/lib/model/item';
-import Item from './item';
-import AddItem from './addItem';
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
-import { CalendarMinus, SortUpAlt, StopwatchFill, ThreeDots } from 'react-bootstrap-icons';
+import Item from './Item';
+import AddItem from './AddItem';
 
 export default function List({ name, listItems }: { name: string, listItems: ItemType[] }) {
   const startingItems: {[key: string]: ItemType['status']} = {};

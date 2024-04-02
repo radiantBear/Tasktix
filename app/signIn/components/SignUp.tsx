@@ -1,14 +1,14 @@
 'use client';
 
 import { getUsernameMessage, getEmailMessage, getPasswordMessage } from '../messages';
-import Message, { InputMessage } from '@/components/input_message';
+import Message, { InputMessage } from '@/components/InputMessage';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
-import { addSnackbar } from '@/components/snackbar';
+import { addSnackbar } from '@/components/Snackbar';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { api } from '@/lib/api';
-import { setLoggedIn } from '@/components/body';
+import { setLoggedIn } from '@/app/body';
 
 export default function SignUp() {
   interface InputMessages {

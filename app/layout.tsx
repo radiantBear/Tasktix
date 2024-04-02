@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Providers } from './providers';
-import Body from '@/components/body';
+import Body from '@/app/body';
 
 import './globals.css';
 import { getUser } from '@/lib/session';

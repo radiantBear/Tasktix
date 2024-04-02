@@ -1,4 +1,7 @@
-import { InputMessage } from "./types";
+export interface InputMessage {
+  message: React.ReactNode|string;
+  color: 'default'|'success'|'warning'|'danger';
+}
 
 export default function Message({data}: {data: InputMessage}) {
   return (

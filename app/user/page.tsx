@@ -2,7 +2,7 @@
 
 import User from '@/lib/model/user';
 import Assignee from '@/lib/model/assignee';
-import { AddList, List } from '@/components/list';
+import { AddList, List } from '@/components/ListSection';
 
 export default function Page() {
   const tomorrow = new Date();

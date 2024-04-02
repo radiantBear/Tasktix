@@ -1,4 +1,4 @@
-import { InputMessage } from '@/components/input_message/';
+import { InputMessage } from '@/components/InputMessage';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
 
 export function getUsernameMessage(input: string): InputMessage {

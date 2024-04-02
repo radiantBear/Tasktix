@@ -4,7 +4,7 @@ import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@n
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
-import Snackbar from '@/components/snackbar';
+import Snackbar from '@/components/Snackbar';
 import Image from 'next/image';
 
 
