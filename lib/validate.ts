@@ -27,13 +27,13 @@ export function validatePassword(password: string): PasswordResult {
 }
 
 export function validateListName(name: string): [boolean, string] {
-    name = name.replaceAll(/[^a-zA-Z0-9]/g, '').substring(0, 64);
+    name = name.substring(0, 64);
     
     return [name == name, name];
 }
 
 export function validateListSectionName(name: string): [boolean, string] {
-    name = name.replaceAll(/[^a-zA-Z0-9]/g, '').substring(0, 64);
+    name = name.substring(0, 64);
     
     return [name == name, name];
 }
