@@ -1,8 +1,8 @@
 'use client';
 
 import { ReactNode, useState } from "react";
-import { Button, Input, Link } from "@nextui-org/react";
-import { Check, Plus } from "react-bootstrap-icons";
+import { Button, Input, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link } from "@nextui-org/react";
+import { CalendarMinus, Check, Sliders2, StopwatchFill, SortUpAlt, Plus } from "react-bootstrap-icons";
 import { useRouter } from 'next/navigation';
 import { api } from "@/lib/api";
 import { addSnackbar } from "@/components/Snackbar";
@@ -84,5 +84,22 @@ function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove
         <Check />
       </Button>
     </form>
+  );
+}
+
+export function ListSettings() {
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button type='button' color='primary' isIconOnly variant='ghost' className='border-0 text-foreground rounded-lg w-8 h-8 min-w-8 min-h-8'>
+          <Sliders2 />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu>
+        <DropdownItem key='toggleTime' startContent={<StopwatchFill />}>No time tracking</DropdownItem>
+        <DropdownItem key='toggleDueDate' startContent={<CalendarMinus />}>No due dates</DropdownItem>
+        <DropdownItem key='sortCompleted' startContent={<SortUpAlt />}>Sort completed ascending</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
 }

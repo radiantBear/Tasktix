@@ -1,7 +1,5 @@
 import { authorize } from "@/lib/security/authorize";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
-import { Sliders2, StopwatchFill, CalendarMinus, SortUpAlt } from "react-bootstrap-icons";
-import Sidebar, { NavItem } from "./sidebar";
+import Sidebar, { ListSettings, NavItem } from "./sidebar";
 import { getListsByUser } from "@/lib/database/list";
 import { getUser } from "@/lib/session";
 
@@ -24,22 +22,5 @@ export default async function UserLayout({children}: Readonly<{children: React.R
       </Sidebar>
       {children}
     </div>
-  );
-}
-
-function ListSettings() {
-  return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button type='button' color='primary' isIconOnly variant='ghost' className='border-0 text-foreground rounded-lg w-8 h-8 min-w-8 min-h-8'>
-          <Sliders2 />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownItem key='toggleTime' startContent={<StopwatchFill />}>No time tracking</DropdownItem>
-        <DropdownItem key='toggleDueDate' startContent={<CalendarMinus />}>No due dates</DropdownItem>
-        <DropdownItem key='sortCompleted' startContent={<SortUpAlt />}>Sort completed ascending</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
   );
 }
