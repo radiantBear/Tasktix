@@ -3,7 +3,7 @@ import {default as ItemType} from '@/lib/model/item';
 import Item from './Item';
 import AddItem from './AddItem';
 
-export default function List({ name, listItems }: { name: string, listItems: ItemType[] }) {
+export default function ListSection({ name, listItems }: { name: string, listItems: ItemType[] }) {
   const startingItems: {[key: string]: ItemType['status']} = {};
   
   for(const item of listItems)

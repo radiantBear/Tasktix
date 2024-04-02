@@ -2,7 +2,7 @@
 
 import User from '@/lib/model/user';
 import Assignee from '@/lib/model/assignee';
-import { AddList, List } from '@/components/ListSection';
+import { ListSection } from '@/components/ListSection';
 
 export default function Page() {
   const tomorrow = new Date();
@@ -55,11 +55,10 @@ export default function Page() {
 
   return (
     <main className='p-8 w-full flex flex-col gap-8'>
-      <List name='Phase 1' listItems={[
+      <ListSection name='Phase 1' listItems={[
         {id: '1', name: 'Plant a garden', dateDue: new Date(), status: 'Completed', priority: 'High', needsClarification: false, tags: [{id: '1', name: 'Planting', color: 'Lime'}, {id: '2', name: 'Outdoors', color: 'Cyan'}, {id: '3', name: 'Fun', color: 'Pink'}, {id: '4', name: 'One time', color: 'Emerald'}], expectedDuration: sixMin, elapsedDuration: fiveMin, assignees: [assignees[0]]},
         {id: '2', name: 'Water the garden', dateDue: tomorrow, status: 'Unstarted', priority: 'Low', needsClarification: false, tags: [{id: '2', name: 'Outdoors', color: 'Cyan'}], expectedDuration: fiveMin, elapsedDuration: zeroMin, assignees},
       ]} />
-      <AddList />
     </main>
   );
 }
