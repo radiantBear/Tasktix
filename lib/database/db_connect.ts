@@ -37,6 +37,7 @@ export async function query<T extends RowDataPacket>(sql: string, values: any): 
     try {
       conn?.end();
     } catch(_){}
+    console.error(err);
 
     return false;
   }
@@ -63,6 +64,7 @@ export async function execute(sql: string, values: any): Promise<ResultSetHeader
     try {
       conn?.end();
     } catch(_){}
+    console.error(err);
 
     return false;
   }
