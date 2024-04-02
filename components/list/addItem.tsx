@@ -14,7 +14,6 @@ export default function AddItem() {
     setValues({name: values.name, dueDate: inputToDate(date), priority: new Set(values.priority)});
   }
   function setPriority(priority: Selection): void {
-    console.log(priority)
     setValues({name: values.name, dueDate: values.dueDate, priority});
   }
 

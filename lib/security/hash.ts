@@ -17,11 +17,8 @@ export async function hash(password: string): Promise<string> {
 }
 
 export async function compare(password: string, hash: string): Promise<boolean> {
-  console.log(hash);
   const [saltString, otherPass, ...extra] = hash.split(':');
-  console.log(saltString)
-  console.log(otherPass)
-  console.log(extra)
+
   if(extra.length || !otherPass)
     return false;
 
@@ -29,7 +26,6 @@ export async function compare(password: string, hash: string): Promise<boolean> 
 
   const hashedPassword = await _hash(password, salt);
 
-  console.log(hashedPassword);
   return hashedPassword === otherPass;
 }
 

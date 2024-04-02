@@ -31,7 +31,7 @@ export async function getUser(): Promise<User|false> {
     return false;
   
   const user = await getUserBySessionId(sessionId);
-  console.log(user)
+
   return user;
 }
 

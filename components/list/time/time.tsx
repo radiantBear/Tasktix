@@ -19,14 +19,8 @@ export default function Time({ expected, elapsed, status, setStatus }: { expecte
   useEffect(() => {
     updateTime.current = () => {
       timer.current = setTimeout(() => updateTime.current(), minute);
-      console.log('elapsedLive.getTime: '+elapsedLive.getTime());
-      console.log('lastTime.current.getTime: '+lastTime.current.getTime());
-      console.log('Date.now: '+Date.now());
-      console.log('Time offset: '+(Date.now() - lastTime.current.getTime()));
-      console.log('New time: '+(new Date(elapsedLive.getTime() + (Date.now() - lastTime.current.getTime()))).getTime());
       setElapsedLive(new Date(elapsedLive.getTime() + (Date.now() - lastTime.current.getTime())));
       lastTime.current = new Date();
-      console.log('Finished updating time');
     }
   });
 
@@ -47,12 +41,9 @@ export default function Time({ expected, elapsed, status, setStatus }: { expecte
       setStatus('In Progress');
       lastTime.current = new Date();
       clearTimeout(timer.current);
-      console.log(`Delay: ${5 + minute - elapsedLive.getTime() % minute}`)
       timer.current = setTimeout(updateTime.current, minute - elapsedLive.getTime() % minute + 5);
     }
   }
-
-  console.log('Rendering');
 
   return (
     <>
