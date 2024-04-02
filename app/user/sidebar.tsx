@@ -55,9 +55,9 @@ function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove
   const [name, setName] = useState('');
 
   return (
-    <form className={`pl-1 flex items-center justify-between gap-2 text-sm`}>
-      <Input value={name} ref={input => input?.focus()} onValueChange={setName} onBlur={remove} onKeyUp={e => { if(e.key == 'Enter') setName(name) }} variant='underlined' color='primary' placeholder='List name' size='sm' />
-      <Button onPress={() => finalize(name)} variant='ghost' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
+    <form className={`pl-1 flex items-center justify-between gap-2 text-sm`} onSubmit={e => { e.preventDefault(); finalize(name) }}>
+      <Input value={name} ref={input => input?.focus()} onValueChange={setName} onBlur={remove} variant='underlined' color='primary' placeholder='List name' size='sm' />
+      <Button type='submit' variant='ghost' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
         <Check />
       </Button>
     </form>
