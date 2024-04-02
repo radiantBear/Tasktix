@@ -58,3 +58,21 @@ export function formatTime(time: Date): string {
 
   return `${hours}:${minutes}`;
 }
+
+export function inputToDate(date: string): Date {
+  const [year, month, day] = date.split('-');
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
+export function dateToInput(date: Date): string {
+  const year = date.getFullYear().toString();
+  let month = (date.getMonth() + 1).toString();
+  let day = date.getDate().toString();
+
+  if(month.length < 2)
+    month = '0' + month;
+  if(day.length < 2)
+    day = '0' + day;
+
+  return `${year}-${month}-${day}`;
+}
