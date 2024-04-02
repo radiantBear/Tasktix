@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
+import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
 import Snackbar from '@/components/snackbar';
+import Image from 'next/image';
 
 
 export let setLoggedIn: () => void;
@@ -19,7 +20,7 @@ export default function Body({ children, isLoggedInAtStart }: { children: ReactN
     <div className='flex flex-col h-screen'>
       <Navbar maxWidth='full'>
         <NavbarBrand as={Link} href="/" className='flex flex-row justify-left items-center gap-2'>
-          <Image src='/logo.png' width={100} alt='logo' style={{borderRadius: 0}} />
+          <Image src='/logo.png' priority width={100} height={26} alt='Tasktix' style={{borderRadius: 0}} />
         </NavbarBrand>
         <NavbarContent className='justify-center'>
           <NavbarItem>
