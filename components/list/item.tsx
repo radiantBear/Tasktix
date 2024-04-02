@@ -19,7 +19,7 @@ export default function Item({ item, status, setIsComplete, setStatus }: { item:
           <span className={`text-xs ${isComplete ? 'text-secondary/50 line-through' : 'text-secondary'}`}>Due {formatDate(item.dateDue)}</span>
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} />
-        <div className='w-1/4 flex items-center justify-start overflow-scroll flex-nowrap h-10'>
+        <div className='w-1/4 flex items-center justify-start overflow-auto flex-nowrap h-10'>
           {/* TODO: find way to say how many items are hidden */}
           {item.tags.map(tag => <Tag key={tag.id} tag={tag} isComplete={isComplete} />)}
         </div>
