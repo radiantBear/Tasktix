@@ -1,15 +1,15 @@
 'use client';
 
 import { ReactNode, useState } from "react";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
-import { Check, Sliders2, Plus, StopwatchFill, CalendarMinus, SortUpAlt } from "react-bootstrap-icons";
+import { Button, Input, Link } from "@nextui-org/react";
+import { Check, Plus } from "react-bootstrap-icons";
 import { useRouter } from 'next/navigation';
 import { api } from "@/lib/api";
 import { addSnackbar } from "@/components/Snackbar";
 import { setTimeout } from "timers";
 import { validateListName } from "@/lib/validate";
 
-export default function Sidebar() {
+export default function Sidebar({ children }: { children: ReactNode }) {
   const [addingList, setAddingList] = useState(false);
   const router = useRouter();
 
@@ -33,10 +33,9 @@ export default function Sidebar() {
 
   return (
     <aside className='w-48 bg-content1 p-4 flex flex-col gap-4'>
-      <NavItem value='Today' isActive={false} />
+      <NavItem name='Today' link='/user' isActive={false} />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
-        <NavItem value='List 1' isActive={true} endContent={<ListSettings />} />
-        <NavItem value='List 2' isActive={false} endContent={<ListSettings />} />
+        {children}
         {addingList ? <NewItem finalize={finalize} remove={remove} /> : <></>}
       </NavSection>
     </aside>
@@ -54,10 +53,10 @@ function NavSection({ name, endContent, children }: { name: string, endContent?:
   );
 }
 
-function NavItem({ value, endContent, isActive }: { value: ReactNode, endContent?: ReactNode, isActive: boolean }) {
+export function NavItem({ name, link, endContent, isActive }: { name: string, link: string, endContent?: ReactNode, isActive: boolean }) {
   return (
     <span className={`pl-2 flex items-center justify-between${isActive ? ' border-l-2 border-primary' : ''} text-sm`}>
-      {value}
+      <Link href={link} color='foreground' >{name}</Link>
       {endContent}
     </span>
   );
@@ -85,22 +84,5 @@ function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove
         <Check />
       </Button>
     </form>
-  );
-}
-
-function ListSettings() {
-  return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button color='primary' isIconOnly variant='ghost' className='border-0 text-foreground rounded-lg w-8 h-8 min-w-8 min-h-8'>
-          <Sliders2 />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownItem key='toggleTime' startContent={<StopwatchFill />}>No time tracking</DropdownItem>
-        <DropdownItem key='toggleDueDate' startContent={<CalendarMinus />}>No due dates</DropdownItem>
-        <DropdownItem key='sortCompleted' startContent={<SortUpAlt />}>Sort completed ascending</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
   );
 }

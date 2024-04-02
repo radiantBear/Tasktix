@@ -1,10 +1,10 @@
 'use server';
 
-import User from '@/lib/model/user';
+import User, { extractUserFromRow } from '@/lib/model/user';
 import { RowDataPacket } from 'mysql2/promise';
 import { execute, query } from './db_connect';
 
-interface DB_User extends RowDataPacket {
+export interface DB_User extends RowDataPacket {
   u_id: string;
   u_username: string;
   u_email: string;
@@ -117,17 +117,4 @@ export async function getUserBySessionId(id: string): Promise<User|false> {
     return false;
 
   return extractUserFromRow(result[0]);
-}
-
-function extractUserFromRow(row: DB_User): User {
-  const user = new User(row.u_id);
-  user.username = row.u_username;
-  user.email = row.u_email;
-  user.password = row.u_password;
-  user.dateCreated = new Date(row.u_dateCreated);
-  
-  if(row.u_dateSignedIn)
-    user.dateSignedIn = new Date(row.u_dateSignedIn);
-
-  return user;
 }

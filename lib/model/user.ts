@@ -1,3 +1,4 @@
+import { DB_User } from "../database/user";
 import { generateId } from "../generateId";
 
 export default class User {
@@ -19,4 +20,17 @@ export default class User {
     this.dateCreated = null;
     this.dateSignedIn = null;
   }
+}
+
+export function extractUserFromRow(row: DB_User): User {
+  const user = new User(row.u_id);
+  user.username = row.u_username;
+  user.email = row.u_email;
+  user.password = row.u_password;
+  user.dateCreated = new Date(row.u_dateCreated);
+  
+  if(row.u_dateSignedIn)
+    user.dateSignedIn = new Date(row.u_dateSignedIn);
+
+  return user;
 }

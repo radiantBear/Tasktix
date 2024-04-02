@@ -31,3 +31,9 @@ export function validateListName(name: string): [boolean, string] {
     
     return [name == name, name];
 }
+
+export function validateListSectionName(name: string): [boolean, string] {
+    name = name.replaceAll(/[^a-zA-Z0-9]/g, '').substring(0, 64);
+    
+    return [name == name, name];
+}

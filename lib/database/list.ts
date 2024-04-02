@@ -1,14 +1,22 @@
 'use server';
 
-import Session from '@/lib/model/session';
-import { RowDataPacket } from 'mysql2/promise';
 import { execute, query } from './db_connect';
-import List from '../model/list';
+import { DB_ListSection } from './listSection';
+import { DB_User } from './user';
+import List, { extractListFromRow, mergeLists } from '@/lib/model/list';
 
-interface DB_List extends RowDataPacket {
-  s_id: string;
-  s_u_id: string;
-  s_dateExpire: Date;
+export interface DB_ListMember extends DB_User {
+  la_l_id: string;
+  la_u_id: string;
+  la_canAdd: boolean;
+  la_canRemove: boolean;
+  la_canComplete: boolean;
+  la_canAssign: boolean;
+}
+
+export interface DB_List extends DB_ListMember, DB_ListSection {
+  l_id: string;
+  l_name: string;
 }
 
 export async function createList(list: List): Promise<boolean> {
@@ -46,9 +54,11 @@ export async function createList(list: List): Promise<boolean> {
   return true;
 }
 
-export async function getListById(id: string): Promise<Session|false> {
+export async function getListById(id: string): Promise<List|false> {
   const sql = `
     SELECT * FROM \`lists\`
+    INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    INNER JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
     WHERE \`l_id\` = :id;
   `;
   
@@ -57,14 +67,21 @@ export async function getListById(id: string): Promise<Session|false> {
   if(!result)
     return false;
 
-  return extractListFromRow(result[0]);
+  return mergeLists(result.map(extractListFromRow))[0];
 }
 
+export async function getListsByUser(id: string): Promise<List[]|false> {
+  const sql = `
+    SELECT * FROM \`lists\`
+    INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    WHERE \`listMembers\`.\`lm_u_id\` = :id
+    ORDER BY \`lists\`.\`l_name\` ASC;
+  `;
+  
+  const result = await query<DB_List>(sql, { id });
+  
+  if(!result)
+    return false;
 
-function extractListFromRow(row: DB_List): Session {
-  const session = new Session(row.s_id);
-  session.userId = row.s_u_id;
-  session.dateExpire = new Date(row.s_dateExpire);
-
-  return session;
+  return mergeLists(result.map(extractListFromRow));
 }

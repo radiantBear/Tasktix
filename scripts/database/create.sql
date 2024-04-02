@@ -20,6 +20,13 @@ CREATE TABLE `lists` (
   `l_description` text NULL DEFAULT NULL
 );
 
+CREATE TABLE `listSections` (
+  `ls_id` char(16) NOT NULL PRIMARY KEY,
+  `ls_l_id` char(16) NOT NULL,
+  `ls_name` char(64) NOT NULL,
+  FOREIGN KEY (`ls_l_id`) REFERENCES `lists` (`l_id`)
+);
+
 CREATE TABLE `items` (
   `i_id` char(16) NOT NULL PRIMARY KEY,
   `i_name` varchar(128) NOT NULL,
@@ -29,12 +36,12 @@ CREATE TABLE `items` (
   `i_expectedDuration` time NOT NULL,
   `i_elapsedDuration` time NOT NULL DEFAULT '00:00:00',
   `i_parentId` char(16) NOT NULL,
-  `i_l_id` char(16) NOT NULL,
+  `i_ls_id` char(16) NOT NULL,
   `i_dateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `i_dateDue` datetime NOT NULL,
   `i_dateStarted` datetime NOT NULL,
   FOREIGN KEY (`i_parentId`) REFERENCES `items` (`i_id`),
-  FOREIGN KEY (`i_l_id`) REFERENCES `lists` (`l_id`)
+  FOREIGN KEY (`i_ls_id`) REFERENCES `listSections` (`ls_id`)
 );
 
 CREATE TABLE `tags` (
