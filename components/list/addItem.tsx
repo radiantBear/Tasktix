@@ -1,11 +1,17 @@
 import { dateToInput, inputToDate } from '@/lib/date'
 import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
-import { useState } from 'react';
-import { Plus } from 'react-bootstrap-icons';
+import { useEffect, useRef, useState } from 'react';
+import { Check, Plus } from 'react-bootstrap-icons';
 
 export default function AddItem() {
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection}>({name: '', dueDate: new Date(), priority: new Set(['Low'])});
+  const focusInput = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if(isOpen)
+      focusInput.current?.focus();
+  }, [isOpen]);
 
   function setName(name: string): void {
     setValues({name, dueDate: values.dueDate, priority: new Set(values.priority)});
@@ -25,6 +31,7 @@ export default function AddItem() {
             placeholder='Add item...' 
             value={values.name}
             onValueChange={setName}
+            ref={input => focusInput.current = input }
             variant='underlined' 
             size='sm' 
             className='w-44 mt-2' 
@@ -56,7 +63,7 @@ export default function AddItem() {
             <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
             <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
           </Select>
-          <Button onPress={() => alert(values.dueDate)} variant='ghost' color='primary'>Add</Button>
+          <Button onPress={() => alert(values.dueDate)} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
         </span>
       </span>
       <Button variant='ghost' isIconOnly onPress={() => setIsOpen(!isOpen)} color={isOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isOpen ? ' -rotate-45' : ''}`}/></Button>
