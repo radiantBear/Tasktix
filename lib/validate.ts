@@ -25,3 +25,9 @@ export function validatePassword(password: string): PasswordResult {
     else
         return { valid: false, color: 'danger', strength: 'weak' };
 }
+
+export function validateListName(name: string): [boolean, string] {
+    name = name.replaceAll(/[^a-zA-Z0-9]/g, '').substring(0, 64);
+    
+    return [name == name, name];
+}

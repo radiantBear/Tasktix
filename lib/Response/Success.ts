@@ -4,7 +4,7 @@ export default class Success {
   }
 
   static Created(message: string, location: string, headers: HeadersInit|undefined = undefined) {
-      return Response.json({message}, {status: 201, statusText: 'Created', headers: {...headers, 'Location': location}});
+      return Response.json({message, content: location}, {status: 201, statusText: 'Created', headers: {...headers, 'Location': location}});
   }
 
   static NoContent(headers: HeadersInit|undefined = undefined) {

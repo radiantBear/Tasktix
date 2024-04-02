@@ -3,12 +3,32 @@
 import { ReactNode, useState } from "react";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
 import { Check, Sliders2, Plus, StopwatchFill, CalendarMinus, SortUpAlt } from "react-bootstrap-icons";
+import { useRouter } from 'next/navigation';
+import { api } from "@/lib/api";
+import { addSnackbar } from "@/components/Snackbar";
+import { setTimeout } from "timers";
+import { validateListName } from "@/lib/validate";
 
 export default function Sidebar() {
   const [addingList, setAddingList] = useState(false);
+  const router = useRouter();
 
   function finalize(name: string) {
+    console.log('starting')
+    api.post('/list', { name })
+      .then(res => {
+        router.push(`/user${res.content}`);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
 
+  async function remove() {
+    function delay(ms: number) {
+      return new Promise(res => setTimeout(res, ms));
+    }
+    
+    await delay(100);
+    setAddingList(false);
   }
 
   return (
@@ -17,7 +37,7 @@ export default function Sidebar() {
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
         <NavItem value='List 1' isActive={true} endContent={<ListSettings />} />
         <NavItem value='List 2' isActive={false} endContent={<ListSettings />} />
-        {addingList ? <NewItem finalize={finalize} remove={() => setAddingList(false)} /> : <></>}
+        {addingList ? <NewItem finalize={finalize} remove={remove} /> : <></>}
       </NavSection>
     </aside>
   );
@@ -54,9 +74,13 @@ function AddList({ addList }: { addList: () => any }) {
 function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove: () => any }) {
   const [name, setName] = useState('');
 
+  function updateName(name: string) {
+    setName(validateListName(name)[1]);
+  }
+
   return (
     <form className={`pl-1 flex items-center justify-between gap-2 text-sm`} onSubmit={e => { e.preventDefault(); finalize(name) }}>
-      <Input value={name} ref={input => input?.focus()} onValueChange={setName} onBlur={remove} variant='underlined' color='primary' placeholder='List name' size='sm' />
+      <Input value={name} ref={input => input?.focus()} onValueChange={updateName} onBlur={remove} variant='underlined' color='primary' placeholder='List name' size='sm' />
       <Button type='submit' variant='ghost' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
         <Check />
       </Button>
