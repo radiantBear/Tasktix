@@ -24,10 +24,18 @@ export default class List {
 export function extractListFromRow(row: DB_List): List {
   const user = extractUserFromRow(row);
 
-  const listMember = new ListMember(user, row.la_canAdd, row.la_canRemove, row.la_canComplete, row.la_canRemove);
-  const listSection = new ListSection(row.ls_name, row.ls_id);
+  const listMember = 
+    row.u_id 
+      ? [new ListMember(user, row.la_canAdd, row.la_canRemove, row.la_canComplete, row.la_canRemove)]
+      : [];
+  const listSection = 
+    row.ls_name
+      ? [new ListSection(row.ls_name, row.ls_id)]
+      : [];
+
+
   
-  const list = new List(row.l_name, [listMember], [listSection], row.l_id);
+  const list = new List(row.l_name, listMember, listSection, row.l_id);
   list.id = row.l_id;
 
   return list;

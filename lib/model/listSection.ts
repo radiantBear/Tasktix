@@ -1,4 +1,3 @@
-import ListMember from "./listMember";
 import { generateId } from "../generateId";
 
 export default class ListSection {

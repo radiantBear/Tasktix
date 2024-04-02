@@ -7,13 +7,11 @@ export default async function UserLayout({children}: Readonly<{children: React.R
   await authorize();
 
   const user = await getUser();
-  
   /* Just need this for TypeScript */
   if(!user)
-    return <></>;
-  const lists = await getListsByUser(user.id);
-  if(!lists)
-    return <></>;
+  return <></>;
+
+  const lists = await getListsByUser(user.id) || [];
 
   return (
     <div className='flex h-100 grow'>

@@ -14,7 +14,6 @@ export default function Sidebar({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   function finalize(name: string) {
-    console.log('starting')
     api.post('/list', { name })
       .then(res => {
         router.push(`/user${res.content}`);

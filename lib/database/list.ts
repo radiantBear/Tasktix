@@ -57,13 +57,13 @@ export async function createList(list: List): Promise<boolean> {
 export async function getListById(id: string): Promise<List|false> {
   const sql = `
     SELECT * FROM \`lists\`
-    INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
-    INNER JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
+    LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    LEFT JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
     WHERE \`l_id\` = :id;
   `;
-  
+
   const result = await query<DB_List>(sql, { id });
-  
+
   if(!result)
     return false;
 
