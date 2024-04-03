@@ -4,24 +4,15 @@ import Item from './Item';
 import AddItem from './AddItem';
 
 export default function ListSection({ id, name, listItems }: { id: string, name: string, listItems: ItemType[] }) {
-  const startingItems: {[key: string]: ItemType['status']} = {};
-  
-  for(const item of listItems)
-    startingItems[item.id] = item.status;
-
-  const [items, setItems] = useState(startingItems);
+  const [items, setItems] = useState(listItems);
 
   function setStatus(id: string, status: ItemType['status']) {
-    const newItems = { ...items };
-    newItems[id] = status;
+    const newItems = structuredClone(items);
+    for(const item of newItems)
+      if(item.id == id)
+        item.status = status;
+    console.log(newItems)
     setItems(newItems);
-  }
-
-  function setIsComplete(id: string, event: React.ChangeEvent<HTMLInputElement>) {
-    if(event.target.checked)
-      setStatus(id, 'Completed');
-    else
-      setStatus(id, 'Paused');
   }
 
   return (
@@ -32,7 +23,7 @@ export default function ListSection({ id, name, listItems }: { id: string, name:
           <AddItem sectionId={id} />
         </span>
       </div>
-      {listItems.map(item => <Item key={item.id} item={item} status={items[item.id]} setIsComplete={setIsComplete.bind(null, item.id)} setStatus={setStatus.bind(null, item.id)} />)}
+      {items.map(item => <Item key={item.id} item={item} setStatus={setStatus.bind(null, item.id)} />)}
     </div>
   )
 }
