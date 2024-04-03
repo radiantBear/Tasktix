@@ -8,20 +8,26 @@ import { api } from "@/lib/api";
 import { addSnackbar } from "@/components/Snackbar";
 import { setTimeout } from "timers";
 import { validateListName } from "@/lib/validate";
+import List from "@/lib/model/list";
 
-export default function Sidebar({ children }: { children: ReactNode }) {
+export default function Sidebar({ startingLists }: { startingLists: string }) {
+  const [lists, setLists] = useState<List[]>(JSON.parse(startingLists));
   const [addingList, setAddingList] = useState(false);
   const router = useRouter();
 
-  function finalize(name: string) {
+  function finalizeNew(name: string) {
     api.post('/list', { name })
       .then(res => {
         router.push(`/user${res.content}`);
+        
+        const newLists = structuredClone(lists);
+        newLists.push(new List(name, [], [], res.content));
+        setLists(newLists);
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  async function remove() {
+  async function removeNew() {
     function delay(ms: number) {
       return new Promise(res => setTimeout(res, ms));
     }
@@ -34,8 +40,8 @@ export default function Sidebar({ children }: { children: ReactNode }) {
     <aside className='w-48 bg-content1 p-4 flex flex-col gap-4'>
       <NavItem name='Today' link='/user' isActive={false} />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
-        {children}
-        {addingList ? <NewItem finalize={finalize} remove={remove} /> : <></>}
+        {lists.sort((a, b) => a.name > b.name ? 1 : 0).map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} isActive={true} endContent={<ListSettings />} />)}
+        {addingList ? <NewItem finalize={finalizeNew} remove={removeNew} /> : <></>}
       </NavSection>
     </aside>
   );

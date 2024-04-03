@@ -15,9 +15,7 @@ export default async function UserLayout({children}: Readonly<{children: React.R
 
   return (
     <div className='flex h-100 grow'>
-      <Sidebar>
-        {lists.map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} isActive={true} endContent={<ListSettings />} />)}
-      </Sidebar>
+      <Sidebar startingLists={JSON.stringify(lists)} />
       {children}
     </div>
   );
