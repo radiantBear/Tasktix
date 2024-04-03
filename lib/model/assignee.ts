@@ -14,7 +14,7 @@ export default class Assignee {
   }
 }
 
-export function extractAssigneeFromRow(row: DB_Assignee) {
+export function extractAssigneeFromRow(row: DB_Assignee): Assignee {
   const user = extractUserFromRow(row);
   return new Assignee(user, row.ia_role, row.ia_color);
 }

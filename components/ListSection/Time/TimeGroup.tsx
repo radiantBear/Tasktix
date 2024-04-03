@@ -1,9 +1,9 @@
 import { formatTime } from '@/lib/date';
 import TimeButton from './TimeButton';
-import Item from '@/lib/model/item';
+import ListItem from '@/lib/model/listItem';
 import { useEffect, useRef, useState } from 'react';
 
-export default function TimeGroup({ expected, elapsed, status, setStatus }: { expected: Date, elapsed: Date, status: Item['status'], setStatus: (status: Item['status']) => void}) {
+export default function TimeGroup({ expected, elapsed, status, setStatus }: { expected: Date, elapsed: Date, status: ListItem['status'], setStatus: (status: ListItem['status']) => void}) {
   const minute = 1000 * 60;
   const isComplete = status == 'Completed';
   

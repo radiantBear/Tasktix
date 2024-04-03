@@ -1,8 +1,10 @@
-import ListMember from "./listMember";
-import { generateId } from "../generateId";
-import { DB_List } from "../database/list";
-import { extractUserFromRow } from "./user";
-import ListSection from "./listSection";
+import ListMember, { extractListMemberFromRow } from './listMember';
+import { generateId } from '@/lib/generateId';
+import { DB_List } from '@/lib/database/list';
+import Tag from './tag';
+import Assignee from './assignee';
+import ListItem, { mergeListItems } from './listItem';
+import ListSection, { extractListSectionFromRow } from './listSection';
 
 export default class List {
   id: string;
@@ -22,19 +24,16 @@ export default class List {
 }
 
 export function extractListFromRow(row: DB_List): List {
-  const user = extractUserFromRow(row);
-
   const listMember = 
-    row.u_id 
-      ? [new ListMember(user, row.la_canAdd, row.la_canRemove, row.la_canComplete, row.la_canRemove)]
+    row.ia_role
+      ? [extractListMemberFromRow(row)]
       : [];
+  
   const listSection = 
     row.ls_name
-      ? [new ListSection(row.ls_name, row.ls_id)]
+      ? [extractListSectionFromRow(row)]
       : [];
 
-
-  
   const list = new List(row.l_name, listMember, listSection, row.l_id);
   list.id = row.l_id;
 
@@ -45,13 +44,26 @@ export function mergeLists(original: List[]): List[] {
   const accumulator: List[] = [];
   
   for(const current of original) {
-    if(accumulator.at(-1)?.id == current.id) {
-      accumulator.at(-1)?.members.splice(-1, 0, ...current.members)
+    const last = accumulator.at(-1);
+
+    if(last?.id == current.id) {
+      // Merge new data into list
+      
+      // Add any new members
+      last?.members.splice(-1, 0, ...current.members)
         .filter((item: ListMember, index: number, arr: ListMember[]) => arr.indexOf(item) == index);
-      accumulator.at(-1)?.sections.splice(-1, 0, ...current.sections)
-        .filter((item: ListSection, index: number, arr: ListSection[]) => arr.indexOf(item) == index);
+      
+      const lastSection = last?.sections.at(-1);
+      if(lastSection && lastSection?.id == current.sections.at(0)?.id) {
+        // Merge new data into list section
+        lastSection.items = mergeListItems([...lastSection?.items || [], ...current.sections.at(0)?.items || []]);
+      } 
+      else 
+        // Add new list section
+        last?.sections.splice(-1, 0, ...current.sections);
     }
     else
+      // Add new list
       accumulator.push(current);
   }
 

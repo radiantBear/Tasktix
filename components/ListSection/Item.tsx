@@ -1,13 +1,13 @@
 import { Checkbox } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
-import Item from '@/lib/model/item';
+import ListItem from '@/lib/model/listItem';
 import More from './More';
 import Tag from './Tag';
 import Time from './Time';
 import Priority from './Priority';
 import Users from './Users';
 
-export default function Item({ item, setStatus }: { item: Item, setStatus: (status: Item['status']) => void}) {  
+export default function Item({ item, setStatus }: { item: ListItem, setStatus: (status: ListItem['status']) => void}) {  
   const isComplete = item.status == 'Completed';
 
   return (

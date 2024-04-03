@@ -1,10 +1,10 @@
 'use server';
 
-import { RowDataPacket } from 'mysql2';
+import { DB_ListItem } from './listItem';
 import ListSection from '../model/listSection';
 import { execute } from './db_connect';
 
-export interface DB_ListSection extends RowDataPacket {
+export interface DB_ListSection extends DB_ListItem {
   ls_id: string;
   ls_l_id: string;
   ls_name: string;

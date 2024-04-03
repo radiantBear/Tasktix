@@ -1,10 +1,17 @@
 'use server';
 
 import { DB_User } from './user';
-import ListSection from '@/lib/model/listSection';
 import { execute } from './db_connect';
 import ListItem, { Priority, Status } from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
+import { RowDataPacket } from 'mysql2';
+
+export interface DB_Tag extends RowDataPacket {
+  t_id: string;
+  t_name: string;
+  t_color: Color;
+  t_i_id: string;
+}
 
 export interface DB_Assignee extends DB_User {
   ia_u_id: string;
@@ -13,7 +20,7 @@ export interface DB_Assignee extends DB_User {
   ia_color: Color;
 }
 
-export interface DB_ListItem extends DB_Assignee {
+export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_id: string;
   i_name: string;
   i_status: Status;

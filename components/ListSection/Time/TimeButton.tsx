@@ -1,8 +1,8 @@
 import { Button } from '@nextui-org/react';
 import { PauseFill, PlayFill } from 'react-bootstrap-icons';
-import Item from '@/lib/model/item';
+import ListItem from '@/lib/model/listItem';
 
-export default function TimeButton({ status, toggleRunning }: { status: Item['status'], toggleRunning: () => void}) {
+export default function TimeButton({ status, toggleRunning }: { status: ListItem['status'], toggleRunning: () => void}) {
   const playBtn = <PlayFill className='shrink-0' />;
   const pauseBtn = <PauseFill className='shrink-0' />;
   

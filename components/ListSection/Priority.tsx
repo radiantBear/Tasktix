@@ -1,8 +1,8 @@
 import { Select, SelectItem, Selection } from "@nextui-org/react";
 import { useState } from "react";
-import Item from '@/lib/model/item';
+import ListItem from "@/lib/model/listItem";
 
-export default function Priority({ isComplete, startingPriority }: { isComplete: boolean, startingPriority: Item['priority'] }) {
+export default function Priority({ isComplete, startingPriority }: { isComplete: boolean, startingPriority: ListItem['priority'] }) {
   const [priority, setPriority] = useState<Selection>(new Set([startingPriority]));
   
   return (

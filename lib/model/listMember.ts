@@ -1,12 +1,5 @@
-import User from './user';
-
-export default interface ListMember {
-  user: User,
-  canAdd: boolean,
-  canRemove: boolean,
-  canComplete: boolean,
-  canAssign: boolean,
-}
+import { DB_ListMember } from '../database/list';
+import User, { extractUserFromRow } from './user';
 
 export default class ListMember {
   user: User;
@@ -22,4 +15,9 @@ export default class ListMember {
     this.canComplete = canComplete;
     this.canAssign = canAssign;
   }
+}
+
+export function extractListMemberFromRow(row: DB_ListMember): ListMember {
+  const user = extractUserFromRow(row);
+  return new ListMember(user, row.la_canAdd, row.la_canRemove, row.la_canComplete, row.la_canRemove);
 }

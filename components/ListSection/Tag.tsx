@@ -1,7 +1,7 @@
-import Tag from '@/lib/model/tag';
+import TagModel from '@/lib/model/tag';
 import { Chip } from '@nextui-org/react';
 
-export default function Tag({ tag, isComplete }: { tag: Tag, isComplete: boolean }) {
+export default function Tag({ tag, isComplete }: { tag: TagModel, isComplete: boolean }) {
   let textColor: string;
   switch(tag.color) {
     case 'Pink':

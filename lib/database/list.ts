@@ -57,8 +57,11 @@ export async function createList(list: List): Promise<boolean> {
 export async function getListById(id: string): Promise<List|false> {
   const sql = `
     SELECT * FROM \`lists\`
-    LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
-    LEFT JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`items\` ON \`items\`.\`i_ls_id\` = \`listSections\`.\`ls_id\`
+      LEFT JOIN \`tags\` ON \`tags\`.\`t_i_id\` = \`items\`.\`i_id\`
+      LEFT JOIN \`itemAssignees\` on \`itemAssignees\`.\`ia_i_id\`
     WHERE \`l_id\` = :id;
   `;
 
