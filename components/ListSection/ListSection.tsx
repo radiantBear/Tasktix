@@ -4,20 +4,24 @@ import AddItem from './AddItem';
 import ListItem from '@/lib/model/listItem';
 
 export default function ListSection({ id, name, listItems }: { id: string, name: string, listItems: string }) {
-  const startingItems = JSON.parse(listItems);
-  for(const item of startingItems) {
-    item.expectedDuration = new Date(item.expectedDuration);
-    item.elapsedDuration = new Date(item.elapsedDuration);
-    item.dateCreated = new Date(item.dateCreated);
-    item.dateDue = new Date(item.dateDue);
-    item.dateStarted = new Date(item.dateStarted);
+  const startingItemsFromJSON = JSON.parse(listItems);
+  const startingItems: ListItem[] = [];
+  for(const item of startingItemsFromJSON) {
+    new ListItem(item.name, item.expectedDuration, {
+      ...item,
+      expectedDuration: new Date(item.expectedDuration),
+      elapsedDuration: new Date(item.elapsedDuration),
+      dateCreated: new Date(item.dateCreated),
+      dateDue: new Date(item.dateDue),
+      dateStarted: new Date(item.dateStarted)
+    });
   }
 
   const [items, setItems] = useState<ListItem[]>(startingItems);
 
   function setStatus(id: string, status: ListItem['status']) {
     const newItems = structuredClone(items);
-    for(const item of newItems)
+    for(let item of newItems)
       if(item.id == id)
         item.status = status;
     setItems(newItems);
