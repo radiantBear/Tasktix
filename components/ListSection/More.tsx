@@ -1,7 +1,7 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import { CalendarEventFill, PeopleFill, StopwatchFill, Tags, ThreeDots, TrashFill } from 'react-bootstrap-icons';
 
-export default function More() {
+export default function More({ deleteItem }: { deleteItem: () => any }) {
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -12,7 +12,7 @@ export default function More() {
         <DropdownItem key='tag' startContent={<Tags />}>Update tags</DropdownItem>
         <DropdownItem key='updateExpectedDuration' startContent={<StopwatchFill />}>Updated expected duration</DropdownItem>
         <DropdownItem key='updateDueDate' startContent={<CalendarEventFill />} className='text-warning' color='warning'>Change due date</DropdownItem>
-        <DropdownItem key='remove' startContent={<TrashFill />} className='text-danger' color='danger'>Delete</DropdownItem>
+        <DropdownItem key='remove' onPress={deleteItem} startContent={<TrashFill />} className='text-danger' color='danger'>Delete</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

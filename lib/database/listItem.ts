@@ -74,3 +74,17 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
   
   return true;
 }
+
+export async function deleteListItem(id: string): Promise<boolean> {
+  const sql = `
+    DELETE FROM \`items\`
+    WHERE \`i_id\` = :id;
+  `;
+  
+  const result = await execute(sql, { id });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}

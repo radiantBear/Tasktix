@@ -6,9 +6,20 @@ import Tag from './Tag';
 import Time from './Time';
 import Priority from './Priority';
 import Users from './Users';
+import { api } from '@/lib/api';
+import { addSnackbar } from '../Snackbar';
 
-export default function Item({ item, setStatus }: { item: ListItem, setStatus: (status: ListItem['status']) => void}) {  
+export default function Item({ item, setStatus, deleteItem }: { item: ListItem, setStatus: (status: ListItem['status']) => void, deleteItem: () => any }) {  
   const isComplete = item.status == 'Completed';
+
+  function _deleteItem() {
+    api.delete(`/item/${item.id}`)
+      .then(res => {
+        deleteItem();
+        addSnackbar(res.message, 'success')
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
 
   return (
     <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0 last:rounded-b-md'>
@@ -27,7 +38,7 @@ export default function Item({ item, setStatus }: { item: ListItem, setStatus: (
       </span>
       <span className='flex gap-4 items-center justify-end'>
         <Time expected={item.expectedDuration} elapsed={item.elapsedDuration} status={item.status} setStatus={setStatus} />
-        <More />
+        <More deleteItem={_deleteItem} />
       </span>
     </div>
   );

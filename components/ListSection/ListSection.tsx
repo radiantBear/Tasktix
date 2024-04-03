@@ -29,6 +29,14 @@ export default function ListSection({ id, name, listItems }: { id: string, name:
     setItems(newItems);
   }
 
+  function deleteItem(id: string) {
+    const newItems = structuredClone(items);
+    for(let i = 0; i < newItems.length; i++)
+      if(newItems[i].id == id)
+        newItems.splice(i, 1);
+    setItems(newItems);
+  }
+
   return (
     <div className='rounded-md w-100 overfLow-hidden border-1 border-content3 box-border'>
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
@@ -37,7 +45,7 @@ export default function ListSection({ id, name, listItems }: { id: string, name:
           <AddItem sectionId={id} addItem={addItem} />
         </span>
       </div>
-      {items.map(item => <Item key={item.id} item={item} setStatus={setStatus.bind(null, item.id)} />)}
+      {items.map(item => <Item key={item.id} item={item} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} />)}
     </div>
   )
 }
