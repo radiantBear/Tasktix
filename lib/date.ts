@@ -76,3 +76,20 @@ export function dateToInput(date: Date): string {
 
   return `${year}-${month}-${day}`;
 }
+
+export function inputToTime(time: string): Date {
+  const [hours, minutes] = time.split(':');
+  return new Date(0, 0, 0, Number(hours), Number(minutes));
+}
+
+export function timeToInput(time: Date): string {
+  let hours = time.getUTCHours().toString();
+  let minutes = time.getUTCMinutes().toString();
+
+  if(hours.length < 2)
+    hours = '0' + hours;
+  if(minutes.length < 2)
+    minutes = '0' + minutes;
+
+  return `${hours}:${minutes}`;
+}

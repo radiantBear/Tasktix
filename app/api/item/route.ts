@@ -15,6 +15,7 @@ export async function POST(request: Request) {
   const dueDate = new Date(requestBody.dueDate);
   const priority = requestBody.priority;
   const sectionId = requestBody.sectionId;
+  const expectedDuration = new Date(requestBody.duration);
   
   if(!name)
     return ClientError.BadRequest('Item name is required');
@@ -26,9 +27,11 @@ export async function POST(request: Request) {
     return ClientError.BadRequest('Invalid priority');
   if(!sectionId)
     return ClientError.BadRequest('Invalid section ID');
+  if(!expectedDuration)
+    return ClientError.BadRequest('Invalid expected duration');
   
 
-  const listItem = new ListItem(name, new Date(0), { priority, dateDue: dueDate });
+  const listItem = new ListItem(name, expectedDuration, { priority, dateDue: dueDate });
 
   const result = await createListItem(sectionId, listItem);
 
