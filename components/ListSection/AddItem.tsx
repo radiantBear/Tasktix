@@ -1,9 +1,11 @@
+import { api } from '@/lib/api';
 import { dateToInput, inputToDate } from '@/lib/date'
 import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
+import { addSnackbar } from '../Snackbar';
 
-export default function AddItem() {
+export default function AddItem({ sectionId }: { sectionId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection}>({name: '', dueDate: new Date(), priority: new Set(['Low'])});
   const focusInput = useRef<HTMLInputElement | null>(null);
@@ -21,6 +23,12 @@ export default function AddItem() {
   }
   function setPriority(priority: Selection): void {
     setValues({name: values.name, dueDate: values.dueDate, priority});
+  }
+
+  function addItem() {
+    api.post('/item', { ...values, sectionId, priority: values.priority != 'all' && values.priority.keys().next().value })
+      .then(res => addSnackbar(res.message, 'success'))
+      .catch(err => addSnackbar(err.message, 'error'));
   }
 
   return (
@@ -63,7 +71,7 @@ export default function AddItem() {
             <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
             <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
           </Select>
-          <Button onPress={() => alert(values.dueDate)} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
+          <Button onPress={addItem} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
         </span>
       </span>
       <Button variant='ghost' isIconOnly onPress={() => setIsOpen(!isOpen)} color={isOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isOpen ? ' -rotate-45' : ''}`}/></Button>

@@ -3,7 +3,7 @@ import {default as ItemType} from '@/lib/model/item';
 import Item from './Item';
 import AddItem from './AddItem';
 
-export default function ListSection({ name, listItems }: { name: string, listItems: ItemType[] }) {
+export default function ListSection({ id, name, listItems }: { id: string, name: string, listItems: ItemType[] }) {
   const startingItems: {[key: string]: ItemType['status']} = {};
   
   for(const item of listItems)
@@ -29,7 +29,7 @@ export default function ListSection({ name, listItems }: { name: string, listIte
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
         <span>{name}</span>
         <span className='flex gap-4'>
-          <AddItem />
+          <AddItem sectionId={id} />
         </span>
       </div>
       {listItems.map(item => <Item key={item.id} item={item} status={items[item.id]} setIsComplete={setIsComplete.bind(null, item.id)} setStatus={setStatus.bind(null, item.id)} />)}

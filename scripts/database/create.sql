@@ -35,11 +35,11 @@ CREATE TABLE `items` (
   `i_isUnclear` boolean NOT NULL DEFAULT 0,
   `i_expectedDuration` time NOT NULL,
   `i_elapsedDuration` time NOT NULL DEFAULT '00:00:00',
-  `i_parentId` char(16) NOT NULL,
+  `i_parentId` char(16) NULL DEFAULT NULL,
   `i_ls_id` char(16) NOT NULL,
   `i_dateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `i_dateDue` datetime NOT NULL,
-  `i_dateStarted` datetime NOT NULL,
+  `i_dateStarted` datetime NULL DEFAULT NULL,
   FOREIGN KEY (`i_parentId`) REFERENCES `items` (`i_id`),
   FOREIGN KEY (`i_ls_id`) REFERENCES `listSections` (`ls_id`)
 );
@@ -65,11 +65,11 @@ CREATE TABLE `listMembers` (
 );
 
 CREATE TABLE `itemAssignees` (
-  `lm_u_id` char(16) NOT NULL,
-  `lm_i_id` char(16) NOT NULL,
-  `lm_role` varchar(64) NOT NULL,
-  `lm_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
-  PRIMARY KEY (`lm_u_id`, `lm_i_id`),
-  FOREIGN KEY (`lm_u_id`) REFERENCES `users` (`u_id`),
-  FOREIGN KEY (`lm_i_id`) REFERENCES `items` (`i_id`)
+  `ia_u_id` char(16) NOT NULL,
+  `ia_i_id` char(16) NOT NULL,
+  `ia_role` varchar(64) NOT NULL,
+  `ia_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
+  PRIMARY KEY (`ia_u_id`, `ia_i_id`),
+  FOREIGN KEY (`ia_u_id`) REFERENCES `users` (`u_id`),
+  FOREIGN KEY (`ia_i_id`) REFERENCES `items` (`i_id`)
 );

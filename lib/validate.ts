@@ -37,3 +37,9 @@ export function validateListSectionName(name: string): [boolean, string] {
     
     return [name == name, name];
 }
+
+export function validateListItemName(name: string): [boolean, string] {
+    name = name.substring(0, 128);
+    
+    return [name == name, name];
+}
