@@ -9,9 +9,10 @@ import ListItem from '@/lib/model/listItem';
 export default function AddItem({ sectionId, addItem }: { sectionId: string, addItem: (_: ListItem) => any }) {
   const zeroMin = new Date();
   zeroMin.setTime(0);
+  const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: zeroMin};
 
   const [isOpen, setIsOpen] = useState(false);
-  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: Date}>({name: '', dueDate: new Date(), priority: new Set(['Low']), duration: zeroMin});
+  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: Date}>(startingInputValues);
   const focusInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -36,6 +37,8 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
     api.post('/item', { ...values, sectionId, priority })
       .then(res => {
+        setValues(startingInputValues);
+
         const id = res.content?.split('/').at(-1);
         const item = new ListItem(values.name, values.duration, { priority, dateDue: values.dueDate, id });
         addItem(item);
