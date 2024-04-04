@@ -41,7 +41,32 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
           <Button onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.map(item => <Item key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      {items.sort(sortItems).map(item => <Item key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
+}
+
+function sortItems(a: ListItem, b: ListItem): number {
+  if(a.status == 'Completed' && b.status != 'Completed')
+    return 1;
+  if(b.status == 'Completed' && a.status != 'Completed')
+    return -1;
+
+  if(a.dateDue > b.dateDue)
+    return 1;
+  if(b.dateDue > a.dateDue)
+    return -1;
+
+  if(
+    (a.priority == 'Low' && (b.priority == 'Medium' || b.priority == 'High'))
+    || (a.priority == 'Medium' && b.priority == 'High') 
+  )
+    return 1;
+  if(
+    (b.priority == 'Low' && (a.priority == 'Medium' || a.priority == 'High'))
+    || (b.priority == 'Medium' && a.priority == 'High') 
+  )
+    return -1;
+
+  return 0;
 }
