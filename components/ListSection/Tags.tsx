@@ -13,28 +13,37 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
   const [tags, setTags] = useState<TagModel[]>(JSON.parse(initialTags));
   const [newTagValue, setNewTagValue] = useState('');
 
-  function linkTag(tagId: string) {
-    api.post(`/item/${itemId}/tag/${tagId}`, {})
+  function linkTag(id: string, name?: string, color?: Color) {
+    api.post(`/item/${itemId}/tag/${id}`, {})
       .then(res => {
         addSnackbar(res.message, 'success');
 
+        // Add the tag
         const newTags = structuredClone(tags);
-        newTags.push(new TagModel(newTagValue, 'Red', res.content));
-        setTags(newTags);
 
-        setNewTagValue('');
+        if(!name || !color){
+          const tag = tagsAvailable.find(tag => tag.id == id);
+          if(!tag)
+            throw Error('Could not find tag with id '+id);
+
+          newTags.push(new TagModel(tag.name, tag.color, id));
+        }
+        else
+          newTags.push(new TagModel(name, color, id));
+        
+        setTags(newTags);
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  function unlinkTag(tagId: string) {
-    api.delete(`/item/${itemId}/tag/${tagId}`)
+  function unlinkTag(id: string) {
+    api.delete(`/item/${itemId}/tag/${id}`)
       .then(res => {
         addSnackbar(res.message, 'success');
 
         const newTags = structuredClone(tags);
         for(let i = 0; i < newTags.length; i++)
-          if(newTags[i].id == tagId)
+          if(newTags[i].id == id)
             newTags.splice(i, 1);
         setTags(newTags);
       })
@@ -43,7 +52,8 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
 
   async function linkNewTag() {
     const id = await addNewTag(newTagValue, 'Red');
-    linkTag(id);
+    linkTag(id, newTagValue, 'Red');
+    setNewTagValue('');
   }
 
   return (
@@ -67,7 +77,7 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
                 return (
                   <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
                     {tag.name}
-                    <Button onPress={linkTag.bind(null, tag.id)} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Plus /></Button>
+                    <Button onPress={linkTag.bind(null, tag.id, undefined, undefined)} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Plus /></Button>
                   </div>
                 );
             })
