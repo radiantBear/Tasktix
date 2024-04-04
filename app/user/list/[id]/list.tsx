@@ -35,7 +35,7 @@ export default function List({ startingList }: { startingList: string }) {
   
   return (
     <>
-      {list.sections.map(section => <ListSection key={section.id} id={section.id} name={section.name} listItems={JSON.stringify(section.items)} deleteSection={deleteListSection.bind(null, section.id)} />)}
+      {list.sections.map(section => <ListSection key={section.id} id={section.id} name={section.name} listId={list.id} listItems={JSON.stringify(section.items)} deleteSection={deleteListSection.bind(null, section.id)} />)}
       <AddListSection listId={list.id} addListSection={addListSection} />
     </>
   );

@@ -13,7 +13,7 @@ export default function AddListSection({ listId, addListSection }: { listId: str
     api.post(`/list/${listId}/section`, { name })
       .then(res => {
         const id = res.content?.split('/').at(-1);
-        addListSection(new ListSection(name, id));
+        addListSection(new ListSection(name, [], id));
         setName('');
       })
       .catch(err => addSnackbar(err.message, 'error'));

@@ -43,3 +43,19 @@ export function validateListItemName(name: string): [boolean, string] {
     
     return [name == name, name];
 }
+
+export function validateColor(color: string): boolean {
+    return [
+        'Pink', 
+        'Red', 
+        'Orange', 
+        'Amber', 
+        'Yellow', 
+        'Lime', 
+        'Green', 
+        'Emerald', 
+        'Cyan', 
+        'Blue', 
+        'Violet'
+    ].includes(color);
+}

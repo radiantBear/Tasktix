@@ -48,8 +48,16 @@ CREATE TABLE `tags` (
   `t_id` char(16) NOT NULL PRIMARY KEY,
   `t_name` varchar(32) NOT NULL,
   `t_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
-  `t_i_id` char(16) NOT NULL,
-  FOREIGN KEY (`t_i_id`) REFERENCES `items` (`i_id`)
+  `t_l_id` char(16) NOT NULL,
+  FOREIGN KEY (`t_l_id`) REFERENCES `lists` (`l_id`)
+);
+
+CREATE TABLE `itemTags` (
+  `it_i_id` char(16) NOT NULL,
+  `it_t_id` char(16) NOT NULL,
+  PRIMARY KEY (`it_i_id`, `it_t_id`),
+  FOREIGN KEY (`it_i_id`) REFERENCES `items` (`i_id`),
+  FOREIGN KEY (`it_t_id`) REFERENCES `tags` (`t_id`)
 );
 
 CREATE TABLE `listMembers` (

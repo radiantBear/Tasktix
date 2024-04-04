@@ -47,5 +47,10 @@ const config: Config = {
       }
     }
   })],
+  safelist: [
+    {
+      pattern: /bg-(red|green|blue|orange)-(100|500|700)/,
+    }
+  ]
 };
 export default config;

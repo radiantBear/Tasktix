@@ -4,6 +4,7 @@ import { DB_User } from './user';
 import { execute } from './db_connect';
 import ListItem, { Priority, Status } from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
+import Tag from '@/lib/model/tag';
 import { RowDataPacket } from 'mysql2';
 
 export interface DB_Tag extends RowDataPacket {
@@ -68,6 +69,50 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
   `;
   
   const result = await execute(sql, { sectionId, ...listItem });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
+export async function createTag(listId: string, tag: Tag): Promise<boolean> {
+  const sql = `
+    INSERT INTO \`tags\`(
+      \`t_id\`,
+      \`t_name\`,
+      \`t_color\`,
+      \`t_l_id\`
+    )
+    VALUES (
+      :id,
+      :name,
+      :color,
+      :listId
+    );
+  `;
+  
+  const result = await execute(sql, { listId, ...tag });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
+export async function linkTag(itemId: string, tagId: string): Promise<boolean> {
+  const sql = `
+    INSERT INTO \`itemTags\`(
+      \`it_i_id\`,
+      \`it_t_id\`
+    )
+    VALUES (
+      :itemId,
+      :tagId
+    );
+  `;
+  
+  const result = await execute(sql, { itemId, tagId });
   
   if(!result)
     return false;
