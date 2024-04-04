@@ -78,10 +78,10 @@ export function mergeListItems(original: ListItem[]): ListItem[] {
 
   for(const item of original) {
     if(accumulator.at(-1)?.id == item.id) {
-      accumulator.at(-1)?.assignees.splice(-1, 0, ...item.assignees)
-        .filter((item: Assignee, index: number, arr: Assignee[]) => arr.indexOf(item) == index);
-      accumulator.at(-1)?.tags.splice(-1, 0, ...item.tags)
-        .filter((item: Tag, index: number, arr: Tag[]) => arr.indexOf(item) == index);
+      accumulator.at(-1)?.assignees.push(...item.assignees);
+      accumulator.at(-1)?.assignees.filter((item: Assignee, index: number, arr: Assignee[]) => arr.indexOf(item) == index);
+      accumulator.at(-1)?.tags.push(...item.tags);
+      accumulator.at(-1)?.tags.filter((item: Tag, index: number, arr: Tag[]) => arr.indexOf(item) == index);
     }
     else
       accumulator.push(item);

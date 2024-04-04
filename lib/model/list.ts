@@ -50,8 +50,8 @@ export function mergeLists(original: List[]): List[] {
       // Merge new data into list
       
       // Add any new members
-      last?.members.splice(-1, 0, ...current.members)
-        .filter((item: ListMember, index: number, arr: ListMember[]) => arr.indexOf(item) == index);
+      last?.members.push(...current.members);
+      last?.members.filter((item: ListMember, index: number, arr: ListMember[]) => arr.indexOf(item) == index);
       
       const lastSection = last?.sections.at(-1);
       if(lastSection && lastSection?.id == current.sections.at(0)?.id) {
@@ -60,7 +60,7 @@ export function mergeLists(original: List[]): List[] {
       } 
       else 
         // Add new list section
-        last?.sections.splice(-1, 0, ...current.sections);
+        last?.sections.push(...current.sections);
     }
     else
       // Add new list
