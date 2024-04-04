@@ -62,7 +62,8 @@ export async function getListById(id: string): Promise<List|false> {
       LEFT JOIN \`items\` ON \`items\`.\`i_ls_id\` = \`listSections\`.\`ls_id\`
       LEFT JOIN \`tags\` ON \`tags\`.\`t_i_id\` = \`items\`.\`i_id\`
       LEFT JOIN \`itemAssignees\` on \`itemAssignees\`.\`ia_i_id\`
-    WHERE \`l_id\` = :id;
+    WHERE \`l_id\` = :id
+    ORDER BY \`listSections\`.\`ls_name\` ASC;
   `;
 
   const result = await query<DB_List>(sql, { id });
