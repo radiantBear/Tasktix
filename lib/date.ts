@@ -78,8 +78,8 @@ export function dateToInput(date: Date): string {
 }
 
 export function inputToTime(time: string): Date {
-  const [hours, minutes] = time.split(':');
-  return new Date(0, 0, 0, Number(hours), Number(minutes));
+  const [hours, minutes, seconds] = time.split(':');
+  return new Date(0, 0, 0, Number(hours), Number(minutes), Number(seconds));
 }
 
 export function timeToInput(time: Date): string {

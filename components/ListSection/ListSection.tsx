@@ -7,22 +7,7 @@ import { TrashFill } from 'react-bootstrap-icons';
 import { Button } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
 
-export default function ListSection({ id, name, listItems, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, listItems: string, tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
-  const startingItemsFromJSON = JSON.parse(listItems);
-  const startingItems: ListItem[] = [];
-  for(const item of startingItemsFromJSON) {
-    startingItems.push(
-      new ListItem(item.name, item.expectedDuration, {
-        ...item,
-        expectedDuration: new Date(item.expectedDuration),
-        elapsedDuration: new Date(item.elapsedDuration),
-        dateCreated: new Date(item.dateCreated),
-        dateDue: new Date(item.dateDue),
-        dateStarted: new Date(item.dateStarted)
-      })
-    );
-  }
-
+export default function ListSection({ id, name, startingItems, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItem[], tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
   const [items, setItems] = useState<ListItem[]>(startingItems);
 
   function setStatus(id: string, status: ListItem['status']) {

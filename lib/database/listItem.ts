@@ -27,8 +27,8 @@ export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_status: Status;
   i_priority: Priority;
   i_isUnclear: boolean;
-  i_expectedDuration: Date;
-  i_elapsedDuration: Date;
+  i_expectedDuration: string;
+  i_elapsedDuration: string;
   i_parentId: string;
   i_ls_id: string;
   i_dateCreated: Date;

@@ -10,7 +10,18 @@ import Color from '@/lib/model/color';
 import { useState } from 'react';
 
 export default function List({ startingList, startingTagsAvailable }: { startingList: string, startingTagsAvailable: string }) {
-  const [list, setList] = useState<ListModel>(JSON.parse(startingList));
+  const builtList: ListModel = JSON.parse(startingList);
+  for(const section of builtList.sections) {
+    for(const item of section.items) {
+      item.dateCreated = new Date(item.dateCreated);
+      item.dateDue = new Date(item.dateDue);
+      item.dateStarted = item.dateStarted ? new Date(item.dateStarted) : null;
+      item.expectedDuration = new Date(item.expectedDuration);
+      item.elapsedDuration = new Date(item.elapsedDuration);
+    }
+  }
+  
+  const [list, setList] = useState<ListModel>(builtList);
   const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(JSON.parse(startingTagsAvailable));
 
   function addNewTag(name: string, color: Color) {
@@ -53,7 +64,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   
   return (
     <>
-      {list.sections.map(section => <ListSection key={section.id} id={section.id} name={section.name} listItems={JSON.stringify(section.items)} tagsAvailable={tagsAvailable} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
+      {list.sections.map(section => <ListSection key={section.id} id={section.id} name={section.name} startingItems={section.items} tagsAvailable={tagsAvailable} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
       <AddListSection listId={list.id} addListSection={addListSection} />
     </>
   );

@@ -2,6 +2,7 @@ import Assignee, { extractAssigneeFromRow } from './assignee';
 import { generateId } from '@/lib/generateId';
 import { DB_ListItem } from '@/lib/database/listItem';
 import Tag, { extractTagFromRow } from './tag';
+import { inputToTime } from '../date';
 
 export type Status = 'Unstarted'|'In Progress'|'Paused'|'Completed';
 export type Priority = 'Low'|'Medium'|'High';
@@ -56,12 +57,12 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
 
   const listItem = new ListItem(
     row.i_name,
-    new Date(row.i_expectedDuration),
+    inputToTime(row.i_expectedDuration),
     { id: row.i_id,
       status: row.i_status,
       priority: row.i_priority,
       isUnclear: row.i_isUnclear,
-      elapsedDuration: new Date(row.i_elapsedDuration),
+      elapsedDuration: inputToTime(row.i_elapsedDuration),
       dateCreated: new Date(row.i_dateCreated),
       dateDue: new Date(row.i_dateDue),
       dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,
