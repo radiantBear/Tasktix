@@ -3,7 +3,7 @@
 import { ReactNode, useState } from "react";
 import { Button, Input, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link } from "@nextui-org/react";
 import { CalendarMinus, Check, Sliders2, StopwatchFill, SortUpAlt, Plus } from "react-bootstrap-icons";
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { api } from "@/lib/api";
 import { addSnackbar } from "@/components/Snackbar";
 import { setTimeout } from "timers";
@@ -38,9 +38,12 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
 
   return (
     <aside className='w-48 bg-content1 p-4 flex flex-col gap-4'>
-      <NavItem name='Today' link='/user' isActive={false} />
+      <NavItem name='Today' link='/user' />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
-        {lists.sort((a, b) => a.name > b.name ? 1 : 0).map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} isActive={true} endContent={<ListSettings />} />)}
+        {
+          lists.sort((a, b) => a.name > b.name ? 1 : 0)
+            .map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} endContent={<ListSettings />} />)
+        }
         {addingList ? <NewItem finalize={finalizeNew} remove={removeNew} /> : <></>}
       </NavSection>
     </aside>
@@ -58,9 +61,12 @@ function NavSection({ name, endContent, children }: { name: string, endContent?:
   );
 }
 
-export function NavItem({ name, link, endContent, isActive }: { name: string, link: string, endContent?: ReactNode, isActive: boolean }) {
+export function NavItem({ name, link, endContent }: { name: string, link: string, endContent?: ReactNode }) {
+  const pathname = usePathname();
+  const isActive = pathname == link;
+
   return (
-    <span className={`pl-2 flex items-center justify-between${isActive ? ' border-l-2 border-primary' : ''} text-sm`}>
+    <span className={`pl-2 flex items-center justify-between border-l-2${isActive ? ' border-primary' : ' border-transparent'} text-sm`}>
       <Link href={link} color='foreground' >{name}</Link>
       {endContent}
     </span>
