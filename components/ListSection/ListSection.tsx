@@ -9,14 +9,16 @@ export default function ListSection({ id, name, listItems, deleteSection }: { id
   const startingItemsFromJSON = JSON.parse(listItems);
   const startingItems: ListItem[] = [];
   for(const item of startingItemsFromJSON) {
-    new ListItem(item.name, item.expectedDuration, {
-      ...item,
-      expectedDuration: new Date(item.expectedDuration),
-      elapsedDuration: new Date(item.elapsedDuration),
-      dateCreated: new Date(item.dateCreated),
-      dateDue: new Date(item.dateDue),
-      dateStarted: new Date(item.dateStarted)
-    });
+    startingItems.push(
+      new ListItem(item.name, item.expectedDuration, {
+        ...item,
+        expectedDuration: new Date(item.expectedDuration),
+        elapsedDuration: new Date(item.elapsedDuration),
+        dateCreated: new Date(item.dateCreated),
+        dateDue: new Date(item.dateDue),
+        dateStarted: new Date(item.dateStarted)
+      })
+    );
   }
 
   const [items, setItems] = useState<ListItem[]>(startingItems);
