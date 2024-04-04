@@ -17,7 +17,7 @@ export async function POST(request: Request, { params }: { params: {id: string} 
   if(!validateListSectionName(name))
     return ClientError.BadRequest('Invalid section name');
   
-  const listSection = new ListSection(name);
+  const listSection = new ListSection(name, []);
 
   const result = await createListSection(params.id, listSection);
 
