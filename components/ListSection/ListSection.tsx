@@ -2,8 +2,10 @@ import { useState } from 'react';
 import Item from './Item';
 import AddItem from './AddItem';
 import ListItem from '@/lib/model/listItem';
+import { TrashFill } from 'react-bootstrap-icons';
+import { Button } from '@nextui-org/react';
 
-export default function ListSection({ id, name, listItems }: { id: string, name: string, listItems: string }) {
+export default function ListSection({ id, name, listItems, deleteSection }: { id: string, name: string, listItems: string, deleteSection: () => any }) {
   const startingItemsFromJSON = JSON.parse(listItems);
   const startingItems: ListItem[] = [];
   for(const item of startingItemsFromJSON) {
@@ -47,6 +49,7 @@ export default function ListSection({ id, name, listItems }: { id: string, name:
         <span>{name}</span>
         <span className='flex gap-4'>
           <AddItem sectionId={id} addItem={addItem} />
+          <Button onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
       {items.map(item => <Item key={item.id} item={item} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} />)}
