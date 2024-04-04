@@ -133,3 +133,18 @@ export async function deleteListItem(id: string): Promise<boolean> {
   
   return true;
 }
+
+export async function unlinkTag(itemId: string, tagId: string): Promise<boolean> {
+  const sql = `
+    DELETE FROM \`itemTags\`
+    WHERE \`it_i_id\` = :itemId
+      AND \`it_t_id\` = :tagId;
+  `;
+  
+  const result = await execute(sql, { itemId, tagId });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}

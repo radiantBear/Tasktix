@@ -27,6 +27,20 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
+  function unlinkTag(tagId: string) {
+    api.delete(`/item/${itemId}/tag/${tagId}`)
+      .then(res => {
+        addSnackbar(res.message, 'success');
+
+        const newTags = structuredClone(tags);
+        for(let i = 0; i < newTags.length; i++)
+          if(newTags[i].id == tagId)
+            newTags.splice(i, 1);
+        setTags(newTags);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
   async function linkNewTag() {
     const id = await addNewTag(newTagValue, 'Red');
     linkTag(id);
@@ -43,7 +57,7 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
             tags.map(tag => (
               <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
                 {tag.name}
-                <Button variant='flat' color='danger' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><X /></Button>
+                <Button onPress={unlinkTag.bind(null, tag.id)} variant='flat' color='danger' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><X /></Button>
               </div>
             ))
           }
