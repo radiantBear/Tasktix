@@ -1,9 +1,13 @@
+export function getDateDiff(a: Date, b: Date): number {
+  return a.getTime() - b.getTime();
+}
+
 export function getDayOffset(date: Date): number {
   const day = 1000 * 60 * 60 * 24;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return Math.trunc((date.getTime() - today.getTime()) / day);
+  return Math.trunc(getDateDiff(date, today) / day);
 }
 
 export function formatDate(date: Date): string {

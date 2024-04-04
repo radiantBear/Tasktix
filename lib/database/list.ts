@@ -65,7 +65,7 @@ export async function getListById(id: string): Promise<List|false> {
       LEFT JOIN \`items\` ON \`items\`.\`i_ls_id\` = \`listSections\`.\`ls_id\`
       LEFT JOIN \`itemTags\` ON \`itemTags\`.\`it_i_id\` = \`items\`.\`i_id\`
       LEFT JOIN \`tags\` ON \`tags\`.\`t_id\` = \`itemTags\`.\`it_t_id\`
-      LEFT JOIN \`itemAssignees\` on \`itemAssignees\`.\`ia_i_id\`
+      LEFT JOIN \`itemAssignees\` ON \`itemAssignees\`.\`ia_i_id\` = \`items\`.\`i_id\`
     WHERE \`l_id\` = :id
     ORDER BY \`listSections\`.\`ls_name\` ASC;
   `;

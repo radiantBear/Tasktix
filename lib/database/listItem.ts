@@ -1,8 +1,8 @@
 'use server';
 
 import { DB_User } from './user';
-import { execute } from './db_connect';
-import ListItem, { Priority, Status } from '@/lib/model/listItem';
+import { execute, query } from './db_connect';
+import ListItem, { Priority, Status, extractListItemFromRow, mergeListItems } from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import { RowDataPacket } from 'mysql2';
@@ -100,6 +100,24 @@ export async function createTag(listId: string, tag: Tag): Promise<boolean> {
   return true;
 }
 
+export async function getListItemById(id: string): Promise<ListItem|false> {
+  const sql = `
+    SELECT * FROM \`items\`
+      LEFT JOIN \`itemTags\` ON \`itemTags\`.\`it_i_id\` = \`items\`.\`i_id\`
+      LEFT JOIN \`tags\` ON \`tags\`.\`t_id\` = \`itemTags\`.\`it_t_id\`
+      LEFT JOIN \`itemAssignees\` ON \`itemAssignees\`.\`ia_i_id\` = \`items\`.\`i_id\`
+    WHERE \`i_id\` = :id
+    ORDER BY \`tags\`.\`t_name\` ASC;
+  `;
+
+  const result = await query<DB_ListItem>(sql, { id });
+
+  if(!result)
+    return false;
+
+  return mergeListItems(result.map(extractListItemFromRow))[0];
+}
+
 export async function linkTag(itemId: string, tagId: string): Promise<boolean> {
   const sql = `
     INSERT INTO \`itemTags\`(
@@ -117,6 +135,29 @@ export async function linkTag(itemId: string, tagId: string): Promise<boolean> {
   if(!result)
     return false;
   
+  return true;
+}
+
+export async function updateListItem(item: ListItem): Promise<boolean> {
+  const sql = `
+    UPDATE \`items\` SET 
+      \`i_name\` = :name,
+      \`i_status\` = :status,
+      \`i_priority\` = :priority,
+      \`i_isUnclear\` = :isUnclear,
+      \`i_expectedDuration\` = :expectedDuration,
+      \`i_elapsedDuration\` = :elapsedDuration,
+      \`i_dateCreated\` = :dateCreated,
+      \`i_dateDue\` = :dateDue,
+      \`i_dateStarted\` = :dateStarted
+    WHERE \`i_id\` = :id;
+  `;
+  
+  const result = await execute(sql, { ...item });
+
+  if(!result)
+    return false;
+
   return true;
 }
 

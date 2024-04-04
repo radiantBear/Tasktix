@@ -12,7 +12,7 @@ export const api = {
   },
 
   patch(resource: string, data: string|object, encodingType: string = 'application/json') {
-    return request(resource, 'PATCH', data, encodingType);
+    return request(resource, 'PATCH', JSON.stringify(data), encodingType);
       
   },
 
