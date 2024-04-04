@@ -88,3 +88,24 @@ export async function getListsByUser(id: string): Promise<List[]|false> {
 
   return mergeLists(result.map(extractListFromRow));
 }
+
+export async function deleteList(id: string): Promise<boolean> {
+  let sql = `
+    DELETE FROM \`listMembers\` 
+    WHERE \`lm_l_id\` = :id;
+  `;
+  
+  let result = await execute(sql, { id });
+  if(!result)
+    return false;
+
+  sql = `
+  DELETE FROM \`lists\`
+  WHERE \`l_id\` = :id;
+  `;
+  result = await execute(sql, { id });
+  if(!result)
+    return false;
+  
+  return true;
+}
