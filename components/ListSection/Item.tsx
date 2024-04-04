@@ -1,6 +1,8 @@
 import { Checkbox } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
 import ListItem from '@/lib/model/listItem';
+import Color from '@/lib/model/color';
+import Tag from '@/lib/model/tag';
 import More from './More';
 import Tags from './Tags';
 import Time from './Time';
@@ -9,7 +11,7 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 
-export default function Item({ listId, item, setStatus, deleteItem }: { listId: string, item: ListItem, setStatus: (status: ListItem['status']) => void, deleteItem: () => any }) {  
+export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNewTag }: { item: ListItem, tagsAvailable: Tag[], setStatus: (status: ListItem['status']) => void, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const isComplete = item.status == 'Completed';
 
   function _deleteItem() {
@@ -30,7 +32,7 @@ export default function Item({ listId, item, setStatus, deleteItem }: { listId: 
           <span className={`text-xs ${isComplete ? 'text-secondary/50 line-through' : 'text-secondary'}`}>Due {formatDate(item.dateDue)}</span>
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} />
-        <Tags listId={listId} itemId={item.id} initialTags={JSON.stringify(item.tags)} isComplete={isComplete} />
+        <Tags itemId={item.id} initialTags={JSON.stringify(item.tags)} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
         <Users assignees={item.assignees} isComplete={isComplete} />
       </span>
       <span className='flex gap-4 items-center justify-end'>

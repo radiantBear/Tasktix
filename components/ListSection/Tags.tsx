@@ -5,10 +5,11 @@ import { getTextColor } from '@/lib/color';
 import TagModel from '@/lib/model/tag';
 import { Button, Chip, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import { useState } from 'react';
-import { X, Check, Tags as TagsIcon } from 'react-bootstrap-icons';
+import { X, Check, Plus, Tags as TagsIcon } from 'react-bootstrap-icons';
 import { addSnackbar } from '../Snackbar';
+import Color from '@/lib/model/color';
 
-export default function Tags({ listId, itemId, initialTags, isComplete }: { listId: string, itemId: string, initialTags: string, isComplete: boolean }) {
+export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: string, isComplete: boolean, tagsAvailable: TagModel[], addNewTag: (name: string, color: Color) => any }) {
   const [tags, setTags] = useState<TagModel[]>(JSON.parse(initialTags));
   const [newTagValue, setNewTagValue] = useState('');
 
@@ -25,14 +26,10 @@ export default function Tags({ listId, itemId, initialTags, isComplete }: { list
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
-  
-  function addNewTag() {
-    api.post(`/list/${listId}/tag`, { name: newTagValue, color: 'Red' })
-      .then(res => {
-        const id = res.content?.split('/').at(-1) || '';
-        linkTag(id);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
+
+  async function linkNewTag() {
+    const id = await addNewTag(newTagValue, 'Red');
+    linkTag(id);
   }
 
   return (
@@ -42,15 +39,28 @@ export default function Tags({ listId, itemId, initialTags, isComplete }: { list
           <Button variant='flat' isIconOnly className='bg-transparent hover:bg-foreground/10'><TagsIcon /></Button>
         </PopoverTrigger>
         <PopoverContent>
-          {tags.map(tag => (
-            <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
-              {tag.name}
-              <Button variant='flat' color='danger' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><X /></Button>
-            </div>
-          ))}
+          {
+            tags.map(tag => (
+              <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
+                {tag.name}
+                <Button variant='flat' color='danger' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><X /></Button>
+              </div>
+            ))
+          }
+          {
+            tagsAvailable.map(tag => {
+              if(!tags.some(usedTag => usedTag.id == tag.id))
+                return (
+                  <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
+                    {tag.name}
+                    <Button onPress={linkTag.bind(null, tag.id)} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Plus /></Button>
+                  </div>
+                );
+            })
+          }
           <div key='add' className='flex w-full p-1.5 pl-1 gap-2'>
             <Input variant='underlined' placeholder='Add tag...' className='w-24' size='sm' value={newTagValue} onValueChange={setNewTagValue} />
-            <Button onPress={addNewTag} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Check /></Button>
+            <Button onPress={linkNewTag} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Check /></Button>
           </div>
         </PopoverContent>
       </Popover>

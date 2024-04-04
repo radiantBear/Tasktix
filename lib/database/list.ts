@@ -1,9 +1,12 @@
 'use server';
 
+import { extractTagFromRow } from '../model/tag';
 import { execute, query } from './db_connect';
+import { DB_Tag } from './listItem';
 import { DB_ListSection } from './listSection';
 import { DB_User } from './user';
 import List, { extractListFromRow, mergeLists } from '@/lib/model/list';
+import Tag from '@/lib/model/tag';
 
 export interface DB_ListMember extends DB_User {
   la_l_id: string;
@@ -89,6 +92,21 @@ export async function getListsByUser(id: string): Promise<List[]|false> {
     return false;
 
   return mergeLists(result.map(extractListFromRow));
+}
+
+export async function getTagsByListId(id: string): Promise<Tag[]|false> {
+  const sql = `
+    SELECT * FROM \`tags\`
+    WHERE \`tags\`.\`t_l_id\` = :id
+    ORDER BY \`tags\`.\`t_name\` ASC;
+  `;
+  
+  const result = await query<DB_Tag>(sql, { id });
+  
+  if(!result)
+    return false;
+
+  return result.map(extractTagFromRow);
 }
 
 export async function deleteList(id: string): Promise<boolean> {

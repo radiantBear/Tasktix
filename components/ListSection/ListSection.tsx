@@ -2,10 +2,12 @@ import { useState } from 'react';
 import Item from './Item';
 import AddItem from './AddItem';
 import ListItem from '@/lib/model/listItem';
+import Color from '@/lib/model/color';
 import { TrashFill } from 'react-bootstrap-icons';
 import { Button } from '@nextui-org/react';
+import Tag from '@/lib/model/tag';
 
-export default function ListSection({ id, name, listId, listItems, deleteSection }: { id: string, name: string, listId: string, listItems: string, deleteSection: () => any }) {
+export default function ListSection({ id, name, listItems, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, listItems: string, tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
   const startingItemsFromJSON = JSON.parse(listItems);
   const startingItems: ListItem[] = [];
   for(const item of startingItemsFromJSON) {
@@ -54,7 +56,7 @@ export default function ListSection({ id, name, listId, listItems, deleteSection
           <Button onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.map(item => <Item listId={listId} key={item.id} item={item} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} />)}
+      {items.map(item => <Item key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
 }

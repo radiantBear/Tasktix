@@ -5,10 +5,28 @@ import { addSnackbar } from '@/components/Snackbar';
 import { api } from '@/lib/api';
 import { default as ListModel } from "@/lib/model/list";
 import { default as ListSectionModel } from "@/lib/model/listSection";
-import { useState } from "react";
+import Tag from '@/lib/model/tag';
+import Color from '@/lib/model/color';
+import { useState } from 'react';
 
-export default function List({ startingList }: { startingList: string }) {
+export default function List({ startingList, startingTagsAvailable }: { startingList: string, startingTagsAvailable: string }) {
   const [list, setList] = useState<ListModel>(JSON.parse(startingList));
+  const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(JSON.parse(startingTagsAvailable));
+
+  function addNewTag(name: string, color: Color) {
+    return new Promise((resolve, reject) => {
+      api.post(`/list/${list.id}/tag`, { name, color })
+        .then(res => {
+          const id = res.content?.split('/').at(-1) || '';
+          const newTags = structuredClone(tagsAvailable);
+          newTags.push(new Tag(name, color, id));
+          setTagsAvailable(newTags);
+
+          resolve(id);
+        })
+        .catch(err => reject(err));
+    });
+  }
   
   function addListSection(section: ListSectionModel) {
     if(!list)
@@ -35,7 +53,7 @@ export default function List({ startingList }: { startingList: string }) {
   
   return (
     <>
-      {list.sections.map(section => <ListSection key={section.id} id={section.id} name={section.name} listId={list.id} listItems={JSON.stringify(section.items)} deleteSection={deleteListSection.bind(null, section.id)} />)}
+      {list.sections.map(section => <ListSection key={section.id} id={section.id} name={section.name} listItems={JSON.stringify(section.items)} tagsAvailable={tagsAvailable} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
       <AddListSection listId={list.id} addListSection={addListSection} />
     </>
   );
