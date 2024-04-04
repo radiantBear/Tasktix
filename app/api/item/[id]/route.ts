@@ -15,6 +15,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   if(requestBody.status)
     item.status = requestBody.status;
+  if(requestBody.priority)
+    item.priority = requestBody.priority;
   if(requestBody.elapsedDuration)
     item.elapsedDuration = new Date(requestBody.elapsedDuration);
   if(requestBody.startTime !== undefined)

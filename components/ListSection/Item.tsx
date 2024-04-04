@@ -31,7 +31,7 @@ export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNe
           <span className={`text-sm ${isComplete ? 'line-through text-foreground/50' : ''}`}>{item.name}</span>
           <span className={`text-xs ${isComplete ? 'text-secondary/50 line-through' : 'text-secondary'}`}>Due {formatDate(item.dateDue)}</span>
         </div>
-        <Priority isComplete={isComplete} startingPriority={item.priority} />
+        <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
         <Tags itemId={item.id} initialTags={JSON.stringify(item.tags)} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
         <Users assignees={item.assignees} isComplete={isComplete} />
       </span>

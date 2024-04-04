@@ -42,7 +42,6 @@ export default function TimeGroup({ expected, elapsed, dateStarted, status, item
         addSnackbar(res.message, 'success');
         lastTime.current = new Date();
         clearTimeout(timer.current);
-        console.log(minute, elapsedLive.getTime(), minute - elapsedLive.getTime() % minute + 5)
         timer.current = setTimeout(updateTime.current, minute - elapsedLive.getTime() % minute + 5);
         setStatus('In Progress');
       })
@@ -51,7 +50,6 @@ export default function TimeGroup({ expected, elapsed, dateStarted, status, item
   
   function pauseRunning() {
     const newElapsed = new Date(storedElapsed.current.getTime() + getDateDiff(new Date(), lastTime.current));
-    console.log(newElapsed)
     api.patch(`/item/${itemId}`, { startTime: null, elapsedDuration: newElapsed, status: 'Paused' })
       .then(res => {
         addSnackbar(res.message, 'success');
