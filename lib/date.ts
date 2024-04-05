@@ -72,6 +72,20 @@ export function dateToInput(date: Date): string {
 }
 
 export function parseTime(time: string): number {
-  const [hours, minutes, seconds] = time.split(':');
-  return ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000;
+  const timeParts = time.split(':');
+
+  if(timeParts.length == 3) {
+    const [hours, minutes, seconds] = timeParts;
+    return ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000;
+  }
+  else if(timeParts.length == 2) {
+    const [hours, minutes] = timeParts;
+    return ((Number(hours) * 60 + Number(minutes)) * 60) * 1000;
+  }
+  else if(timeParts.length == 1) {
+    const [minutes] = timeParts;
+    return (Number(minutes) * 60) * 1000;
+  }
+
+  throw Error(`Invalid time to parse: ${time}`);
 }
