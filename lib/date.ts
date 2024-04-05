@@ -36,29 +36,19 @@ export function formatDate(date: Date): string {
     return date.toLocaleDateString('en-US', distant);
 }
 
-export function formatTime(time: Date): string {
-  // TODO: Fix bug for >24 hours
-  let hours: number|string = time.getUTCHours();
-  let minutes: number|string = time.getUTCMinutes();
-  let seconds = time.getUTCSeconds();
+export function formatTime(time: number): string {
+  let hours = Math.trunc(time / 3600000).toString();
+  let minutes = Math.round(time / 60000).toString();
 
-  if(seconds > 29)
-    minutes++;
-  if(minutes >= 60) {
-    minutes -= 60;
-    hours++;
-  }
-
-  if(hours < 1)
+  if(hours.length < 1)
     hours = '00';
-  else if(hours < 10)
+  else if(hours.length < 2)
     hours = '0'+hours;
 
-  if(minutes < 1)
+  if(minutes.length < 1)
     minutes = '00';
-  else if(minutes < 10)
+  else if(minutes.length < 2)
     minutes = '0'+minutes;
-  
 
   return `${hours}:${minutes}`;
 }
@@ -81,19 +71,7 @@ export function dateToInput(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export function inputToTime(time: string): Date {
+export function parseTime(time: string): number {
   const [hours, minutes, seconds] = time.split(':');
-  return new Date(0, 0, 0, Number(hours), Number(minutes), Number(seconds));
-}
-
-export function timeToInput(time: Date): string {
-  let hours = time.getUTCHours().toString();
-  let minutes = time.getUTCMinutes().toString();
-
-  if(hours.length < 2)
-    hours = '0' + hours;
-  if(minutes.length < 2)
-    minutes = '0' + minutes;
-
-  return `${hours}:${minutes}`;
+  return ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000;
 }

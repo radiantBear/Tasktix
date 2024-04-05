@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-import { dateToInput, inputToDate, inputToTime, timeToInput } from '@/lib/date'
+import { dateToInput, inputToDate, parseTime } from '@/lib/date'
 import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
@@ -9,10 +9,10 @@ import ListItem from '@/lib/model/listItem';
 export default function AddItem({ sectionId, addItem }: { sectionId: string, addItem: (_: ListItem) => any }) {
   const zeroMin = new Date();
   zeroMin.setTime(0);
-  const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: zeroMin};
+  const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: ''};
 
   const [isOpen, setIsOpen] = useState(false);
-  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: Date}>(startingInputValues);
+  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: string}>(startingInputValues);
   const focusInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -30,17 +30,18 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
     setValues({name: values.name, dueDate: values.dueDate, priority, duration: values.duration});
   }
   function setExpectedDuration(duration: string): void {
-    setValues({name: values.name, dueDate: values.dueDate, priority: new Set(values.priority), duration: inputToTime(duration)});
+    setValues({name: values.name, dueDate: values.dueDate, priority: new Set(values.priority), duration: duration});
   }
 
   function createItem() {
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
-    api.post('/item', { ...values, sectionId, priority })
+    const duration = parseTime(values.duration);
+    api.post('/item', { ...values, sectionId, priority, duration })
       .then(res => {
         setValues(startingInputValues);
 
         const id = res.content?.split('/').at(-1);
-        const item = new ListItem(values.name, values.duration, { priority, dateDue: values.dueDate, id });
+        const item = new ListItem(values.name, duration, { priority, dateDue: values.dueDate, id });
         addItem(item);
       })
       .catch(err => addSnackbar(err.message, 'error'));
@@ -89,8 +90,8 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
           </Select>
           <Input 
             label='Duration' 
-            type='time' 
-            value={timeToInput(values.duration)}
+            placeholder='hh:mm'
+            value={values.duration}
             onValueChange={setExpectedDuration}
             variant='underlined' 
             size='sm'

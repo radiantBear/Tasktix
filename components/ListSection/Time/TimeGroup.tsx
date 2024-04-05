@@ -5,15 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 import { api } from '@/lib/api';
 import { addSnackbar } from '@/components/Snackbar';
 
-export default function TimeGroup({ expected, elapsed, dateStarted, status, itemId, setStatus }: { expected: Date, elapsed: Date, status: ListItem['status'], dateStarted: Date|null, itemId: string, setStatus: (status: ListItem['status']) => void}) {
+export default function TimeGroup({ expected, elapsed, dateStarted, status, itemId, setStatus }: { expected: number, elapsed: number, status: ListItem['status'], dateStarted: Date|null, itemId: string, setStatus: (status: ListItem['status']) => void }) {
   const minute = 1000 * 60;
   const isComplete = status == 'Completed';
   
-  const lastTime = useRef(dateStarted || new Date());
-  const storedElapsed = useRef(elapsed);
   const timer = useRef<NodeJS.Timeout>();
   const updateTime = useRef(() => {});
-  const [elapsedLive, setElapsedLive] = useState(new Date(elapsed.getTime() + (dateStarted ? getDateDiff(new Date(), dateStarted) : 0)));
+  const lastTime = useRef(dateStarted || new Date());
+  const [elapsedLive, setElapsedLive] = useState(elapsed + (dateStarted ? Date.now() - dateStarted.getTime() : 0));
 
   // Stop timer if checkbox was pressed
   if(isComplete)
@@ -22,7 +21,7 @@ export default function TimeGroup({ expected, elapsed, dateStarted, status, item
   useEffect(() => {
     updateTime.current = () => {
       timer.current = setTimeout(() => updateTime.current(), minute);
-      setElapsedLive(new Date(elapsedLive.getTime() + (Date.now() - lastTime.current.getTime())));
+      setElapsedLive(elapsedLive + (Date.now() - lastTime.current.getTime()));
       lastTime.current = new Date();
     }
   });
@@ -32,7 +31,7 @@ export default function TimeGroup({ expected, elapsed, dateStarted, status, item
       clearTimeout(timer.current);
       timer.current = undefined;
       if(lastTime.current)
-        setElapsedLive(new Date(elapsedLive.getTime() + (Date.now() - lastTime.current.getTime())));
+        setElapsedLive(elapsedLive + (Date.now() - lastTime.current.getTime()));
     }
   }
 
@@ -42,19 +41,18 @@ export default function TimeGroup({ expected, elapsed, dateStarted, status, item
         addSnackbar(res.message, 'success');
         lastTime.current = new Date();
         clearTimeout(timer.current);
-        timer.current = setTimeout(updateTime.current, minute - elapsedLive.getTime() % minute + 5);
+        timer.current = setTimeout(updateTime.current, minute - elapsedLive % minute + 5);
         setStatus('In Progress');
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
   
   function pauseRunning() {
-    const newElapsed = new Date(storedElapsed.current.getTime() + getDateDiff(new Date(), lastTime.current));
-    api.patch(`/item/${itemId}`, { startTime: null, elapsedDuration: newElapsed, status: 'Paused' })
+    const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
+    api.patch(`/item/${itemId}`, { startTime: null, elapsedMs: newElapsed, status: 'Paused' })
       .then(res => {
         addSnackbar(res.message, 'success');
         stopRunning();
-        storedElapsed.current = newElapsed;
         setElapsedLive(newElapsed);   // Ensure any delay doesn't result in inaccurate time display
         setStatus('Paused');
       })

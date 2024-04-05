@@ -2,7 +2,6 @@ import Assignee, { extractAssigneeFromRow } from './assignee';
 import { generateId } from '@/lib/generateId';
 import { DB_ListItem } from '@/lib/database/listItem';
 import Tag, { extractTagFromRow } from './tag';
-import { inputToTime } from '../date';
 
 export type Status = 'Unstarted'|'In Progress'|'Paused'|'Completed';
 export type Priority = 'Low'|'Medium'|'High';
@@ -13,8 +12,8 @@ export default class ListItem {
   status: Status;
   priority: Priority;
   isUnclear: boolean;
-  expectedDuration: Date;
-  elapsedDuration: Date;
+  expectedMs: number;
+  elapsedMs: number;
   dateCreated: Date;
   dateDue: Date;
   dateStarted: Date|null;
@@ -22,9 +21,9 @@ export default class ListItem {
   tags: Tag[];
 
   constructor(
-    name: string, expectedDuration: Date, 
-    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedDuration = new Date(0), dateCreated = new Date(), dateDue = new Date(), dateStarted = null, assignees = [], tags = []}: 
-    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedDuration?: Date, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, assignees?: Assignee[], tags?: Tag[]}
+    name: string, expectedMs: number, 
+    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, assignees = [], tags = [] }:
+    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedMs?: number, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, assignees?: Assignee[], tags?: Tag[] }
   ) {
     if(!id)
       id = generateId();
@@ -34,8 +33,8 @@ export default class ListItem {
     this.status = status;
     this.priority = priority;
     this.isUnclear = !!isUnclear;
-    this.expectedDuration = expectedDuration;
-    this.elapsedDuration = elapsedDuration;
+    this.expectedMs = expectedMs;
+    this.elapsedMs = elapsedMs;
     this.dateCreated = dateCreated;
     this.dateDue = dateDue;
     this.dateStarted = dateStarted;
@@ -49,7 +48,7 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
     row.ia_role
       ? [extractAssigneeFromRow(row)]
       : [];
-    
+
   const tags = 
     row.t_id
       ? [extractTagFromRow(row)]
@@ -57,12 +56,12 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
 
   const listItem = new ListItem(
     row.i_name,
-    inputToTime(row.i_expectedDuration),
+    row.i_expectedMs,
     { id: row.i_id,
       status: row.i_status,
       priority: row.i_priority,
       isUnclear: row.i_isUnclear,
-      elapsedDuration: inputToTime(row.i_elapsedDuration),
+      elapsedMs: row.i_elapsedMs,
       dateCreated: new Date(row.i_dateCreated),
       dateDue: new Date(row.i_dateDue),
       dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,

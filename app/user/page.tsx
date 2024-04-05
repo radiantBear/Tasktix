@@ -46,19 +46,16 @@ export default function Page() {
     }
   ];
 
-  const zeroMin = new Date();
-  zeroMin.setTime(0);
-  const fiveMin = new Date();
-  fiveMin.setTime(5000*60);
-  const sixMin = new Date();
-  sixMin.setTime(6000*60);
+  const zeroMin = 0;
+  const fiveMin = 5000*60;
+  const sixMin = 6000*60;
 
   return (
     <main className='p-8 w-full flex flex-col gap-8'>
-      <ListSection id='' name='Phase 1' listItems={JSON.stringify([
-        {id: '1', name: 'Plant a garden', dateDue: new Date(), status: 'Completed', priority: 'High', isUnclear: false, tags: [{id: '1', name: 'Planting', color: 'Lime'}, {id: '2', name: 'Outdoors', color: 'Cyan'}, {id: '3', name: 'Fun', color: 'Pink'}, {id: '4', name: 'One time', color: 'Emerald'}], expectedDuration: sixMin, elapsedDuration: fiveMin, assignees: [assignees[0]]},
-        {id: '2', name: 'Water the garden', dateDue: tomorrow, status: 'Unstarted', priority: 'Low', isUnclear: false, tags: [{id: '2', name: 'Outdoors', color: 'Cyan'}], expectedDuration: fiveMin, elapsedDuration: zeroMin, assignees},
-      ])} />
+      <ListSection id='' name='Phase 1' startingItems={[
+        {id: '1', name: 'Plant a garden', dateDue: new Date(), status: 'Completed', priority: 'High', isUnclear: false, tags: [{id: '1', name: 'Planting', color: 'Lime'}, {id: '2', name: 'Outdoors', color: 'Cyan'}, {id: '3', name: 'Fun', color: 'Pink'}, {id: '4', name: 'One time', color: 'Emerald'}], expectedMs: sixMin, elapsedMs: fiveMin, assignees: [assignees[0]], dateCreated: new Date(), dateStarted: new Date()},
+        {id: '2', name: 'Water the garden', dateDue: tomorrow, status: 'Unstarted', priority: 'Low', isUnclear: false, tags: [{id: '2', name: 'Outdoors', color: 'Cyan'}], expectedMs: fiveMin, elapsedMs: zeroMin, assignees, dateCreated: new Date(), dateStarted: new Date()},
+      ]} tagsAvailable={[]} deleteSection={() => {}} addNewTag={() => {}} />
     </main>
   );
 }

@@ -27,8 +27,8 @@ export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_status: Status;
   i_priority: Priority;
   i_isUnclear: boolean;
-  i_expectedDuration: string;
-  i_elapsedDuration: string;
+  i_expectedMs: number;
+  i_elapsedMs: number;
   i_parentId: string;
   i_ls_id: string;
   i_dateCreated: Date;
@@ -44,8 +44,8 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
       \`i_status\`,
       \`i_priority\`,
       \`i_isUnclear\`,
-      \`i_expectedDuration\`,
-      \`i_elapsedDuration\`,
+      \`i_expectedMs\`,
+      \`i_elapsedMs\`,
       \`i_parentId\`,
       \`i_ls_id\`,
       \`i_dateCreated\`,
@@ -58,8 +58,8 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
       :status,
       :priority,
       :isUnclear,
-      :expectedDuration,
-      :elapsedDuration,
+      :expectedMs,
+      :elapsedMs,
       NULL,
       :sectionId,
       :dateCreated,
@@ -145,8 +145,8 @@ export async function updateListItem(item: ListItem): Promise<boolean> {
       \`i_status\` = :status,
       \`i_priority\` = :priority,
       \`i_isUnclear\` = :isUnclear,
-      \`i_expectedDuration\` = :expectedDuration,
-      \`i_elapsedDuration\` = :elapsedDuration,
+      \`i_expectedMs\` = :expectedMs,
+      \`i_elapsedMs\` = :elapsedMs,
       \`i_dateCreated\` = :dateCreated,
       \`i_dateDue\` = :dateDue,
       \`i_dateStarted\` = :dateStarted

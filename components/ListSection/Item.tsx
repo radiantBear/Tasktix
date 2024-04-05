@@ -47,7 +47,7 @@ export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNe
         <Users assignees={item.assignees} isComplete={isComplete} />
       </span>
       <span className='flex gap-4 items-center justify-end'>
-        <Time expected={item.expectedDuration} elapsed={item.elapsedDuration} dateStarted={item.dateStarted} status={item.status} itemId={item.id} setStatus={setStatus} />
+        <Time expected={item.expectedMs} elapsed={item.elapsedMs} dateStarted={item.dateStarted} status={item.status} itemId={item.id} setStatus={setStatus} />
         <More deleteItem={_deleteItem} />
       </span>
     </div>
