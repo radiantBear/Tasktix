@@ -72,7 +72,7 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
   return (
       <Popover placement='bottom' isOpen={isPopoverOpen} onOpenChange={open => {if(!isComplete) setIsPopoverOpen(open)}}>
         <PopoverTrigger>
-          <Card className={`px-2 w-1/4 flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer ${isComplete ? 'opacity-50' : 'hover:bg-foreground/10'}`}>
+          <Card className={`px-4 w-1/4 flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer ${isComplete ? 'opacity-50' : 'hover:bg-foreground/10'}`}>
             <TagsIcon className='mr-2 shrink-0' />
             {tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </Card>
