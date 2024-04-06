@@ -117,7 +117,7 @@ export default function Item({ item, tagsAvailable, setStatus, setCompleted, del
           <span className={`text-xs ${isComplete ? 'text-secondary/75' : 'text-secondary'}`}>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
-        <Tags itemId={item.id} initialTags={JSON.stringify(item.tags)} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
+        <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
         <Users assignees={item.assignees} isComplete={isComplete} />
       </span>
       <span className='flex gap-4 items-center justify-end'>

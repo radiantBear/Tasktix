@@ -1,5 +1,5 @@
 import { authorize } from "@/lib/security/authorize";
-import Sidebar, { ListSettings, NavItem } from "./sidebar";
+import Sidebar from "./sidebar";
 import { getListsByUser } from "@/lib/database/list";
 import { getUser } from "@/lib/session";
 

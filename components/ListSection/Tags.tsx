@@ -10,9 +10,9 @@ import { addSnackbar } from '../Snackbar';
 import Color from '@/lib/model/color';
 import ColorPicker from '../ColorPicker';
 
-export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: string, isComplete: boolean, tagsAvailable: TagModel[], addNewTag: (name: string, color: Color) => any }) {
+export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: TagModel[], isComplete: boolean, tagsAvailable: TagModel[], addNewTag: (name: string, color: Color) => any }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [tags, setTags] = useState<TagModel[]>(JSON.parse(initialTags));
+  const [tags, setTags] = useState<TagModel[]>(initialTags);
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState<Color|null>(null);
 
