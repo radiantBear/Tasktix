@@ -3,7 +3,7 @@
 import { api } from '@/lib/api';
 import { getTextColor } from '@/lib/color';
 import TagModel from '@/lib/model/tag';
-import { Button, Chip, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
+import { Button, Chip, Card, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import { useState } from 'react';
 import { X, Check, Plus, Tags as TagsIcon } from 'react-bootstrap-icons';
 import { addSnackbar } from '../Snackbar';
@@ -11,6 +11,7 @@ import Color from '@/lib/model/color';
 import ColorPicker from '../ColorPicker';
 
 export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: string, isComplete: boolean, tagsAvailable: TagModel[], addNewTag: (name: string, color: Color) => any }) {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [tags, setTags] = useState<TagModel[]>(JSON.parse(initialTags));
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState<Color|null>(null);
@@ -69,10 +70,12 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
   }
 
   return (
-    <div className='w-1/4 flex items-center justify-start overflow-hidden flex-nowrap h-10'>
-      <Popover>
+      <Popover placement='bottom' isOpen={isPopoverOpen} onOpenChange={open => {if(!isComplete) setIsPopoverOpen(open)}}>
         <PopoverTrigger>
-          <Button variant='flat' isIconOnly className='bg-transparent hover:bg-foreground/10'><TagsIcon /></Button>
+          <Card className={`px-2 w-1/4 flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 ${isComplete ? 'opacity-50' : 'hover:bg-foreground/10'}`}>
+            <TagsIcon className='mr-2 shrink-0' />
+            {tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          </Card>
         </PopoverTrigger>
         <PopoverContent>
           {
@@ -101,12 +104,10 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
           </div>
         </PopoverContent>
       </Popover>
-      {tags.map(tag => <Tag key={tag.id} tag={tag} isComplete={isComplete} />)}
-    </div>
   );
 }
 
-function Tag({ tag, isComplete }: { tag: TagModel, isComplete: boolean }) {
+function Tag({ tag }: { tag: TagModel }) {
   let textColor: string;
   switch(tag.color) {
     case 'Pink':
@@ -181,5 +182,5 @@ function Tag({ tag, isComplete }: { tag: TagModel, isComplete: boolean }) {
       break;
   }
 
-  return <Chip variant='dot' size='sm' className={`${isComplete ? 'opacity-50' : ''}`} classNames={{dot: bgColor, base: 'border-0', content: textColor}}>{tag.name}</Chip>;
+  return <Chip variant='dot' size='sm' classNames={{dot: bgColor, base: 'border-0', content: textColor}}>{tag.name}</Chip>;
 }
