@@ -21,6 +21,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     item.elapsedMs = requestBody.elapsedMs;
   if(requestBody.startTime !== undefined)
     item.dateStarted = requestBody.startTime ? new Date(requestBody.startTime) : null;
+  if(requestBody.dateCompleted !== undefined)
+    item.dateCompleted = requestBody.dateCompleted ? new Date(requestBody.dateCompleted) : null;
 
   const result = await updateListItem(item);
 

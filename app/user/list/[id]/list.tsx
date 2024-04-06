@@ -16,6 +16,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
       item.dateCreated = new Date(item.dateCreated);
       item.dateDue = new Date(item.dateDue);
       item.dateStarted = item.dateStarted ? new Date(item.dateStarted) : null;
+      item.dateCompleted = item.dateCompleted ? new Date(item.dateCompleted) : null;
     }
   }
   

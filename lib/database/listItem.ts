@@ -34,6 +34,7 @@ export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_dateCreated: Date;
   i_dateDue: Date;
   i_dateStarted: Date|null;
+  i_dateCompleted: Date|null;
 }
 
 export async function createListItem(sectionId: string, listItem: ListItem): Promise<boolean> {
@@ -50,7 +51,8 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
       \`i_ls_id\`,
       \`i_dateCreated\`,
       \`i_dateDue\`,
-      \`i_dateStarted\`
+      \`i_dateStarted\`,
+      \`i_dateCompleted\`
     )
     VALUES (
       :id,
@@ -64,7 +66,8 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
       :sectionId,
       :dateCreated,
       :dateDue,
-      :dateStarted
+      :dateStarted,
+      :dateCompleted
     );
   `;
   
@@ -149,7 +152,8 @@ export async function updateListItem(item: ListItem): Promise<boolean> {
       \`i_elapsedMs\` = :elapsedMs,
       \`i_dateCreated\` = :dateCreated,
       \`i_dateDue\` = :dateDue,
-      \`i_dateStarted\` = :dateStarted
+      \`i_dateStarted\` = :dateStarted,
+      \`i_dateCompleted\` = :dateCompleted
     WHERE \`i_id\` = :id;
   `;
   

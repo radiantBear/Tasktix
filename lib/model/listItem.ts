@@ -17,13 +17,14 @@ export default class ListItem {
   dateCreated: Date;
   dateDue: Date;
   dateStarted: Date|null;
+  dateCompleted: Date|null;
   assignees: Assignee[];
   tags: Tag[];
 
   constructor(
     name: string, expectedMs: number, 
-    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, assignees = [], tags = [] }:
-    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedMs?: number, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, assignees?: Assignee[], tags?: Tag[] }
+    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [] }:
+    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedMs?: number, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[] }
   ) {
     if(!id)
       id = generateId();
@@ -38,6 +39,7 @@ export default class ListItem {
     this.dateCreated = dateCreated;
     this.dateDue = dateDue;
     this.dateStarted = dateStarted;
+    this.dateCompleted = dateCompleted;
     this.assignees = assignees;
     this.tags = tags;
   }
@@ -65,6 +67,7 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
       dateCreated: new Date(row.i_dateCreated),
       dateDue: new Date(row.i_dateDue),
       dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,
+      dateCompleted: row.i_dateCompleted ? new Date(row.i_dateCompleted) : null,
       assignees,
       tags 
     }

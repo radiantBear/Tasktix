@@ -12,9 +12,19 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
 
   function setStatus(id: string, status: ListItem['status']) {
     const newItems = structuredClone(items);
-    for(let item of newItems)
+    for(const item of newItems)
       if(item.id == id)
         item.status = status;
+    setItems(newItems);
+  }
+
+  function setCompleted(id: string, status: ListItem['status'], date: ListItem['dateCompleted']) {
+    const newItems = structuredClone(items);
+    for(const item of newItems)
+      if(item.id == id) {
+        item.dateCompleted = date;
+        item.status = status;
+      }
     setItems(newItems);
   }
 
@@ -41,12 +51,21 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
           <Button onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.sort(sortItems).map(item => <Item key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      {items.sort(sortItems).map(item => <Item key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
 }
 
 function sortItems(a: ListItem, b: ListItem): number {
+  if(a.dateCompleted && b.dateCompleted) {
+    if(a.dateCompleted < b.dateCompleted)
+      return 1;
+    else if(b.dateCompleted < a.dateCompleted)
+      return -1;
+    else
+      return 0;
+  }
+
   if(a.status == 'Completed' && b.status != 'Completed')
     return 1;
   if(b.status == 'Completed' && a.status != 'Completed')

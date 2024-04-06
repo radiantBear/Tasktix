@@ -40,6 +40,7 @@ CREATE TABLE `items` (
   `i_dateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `i_dateDue` datetime NOT NULL,
   `i_dateStarted` datetime NULL DEFAULT NULL,
+  `i_dateCompleted` datetime NULL DEFAULT NULL,
   FOREIGN KEY (`i_parentId`) REFERENCES `items` (`i_id`),
   FOREIGN KEY (`i_ls_id`) REFERENCES `listSections` (`ls_id`)
 );

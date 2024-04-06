@@ -12,7 +12,7 @@ import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNewTag }: { item: ListItem, tagsAvailable: Tag[], setStatus: (status: ListItem['status']) => void, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function Item({ item, tagsAvailable, setStatus, setCompleted, deleteItem, addNewTag }: { item: ListItem, tagsAvailable: Tag[], setStatus: (status: ListItem['status']) => any, setCompleted: (status: ListItem['status'], date: ListItem['dateCompleted']) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -75,8 +75,10 @@ export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNe
   }
   
   function setComplete(e: ChangeEvent<HTMLInputElement>) {
-    const newState: { status: 'Completed'|'Paused', startTime?: null, elapsedMs?: number } 
-      = { status: e.target.checked ? 'Completed' : 'Paused' };
+    const newState: { status: 'Completed'|'Paused', dateCompleted: Date|null, startTime?: null, elapsedMs?: number } 
+      = e.target.checked
+        ? { status: 'Completed', dateCompleted: new Date() }
+        : { status: 'Paused', dateCompleted: null };
 
     const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
 
@@ -92,7 +94,7 @@ export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNe
         addSnackbar(res.message, 'success');
         if(newState.elapsedMs)
           setElapsedLive(newState.elapsedMs);   // Ensure time is up-to-date since timer was cancelled
-        setStatus(newState.status);
+        setCompleted(newState.status, newState.dateCompleted);
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
@@ -112,7 +114,7 @@ export default function Item({ item, tagsAvailable, setStatus, deleteItem, addNe
         <Checkbox isSelected={isComplete} onChange={setComplete} />
         <div className='flex flex-col w-64 gap-1'>
           <span className={`text-sm ${isComplete ? 'line-through text-foreground/50' : ''}`}>{item.name}</span>
-          <span className={`text-xs ${isComplete ? 'text-secondary/50 line-through' : 'text-secondary'}`}>Due {formatDate(item.dateDue)}</span>
+          <span className={`text-xs ${isComplete ? 'text-secondary/75' : 'text-secondary'}`}>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
         <Tags itemId={item.id} initialTags={JSON.stringify(item.tags)} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
