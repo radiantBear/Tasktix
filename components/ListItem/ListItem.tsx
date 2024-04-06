@@ -109,7 +109,7 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
   }
 
   return (
-    <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0 last:rounded-b-md'>
+    <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0'>
       <span className='flex gap-4 items-center justify-start w-full'>
         <Checkbox isSelected={isComplete} onChange={setComplete} />
         <div className='flex flex-col w-64 gap-1'>
