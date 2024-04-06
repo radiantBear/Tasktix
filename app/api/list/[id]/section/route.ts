@@ -1,13 +1,18 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
+import { getIsListAssignee } from '@/lib/database/list';
 import { createListSection } from '@/lib/database/listSection';
 import ListSection from '@/lib/model/listSection';
 import { getUser } from '@/lib/session';
 import { validateListSectionName } from '@/lib/validate';
 
 export async function POST(request: Request, { params }: { params: {id: string} }) {
-  const session = await getUser();
-  if(!session)
+  const user = await getUser();
+  if(!user)
     return ClientError.Unauthenticated('Not logged in');
+
+  const isMember = await getIsListAssignee(user.id, params.id);
+  if(!isMember)
+    return ClientError.BadRequest('List not found');
 
   const requestBody = await request.json();
 

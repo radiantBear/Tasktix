@@ -1,18 +1,24 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
+import { getIsListAssigneeByItem } from '@/lib/database/list';
 import { deleteListItem, getListItemById, updateListItem } from '@/lib/database/listItem';
 import { getUser } from '@/lib/session';
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
-  const session = await getUser();
-  if(!session)
+  const user = await getUser();
+  if(!user)
     return ClientError.Unauthenticated('Not logged in');
-
-  const requestBody = await request.json();
 
   const item = await getListItemById(params.id);
   if(!item)
     return ClientError.NotFound('List item not found');
 
+  const isMember = await getIsListAssigneeByItem(user.id, params.id);
+  if(!isMember)
+    return ClientError.BadRequest('List item not found');
+
+
+  const requestBody = await request.json();
+  
   if(requestBody.status)
     item.status = requestBody.status;
   if(requestBody.priority)

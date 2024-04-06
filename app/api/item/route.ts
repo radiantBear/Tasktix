@@ -1,12 +1,13 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
+import { getIsListAssigneeBySection } from '@/lib/database/list';
 import { createListItem } from '@/lib/database/listItem';
 import ListItem from '@/lib/model/listItem';
 import { getUser } from '@/lib/session';
 import { validateListItemName } from '@/lib/validate';
 
 export async function POST(request: Request) {
-  const session = await getUser();
-  if(!session)
+  const user = await getUser();
+  if(!user)
     return ClientError.Unauthenticated('Not logged in');
 
   const requestBody = await request.json();
@@ -16,6 +17,10 @@ export async function POST(request: Request) {
   const priority = requestBody.priority;
   const sectionId = requestBody.sectionId;
   const expectedMs = requestBody.duration;
+
+  const isMember = await getIsListAssigneeBySection(user.id, sectionId);
+  if(!isMember)
+    return ClientError.BadRequest('List not found');
   
   if(!name)
     return ClientError.BadRequest('Item name is required');

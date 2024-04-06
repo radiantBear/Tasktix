@@ -94,6 +94,51 @@ export async function getListsByUser(id: string): Promise<List[]|false> {
   return mergeLists(result.map(extractListFromRow));
 }
 
+export async function getIsListAssignee(userId: string, listId: string): Promise<boolean> {
+  const sql = `
+    SELECT * FROM \`lists\`
+    INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    WHERE \`listMembers\`.\`lm_u_id\` = :userId
+      AND \`lists\`.\`l_id\` = :listId
+    ORDER BY \`lists\`.\`l_name\` ASC;
+  `;
+  
+  const result = await query<DB_List>(sql, { userId, listId });
+  
+  return !!(result && result.length);
+}
+
+export async function getIsListAssigneeBySection(userId: string, sectionId: string): Promise<boolean> {
+  const sql = `
+    SELECT * FROM \`lists\`
+    INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    INNER JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
+    WHERE \`listMembers\`.\`lm_u_id\` = :userId
+      AND \`listSections\`.\`ls_id\` = :sectionId
+    ORDER BY \`lists\`.\`l_name\` ASC;
+  `;
+  
+  const result = await query<DB_List>(sql, { userId, sectionId });
+  
+  return !!(result && result.length);
+}
+
+export async function getIsListAssigneeByItem(userId: string, itemId: string): Promise<boolean> {
+  const sql = `
+    SELECT * FROM \`lists\`
+    INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    INNER JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
+    INNER JOIN \`items\` ON \`items\`.\`i_ls_id\` = \`listSections\`.\`ls_id\`
+    WHERE \`listMembers\`.\`lm_u_id\` = :userId
+      AND \`items\`.\`i_id\` = :itemId
+    ORDER BY \`lists\`.\`l_name\` ASC;
+  `;
+  
+  const result = await query<DB_List>(sql, { userId, itemId });
+  
+  return !!(result && result.length);
+}
+
 export async function getTagsByListId(id: string): Promise<Tag[]|false> {
   const sql = `
     SELECT * FROM \`tags\`
