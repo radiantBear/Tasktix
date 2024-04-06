@@ -37,8 +37,11 @@ export function formatDate(date: Date): string {
 }
 
 export function formatTime(time: number): string {
-  let hours = Math.trunc(time / 3600000).toString();
-  let minutes = Math.round(time / 60000).toString();
+  const hoursMs = Math.trunc(time / 3600000) * 3600000;
+  const minsMs = Math.round((time - hoursMs) / 60000) * 60000;
+  
+  let hours = (hoursMs / 3600000).toString();
+  let minutes = (minsMs / 60000).toString();
 
   if(hours.length < 1)
     hours = '00';
