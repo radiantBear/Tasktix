@@ -1,6 +1,6 @@
 import { Checkbox } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
-import ListItem from '@/lib/model/listItem';
+import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import More from './More';
@@ -12,7 +12,7 @@ import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-export default function Item({ item, tagsAvailable, setStatus, setCompleted, deleteItem, addNewTag }: { item: ListItem, tagsAvailable: Tag[], setStatus: (status: ListItem['status']) => any, setCompleted: (status: ListItem['status'], date: ListItem['dateCompleted']) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 

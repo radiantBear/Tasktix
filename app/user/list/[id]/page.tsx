@@ -1,5 +1,5 @@
 import { getListById, getTagsByListId } from '@/lib/database/list';
-import List from './list';
+import List from '@/components/List';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const list = await getListById(params.id);

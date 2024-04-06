@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import Item from './Item';
-import AddItem from './AddItem';
-import ListItem from '@/lib/model/listItem';
+import ListItem from './ListItem';
+import AddItem from '@/components/List/AddItem';
+import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
 import { TrashFill } from 'react-bootstrap-icons';
 import { Button } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
 
-export default function ListSection({ id, name, startingItems, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItem[], tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
-  const [items, setItems] = useState<ListItem[]>(startingItems);
+export default function ListSection({ id, name, startingItems, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+  const [items, setItems] = useState<ListItemModel[]>(startingItems);
 
-  function setStatus(id: string, status: ListItem['status']) {
+  function setStatus(id: string, status: ListItemModel['status']) {
     const newItems = structuredClone(items);
     for(const item of newItems)
       if(item.id == id)
@@ -18,7 +18,7 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
     setItems(newItems);
   }
 
-  function setCompleted(id: string, status: ListItem['status'], date: ListItem['dateCompleted']) {
+  function setCompleted(id: string, status: ListItemModel['status'], date: ListItemModel['dateCompleted']) {
     const newItems = structuredClone(items);
     for(const item of newItems)
       if(item.id == id) {
@@ -28,7 +28,7 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
     setItems(newItems);
   }
 
-  function addItem(item: ListItem) {
+  function addItem(item: ListItemModel) {
     const newItems = structuredClone(items);
     newItems.push(item);
     setItems(newItems);
@@ -51,12 +51,12 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
           <Button onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.sort(sortItems).map(item => <Item key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
 }
 
-function sortItems(a: ListItem, b: ListItem): number {
+function sortItems(a: ListItemModel, b: ListItemModel): number {
   if(a.dateCompleted && b.dateCompleted) {
     if(a.dateCompleted < b.dateCompleted)
       return 1;

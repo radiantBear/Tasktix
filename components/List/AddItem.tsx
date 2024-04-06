@@ -3,7 +3,7 @@ import { dateToInput, inputToDate, parseTime } from '@/lib/date'
 import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
-import { addSnackbar } from '../Snackbar';
+import { addSnackbar } from '@/components/Snackbar';
 import ListItem from '@/lib/model/listItem';
 
 export default function AddItem({ sectionId, addItem }: { sectionId: string, addItem: (_: ListItem) => any }) {

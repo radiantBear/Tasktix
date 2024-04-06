@@ -3,7 +3,7 @@
 import { api } from "@/lib/api";
 import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
-import { addSnackbar } from "../Snackbar";
+import { addSnackbar } from "./Snackbar";
 import ListSection from "@/lib/model/listSection";
 
 export default function AddListSection({ listId, addListSection }: { listId: string, addListSection: (_: ListSection) => any }) {
