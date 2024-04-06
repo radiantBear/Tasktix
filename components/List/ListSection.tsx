@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ListItem from './ListItem';
+import ListItem from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
