@@ -5,14 +5,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
 import { addSnackbar } from '@/components/Snackbar';
 import ListItem from '@/lib/model/listItem';
+import TimeInput from '../TimeInput';
 
 export default function AddItem({ sectionId, addItem }: { sectionId: string, addItem: (_: ListItem) => any }) {
   const zeroMin = new Date();
   zeroMin.setTime(0);
-  const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: ''};
+  const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
 
   const [isOpen, setIsOpen] = useState(false);
-  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: string}>(startingInputValues);
+  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: number}>(startingInputValues);
   const focusInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -29,13 +30,13 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
   function setPriority(priority: Selection): void {
     setValues({name: values.name, dueDate: values.dueDate, priority, duration: values.duration});
   }
-  function setExpectedDuration(duration: string): void {
+  function setExpectedDuration(duration: number): void {
     setValues({name: values.name, dueDate: values.dueDate, priority: new Set(values.priority), duration: duration});
   }
 
   function createItem() {
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
-    const duration = parseTime(values.duration);
+    const duration = values.duration;
     api.post('/item', { ...values, sectionId, priority, duration })
       .then(res => {
         setValues(startingInputValues);
@@ -69,14 +70,14 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             onValueChange={setDueDate}
             variant='underlined' 
             size='sm'
-            className='w-32 -mt-2'
+            className='w-24 -mt-2'
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
           <Select
             variant='underlined' 
             labelPlacement='outside' 
             size='sm' 
-            className={'w-32 -mt-4'}
+            className={'w-24 -mt-4'}
             label={<span className='ml-2 text-foreground'>Priority</span>}
             classNames={{trigger: `${(values.priority == 'all' || values.priority.has('High')) ? 'border-danger' : values.priority.has('Medium') ? 'border-warning' : 'border-success'}`, mainWrapper: '-mt-6'}}
             placeholder='Select...' 
@@ -88,14 +89,13 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
             <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
           </Select>
-          <Input 
-            label='Duration' 
-            placeholder='hh:mm'
+          <TimeInput 
+            label='Time'
             value={values.duration}
             onValueChange={setExpectedDuration}
             variant='underlined' 
             size='sm'
-            className='w-32 -mt-2'
+            className='w-12 -mt-2'
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
           <Button onPress={createItem} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
