@@ -179,8 +179,8 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
 
   return (
     <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
-      <PopoverTrigger>
-        <Button tabIndex={0} disabled={disabled} className={`bg-transparent ${disabled ? '' : 'hover:bg-foreground/10'}`}>
+      <PopoverTrigger className='-mr-2 -my-3 -px-2 relative' style={{top: '10px'}}>
+        <Button tabIndex={0} disabled={disabled} isIconOnly className={`w-fit !px-2 bg-transparent p-0 ${disabled ? '' : 'hover:bg-foreground/10'}`}>
           <Time label='Expected' ms={ms} />
         </Button>
       </PopoverTrigger>
