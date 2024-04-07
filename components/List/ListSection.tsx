@@ -32,9 +32,16 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
   function updateExpectedMs(id: string, ms: number) {
     const newItems = structuredClone(items);
     for(const item of newItems)
-      if(item.id == id) {
+      if(item.id == id)
         item.expectedMs = ms;
-      }
+    setItems(newItems);
+  }
+
+  function updateDueDate(id: string, date: Date) {
+    const newItems = structuredClone(items);
+    for(const item of newItems)
+      if(item.id == id)
+        item.dateDue = date;
     setItems(newItems);
   }
 
@@ -61,7 +68,7 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
           <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
 }

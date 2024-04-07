@@ -14,8 +14,9 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
+import DateInput from '../DateInput';
 
-export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -104,6 +105,15 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
+  function _updateDueDate(date: Date) {
+    api.patch(`/item/${item.id}`, { dateDue: date })
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        updateDueDate(date);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
   function _deleteItem() {
     api.delete(`/item/${item.id}`)
       .then(res => {
@@ -126,7 +136,7 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
     <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0'>
       <span className='flex gap-4 items-center justify-start w-full'>
         <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} className='-mr-3' />
-        <div className='flex flex-col w-64 gap-1 -mt-3 -mb-1'>
+        <div className='flex flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
             isComplete 
               ? <span className='text-sm line-through text-foreground/50'>{item.name}</span>
@@ -137,7 +147,11 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
                   </Button>
                 </span>
           }
-          <span className={`text-xs ${isComplete ? 'text-secondary/75' : 'text-secondary'}`}>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
+          {
+            isComplete
+              ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
+              : (<DateInput color='secondary' displayContent={`Due ${formatDate(item.dateDue)}`} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+          }
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
         <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
