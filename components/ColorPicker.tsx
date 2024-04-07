@@ -2,7 +2,7 @@
 
 import { getBackgroundColor } from "@/lib/color";
 import Color from "@/lib/model/color";
-import { Button, Card, CardBody, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
+import { Button, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { useState } from "react";
 import { PaletteFill, X } from "react-bootstrap-icons";
 
