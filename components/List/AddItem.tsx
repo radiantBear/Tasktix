@@ -6,6 +6,7 @@ import { Check, Plus } from 'react-bootstrap-icons';
 import { addSnackbar } from '@/components/Snackbar';
 import ListItem from '@/lib/model/listItem';
 import TimeInput from '../TimeInput';
+import DateInput2 from '../DateInput2';
 
 export default function AddItem({ sectionId, addItem }: { sectionId: string, addItem: (_: ListItem) => any }) {
   const zeroMin = new Date();
@@ -24,8 +25,8 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
   function setName(name: string): void {
     setValues({name, dueDate: values.dueDate, priority: new Set(values.priority), duration: values.duration});
   }
-  function setDueDate(date: string): void {
-    setValues({name: values.name, dueDate: inputToDate(date), priority: new Set(values.priority), duration: values.duration});
+  function setDueDate(date: Date): void {
+    setValues({name: values.name, dueDate: date, priority: new Set(values.priority), duration: values.duration});
   }
   function setPriority(priority: Selection): void {
     setValues({name: values.name, dueDate: values.dueDate, priority, duration: values.duration});
@@ -64,16 +65,16 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             className='w-44 -mt-2' 
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
-          <Input 
+          <DateInput2 
             label='Due' 
-            type='date' 
-            value={dateToInput(values.dueDate)}
+            value={values.dueDate}
             onValueChange={setDueDate}
             variant='underlined' 
+            color='primary'
             size='sm'
             tabIndex={isOpen ? 0 : 1} 
-            className='w-24 -mt-2'
-            classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
+            className='w-24 -mt-4'
+            classNames={{label: '-pb-1', inputWrapper: 'border-foreground/50'}}
           />
           <Select
             variant='underlined' 

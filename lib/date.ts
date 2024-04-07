@@ -10,7 +10,7 @@ export function getDayOffset(date: Date): number {
   return Math.trunc(getDateDiff(date, today) / day);
 }
 
-export function formatDate(date: Date): string {
+export function formatDate(date: Date, pretty?: boolean): string {
   const distant: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
@@ -24,7 +24,9 @@ export function formatDate(date: Date): string {
   const dayOffset = getDayOffset(date);
   const isThisWeek = (dayOffset < 7) && (date.getDay() > (new Date()).getDay());
 
-  if(dayOffset == 0)
+  if(!pretty)
+    return date.toLocaleDateString('en-US', distant);
+  else if(dayOffset == 0)
     return 'Today';
   else if(dayOffset == 1)
     return 'Tomorrow';

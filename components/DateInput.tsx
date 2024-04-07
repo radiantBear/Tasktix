@@ -26,7 +26,6 @@ export default function DateInput({ placeholder, defaultValue, displayContent, c
   return (
     <Popover placement='bottom' isOpen={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger className='-ml-2 -mb-2 mt-1'>
-        {/* Underline instead of background? */}
         <Button color={color} variant='light' className='w-fit min-w-0 h-fit px-2 py-1 text-xs justify-start'>
           { 
             displayContent
