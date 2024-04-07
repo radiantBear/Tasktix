@@ -2,9 +2,9 @@
 
 import { formatTime } from '@/lib/date';
 import { Input } from '@nextui-org/react';
-import { useState } from 'react';
+import { Ref, useState } from 'react';
 
-export default function TimeInput({ label, variant, color, size, value, defaultValue, className, classNames, onValueChange }: { label: string, variant?: 'flat'|'faded'|'bordered'|'underlined', color?: 'default'|'primary'|'secondary'|'success'|'warning'|'danger', size: 'sm'|'md'|'lg', value: number, defaultValue?: number, className?: string, classNames?: { label?: string, inputWrapper?: string, input?: string }, onValueChange: (value: number) => any }) {
+export default function TimeInput({ withRef, label, variant, color, size, value, defaultValue, className, classNames, onValueChange }: { withRef?: Ref<HTMLInputElement>, label?: string, variant?: 'flat'|'faded'|'bordered'|'underlined', color?: 'default'|'primary'|'secondary'|'success'|'warning'|'danger', size?: 'sm'|'md'|'lg', value?: number, defaultValue?: number, className?: string, classNames?: { label?: string, inputWrapper?: string, input?: string }, onValueChange?: (value: number) => any }) {
   const [time, setTime] = useState(formatTime(defaultValue || 0));
 
   function updateTime(value: string) {
@@ -15,11 +15,13 @@ export default function TimeInput({ label, variant, color, size, value, defaultV
     setTime(hourStr+':'+minStr);
 
     const ms = (Number(hourStr) * 60 + Number(minStr)) * 60 * 1000;
-    onValueChange(ms);
+    if(onValueChange)
+      onValueChange(ms);
   }
 
   return (
     <Input
+      ref={withRef}
       label={label}
       variant={variant}
       color={color}

@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input } from '@nextui-org/react';
+import { Button, Checkbox, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
@@ -10,11 +10,12 @@ import Priority from './Priority';
 import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
+import TimeInput from '../TimeInput';
 
-export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -144,7 +145,7 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
       </span>
       <span className='flex gap-4 items-center justify-end'>
         <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
-          <Time label='Expected' ms={item.expectedMs} />
+          <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
           <span className='border-r-1 border-content3'></span>
           <Time label='Elapsed' ms={elapsedLive} />
         </span>
@@ -152,5 +153,45 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
         <More deleteItem={_deleteItem} />
       </span>
     </div>
+  );
+}
+
+function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms: number, disabled: boolean, updateMs: (ms: number) => any }) {
+  const [value, setValue] = useState(ms);
+  const [isOpen, setIsOpen] = useState(false);
+  const focusInput = useRef<HTMLInputElement | null>(null);
+  
+  useEffect(() => {
+    if(isOpen)
+      focusInput.current?.focus();
+  }, [isOpen]);
+
+  function _updateTime(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    api.patch(`/item/${itemId}`, { expectedMs: value })
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        updateMs(value);
+        setIsOpen(false);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
+  return (
+    <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
+      <PopoverTrigger>
+        <Button disabled={disabled} className={`bg-transparent ${disabled ? '' : 'hover:bg-foreground/10'}`}>
+          <Time label='Expected' ms={ms} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className='p-3'>
+        <form onSubmit={_updateTime} className='flex flex-row items-center gap-2'>
+          <TimeInput value={value} onValueChange={setValue} withRef={input => focusInput.current = input} size='sm' variant='underlined' color='primary' className='w-12 grow-0' />
+          <Button type='submit' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
+            <Check />
+          </Button>
+        </form>
+      </PopoverContent>
+    </Popover>
   );
 }
