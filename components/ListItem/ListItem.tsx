@@ -1,4 +1,4 @@
-import { Checkbox } from '@nextui-org/react';
+import { Button, Checkbox, Input } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
@@ -11,6 +11,7 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { Check } from 'react-bootstrap-icons';
 
 export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
@@ -20,6 +21,8 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
   const updateTime = useRef(() => {});
   const lastTime = useRef(new Date());
   const [elapsedLive, setElapsedLive] = useState(item.elapsedMs + (item.dateStarted ? Date.now() - item.dateStarted.getTime() : 0));
+  const [name, setName] = useState(item.name);
+  const [prevName, setPrevName] = useState(item.name);
 
   // Use effect to keep track of the changing timer function
   useEffect(() => {
@@ -108,12 +111,30 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
+  function updateName() {
+    api.patch(`/item/${item.id}`, { name })
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        setPrevName(name);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
   return (
     <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0'>
       <span className='flex gap-4 items-center justify-start w-full'>
         <Checkbox isSelected={isComplete} onChange={setComplete} />
-        <div className='flex flex-col w-64 gap-1'>
-          <span className={`text-sm ${isComplete ? 'line-through text-foreground/50' : ''}`}>{item.name}</span>
+        <div className='flex flex-col w-64 gap-1 -mt-3 -mb-1'>
+          {
+            isComplete 
+              ? <span className='text-sm line-through text-foreground/50'>{item.name}</span>
+              : <span className='-ml-1 flex'>
+                  <Input value={name} onValueChange={setName} size='sm' variant='underlined' classNames={{inputWrapper: 'border-transparent', input: '-mb-2'}} />
+                  <Button onPress={updateName} color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${name == prevName ? 'invisible' : 'visible'}`}>
+                    <Check />
+                  </Button>
+                </span>
+          }
           <span className={`text-xs ${isComplete ? 'text-secondary/75' : 'text-secondary'}`}>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />

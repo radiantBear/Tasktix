@@ -19,6 +19,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const requestBody = await request.json();
   
+  if(requestBody.name)
+    item.name = requestBody.name;
   if(requestBody.status)
     item.status = requestBody.status;
   if(requestBody.priority)
