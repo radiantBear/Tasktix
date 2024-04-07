@@ -12,6 +12,7 @@ import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
+import TimeButton from './TimeButton';
 
 export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
@@ -142,7 +143,12 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
         <Users assignees={item.assignees} isComplete={isComplete} />
       </span>
       <span className='flex gap-4 items-center justify-end'>
-        <Time expected={item.expectedMs} elapsed={elapsedLive} status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
+        <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
+          <Time label='Expected' ms={item.expectedMs} />
+          <span className='border-r-1 border-content3'></span>
+          <Time label='Elapsed' ms={elapsedLive} />
+        </span>
+        <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
         <More deleteItem={_deleteItem} />
       </span>
     </div>
