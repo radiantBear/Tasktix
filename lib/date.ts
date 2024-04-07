@@ -10,7 +10,7 @@ export function getDayOffset(date: Date): number {
   return Math.trunc(getDateDiff(date, today) / day);
 }
 
-export function formatDate(date: Date, pretty?: boolean): string {
+export function formatDate(date: Date, pretty: boolean = true): string {
   const distant: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
