@@ -5,7 +5,7 @@ export default function More({ deleteItem }: { deleteItem: () => any }) {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant='ghost' isIconOnly><ThreeDots /></Button>
+        <Button tabIndex={0} variant='ghost' isIconOnly><ThreeDots /></Button>
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem key='assign' startContent={<PeopleFill />}>Update assignees</DropdownItem>

@@ -125,7 +125,7 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
   return (
     <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0'>
       <span className='flex gap-4 items-center justify-start w-full'>
-        <Checkbox isSelected={isComplete} onChange={setComplete} />
+        <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} />
         <div className='flex flex-col w-64 gap-1 -mt-3 -mb-1'>
           {
             isComplete 
@@ -180,7 +180,7 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
   return (
     <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
       <PopoverTrigger>
-        <Button disabled={disabled} className={`bg-transparent ${disabled ? '' : 'hover:bg-foreground/10'}`}>
+        <Button tabIndex={0} disabled={disabled} className={`bg-transparent ${disabled ? '' : 'hover:bg-foreground/10'}`}>
           <Time label='Expected' ms={ms} />
         </Button>
       </PopoverTrigger>

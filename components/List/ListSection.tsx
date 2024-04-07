@@ -58,7 +58,7 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
         <span>{name}</span>
         <span className='flex gap-4'>
           <AddItem sectionId={id} addItem={addItem} />
-          <Button onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
+          <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
       {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}

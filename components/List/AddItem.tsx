@@ -60,6 +60,7 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             ref={input => focusInput.current = input }
             variant='underlined' 
             size='sm' 
+            tabIndex={isOpen ? 0 : 1} 
             className='w-44 -mt-2' 
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
@@ -70,6 +71,7 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             onValueChange={setDueDate}
             variant='underlined' 
             size='sm'
+            tabIndex={isOpen ? 0 : 1} 
             className='w-24 -mt-2'
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
@@ -81,6 +83,7 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             label={<span className='ml-2 text-foreground'>Priority</span>}
             classNames={{trigger: `${(values.priority == 'all' || values.priority.has('High')) ? 'border-danger' : values.priority.has('Medium') ? 'border-warning' : 'border-success'}`, mainWrapper: '-mt-6'}}
             placeholder='Select...' 
+            tabIndex={isOpen ? 0 : 1} 
             selectedKeys={values.priority}
             onSelectionChange={setPriority}
             color={`${(values.priority == 'all' || values.priority.has('High')) ? 'danger' : values.priority.has('Medium') ? 'warning' : values.priority.has('Low') ? 'success' : 'default'}`}
@@ -95,13 +98,14 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             onValueChange={setExpectedDuration}
             variant='underlined' 
             size='sm'
+            tabIndex={isOpen ? 0 : 1} 
             className='w-12 -mt-2'
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
-          <Button onPress={createItem} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
+          <Button tabIndex={isOpen ? 0 : 1} onPress={createItem} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
         </span>
       </span>
-      <Button variant='ghost' isIconOnly onPress={() => setIsOpen(!isOpen)} color={isOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isOpen ? ' -rotate-45' : ''}`}/></Button>
+      <Button tabIndex={0} variant='ghost' isIconOnly onPress={() => setIsOpen(!isOpen)} color={isOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isOpen ? ' -rotate-45' : ''}`}/></Button>
     </span>
   );
 }

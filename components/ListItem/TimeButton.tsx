@@ -8,11 +8,11 @@ export default function TimeButton({ status, startRunning, pauseRunning }: { sta
   
   switch(status) {
     case 'Unstarted':
-      return <Button color='primary' variant='ghost' className='w-24' startContent={playBtn} onPress={startRunning}>Start</Button>;
+      return <Button tabIndex={0} color='primary' variant='ghost' className='w-24' startContent={playBtn} onPress={startRunning}>Start</Button>;
     case 'In Progress':
-      return <Button color='warning' variant='ghost' className='w-24' startContent={pauseBtn} onPress={pauseRunning}>Pause</Button>;
+      return <Button tabIndex={0} color='warning' variant='ghost' className='w-24' startContent={pauseBtn} onPress={pauseRunning}>Pause</Button>;
     case 'Paused':
     case 'Completed':
-      return <Button color='primary' variant='ghost' className='w-24' startContent={playBtn} isDisabled={status == 'Completed'} onPress={startRunning}>Resume</Button>;
+      return <Button tabIndex={status == 'Completed' ? 1 : 0} color='primary' variant='ghost' className='w-24' startContent={playBtn} isDisabled={status == 'Completed'} onPress={startRunning}>Resume</Button>;
   }
 }
