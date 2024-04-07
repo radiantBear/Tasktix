@@ -50,8 +50,10 @@ export default function Snackbar() {
   
   return (
     <div className='absolute bottom-0 right-0 w-96 overflow-x-clip'>
-      <div key={snackbarQueue[0] ? snackbarQueue[0].id : 'empty' } className={`${snackbarQueue[0] ? styles[snackbarQueue[0].color] : styles.default} absolute bottom-4 w-80 py-2 px-3 rounded-md ${snackbarQueue[0] ? 'animate-slide-from-right right-4' : 'right-[-20rem]'}`}>
-        {snackbarQueue[0] ? snackbarQueue[0].message : ''}
+      <div key={snackbarQueue[0] ? snackbarQueue[0].id : 'empty' } className={`bg-background absolute bottom-4 w-80 p-0 flex overflow-hidden rounded-md ${snackbarQueue[0] ? 'animate-slide-from-right right-4' : 'right-[-20rem]'}`}>
+        <span className={`w-full h-full py-2 px-3 grow ${snackbarQueue[0] ? styles[snackbarQueue[0].color] : styles.default}`}>
+          {snackbarQueue[0] ? snackbarQueue[0].message : ''}
+        </span>
       </div>
     </div>
   );
