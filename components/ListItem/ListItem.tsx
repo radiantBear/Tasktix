@@ -135,10 +135,10 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
   }
 
   return (
-    <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0'>
-      <span className='flex gap-4 items-center justify-start w-full'>
+    <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0 flex-wrap'>
+      <span className='flex gap-4 items-center justify-start grow'>
         <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} className='-mr-3' />
-        <div className='flex flex-col w-64 gap-0 -mt-3 -mb-1'>
+        <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
             isComplete 
               ? <span className='text-sm line-through text-foreground/50'>{item.name}</span>
@@ -157,9 +157,13 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
         <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
-        <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
+        {
+          members.length > 1
+            ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
+            : <></>
+        }
       </span>
-      <span className='flex gap-4 items-center justify-end'>
+      <span className='flex gap-4 items-center justify-end grow-0 shrink-0'>
         <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
           <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
           <span className='border-r-1 border-content3'></span>

@@ -24,7 +24,7 @@ export default function Priority({ isComplete, startingPriority, itemId }: { isC
         variant='flat' 
         labelPlacement='outside' 
         size='sm' 
-        className={'w-28'}
+        className={'w-28 grow-0 shrink-0'}
         label={<span className='ml-2 text-foreground'>Priority</span>}
         placeholder='Select...' 
         selectedKeys={priority}
