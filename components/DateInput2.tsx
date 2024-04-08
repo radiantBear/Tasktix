@@ -66,7 +66,7 @@ export default function DateInput2({ label, placeholder, className, classNames, 
       onFocusChange={debounceOpenChange}
       className={className}
       classNames={classNames}
-      ref={element => input.current = element}
+      autoFocus
       startContent={
         <Popover placement='bottom-start' isOpen={isOpen} onOpenChange={debounceOpenChange}>
           <PopoverTrigger className='-ml-2 -mb-2 mt-1'>

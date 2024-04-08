@@ -4,7 +4,7 @@ import { formatTime } from '@/lib/date';
 import { Input } from '@nextui-org/react';
 import { Ref, useState } from 'react';
 
-export default function TimeInput({ withRef, label, variant, color, size, value, tabIndex, defaultValue, className, classNames, onValueChange }: { withRef?: Ref<HTMLInputElement>, label?: string, variant?: 'flat'|'faded'|'bordered'|'underlined', color?: 'default'|'primary'|'secondary'|'success'|'warning'|'danger', size?: 'sm'|'md'|'lg', value?: number, defaultValue?: number, tabIndex?: number, className?: string, classNames?: { label?: string, inputWrapper?: string, input?: string }, onValueChange?: (value: number) => any }) {
+export default function TimeInput({ label, variant, color, size, value, tabIndex, defaultValue, className, classNames, onValueChange }: { label?: string, variant?: 'flat'|'faded'|'bordered'|'underlined', color?: 'default'|'primary'|'secondary'|'success'|'warning'|'danger', size?: 'sm'|'md'|'lg', value?: number, defaultValue?: number, tabIndex?: number, className?: string, classNames?: { label?: string, inputWrapper?: string, input?: string }, onValueChange?: (value: number) => any }) {
   const [time, setTime] = useState(formatTime(defaultValue || 0));
 
   function updateTime(value: string) {
@@ -21,7 +21,7 @@ export default function TimeInput({ withRef, label, variant, color, size, value,
 
   return (
     <Input
-      ref={withRef}
+      autoFocus
       label={label}
       variant={variant}
       color={color}

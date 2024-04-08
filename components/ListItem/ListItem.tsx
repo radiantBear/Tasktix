@@ -189,12 +189,6 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
 function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms: number, disabled: boolean, updateMs: (ms: number) => any }) {
   const [value, setValue] = useState(ms);
   const [isOpen, setIsOpen] = useState(false);
-  const focusInput = useRef<HTMLInputElement | null>(null);
-  
-  useEffect(() => {
-    if(isOpen)
-      focusInput.current?.focus();
-  }, [isOpen]);
 
   function _updateTime(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -216,7 +210,7 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
       </PopoverTrigger>
       <PopoverContent className='p-3'>
         <form onSubmit={_updateTime} className='flex flex-row items-center gap-2'>
-          <TimeInput value={value} onValueChange={setValue} withRef={input => focusInput.current = input} size='sm' variant='underlined' color='primary' className='w-12 grow-0' />
+          <TimeInput value={value} onValueChange={setValue} size='sm' variant='underlined' color='primary' className='w-12 grow-0' />
           <Button type='submit' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
             <Check />
           </Button>
