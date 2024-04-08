@@ -1,4 +1,4 @@
-import { Button, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
+import { Button, Checkbox, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
@@ -10,13 +10,13 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { ArrowCounterclockwise, Check, StopwatchFill, ThreeDots, TrashFill } from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, Check, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
 import ListMember from '@/lib/model/listMember';
 
-export default function ListItem({ item, members, tagsAvailable, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function ListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -144,6 +144,8 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
+  console.log(hasDueDates)
+
   return (
     <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0 flex-wrap'>
       <span className='flex gap-4 items-center justify-start grow'>
@@ -151,8 +153,8 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
         <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
             isComplete 
-              ? <span className='text-sm line-through text-foreground/50'>{item.name}</span>
-              : <span className='-ml-1 flex'>
+              ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{item.name}</span>
+              : <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
                   <Input value={name} onValueChange={setName} size='sm' variant='underlined' classNames={{inputWrapper: 'border-transparent', input: '-mb-2'}} />
                   <Button onPress={updateName} color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${name == prevName ? 'invisible' : 'visible'}`}>
                     <Check />
@@ -160,9 +162,13 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
                 </span>
           }
           {
-            isComplete
-              ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
-              : (<DateInput color='secondary' displayContent={`Due ${formatDate(item.dateDue)}`} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+            hasDueDates 
+              ? (
+                isComplete
+                  ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
+                  : (<DateInput color='secondary' displayContent={`Due ${formatDate(item.dateDue)}`} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+              )
+              : <></>
           }
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
@@ -174,12 +180,20 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
         }
       </span>
       <span className='flex gap-4 items-center justify-end grow-0 shrink-0'>
-        <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
-          <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
-          <span className='border-r-1 border-content3'></span>
-          <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
-        </span>
-        <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
+        {
+          hasTimeTracking
+            ? (
+              <>
+                <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
+                  <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
+                  <span className='border-r-1 border-content3'></span>
+                  <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
+                </span>
+                <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
+              </>
+            )
+            : <></>
+        }
         <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
       </span>
     </div>

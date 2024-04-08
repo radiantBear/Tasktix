@@ -8,7 +8,7 @@ import ListItem from '@/lib/model/listItem';
 import TimeInput from '../TimeInput';
 import DateInput2 from '../DateInput2';
 
-export default function AddItem({ sectionId, addItem }: { sectionId: string, addItem: (_: ListItem) => any }) {
+export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, addItem }: { sectionId: string, hasTimeTracking: boolean, hasDueDates: boolean, addItem: (_: ListItem) => any }) {
   const zeroMin = new Date();
   zeroMin.setTime(0);
   const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
@@ -65,17 +65,23 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             className='w-44 -mt-2' 
             classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
           />
-          <DateInput2 
-            label='Due' 
-            value={values.dueDate}
-            onValueChange={setDueDate}
-            variant='underlined' 
-            color='primary'
-            size='sm'
-            tabIndex={isOpen ? 0 : 1} 
-            className='w-24 -mt-4'
-            classNames={{label: '-pb-1', inputWrapper: 'border-foreground/50'}}
-          />
+          {
+            hasDueDates
+              ? (
+                <DateInput2 
+                  label='Due' 
+                  value={values.dueDate}
+                  onValueChange={setDueDate}
+                  variant='underlined' 
+                  color='primary'
+                  size='sm'
+                  tabIndex={isOpen ? 0 : 1} 
+                  className='w-24 -mt-4'
+                  classNames={{label: '-pb-1', inputWrapper: 'border-foreground/50'}}
+                />
+              )
+              : <></>
+          }
           <Select
             variant='underlined' 
             labelPlacement='outside' 
@@ -93,16 +99,22 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
             <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
           </Select>
-          <TimeInput 
-            label='Time'
-            value={values.duration}
-            onValueChange={setExpectedDuration}
-            variant='underlined' 
-            size='sm'
-            tabIndex={isOpen ? 0 : 1} 
-            className='w-12 -mt-2'
-            classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
-          />
+          {
+            hasTimeTracking
+              ? (
+                <TimeInput 
+                  label='Time'
+                  value={values.duration}
+                  onValueChange={setExpectedDuration}
+                  variant='underlined' 
+                  size='sm'
+                  tabIndex={isOpen ? 0 : 1} 
+                  className='w-12 -mt-2'
+                  classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
+                />
+              )
+              : <></>
+          }
           <Button tabIndex={isOpen ? 0 : 1} onPress={createItem} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
         </span>
       </span>

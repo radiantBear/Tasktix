@@ -9,7 +9,7 @@ import Tag from '@/lib/model/tag';
 import sortItems from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
 
-export default function ListSection({ id, name, startingItems, members, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+export default function ListSection({ id, name, startingItems, members, tagsAvailable, hasTimeTracking, hasDueDates, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
   const [items, setItems] = useState<ListItemModel[]>(startingItems);
 
   function setStatus(id: string, status: ListItemModel['status']) {
@@ -65,11 +65,11 @@ export default function ListSection({ id, name, startingItems, members, tagsAvai
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
         <span>{name}</span>
         <span className='flex gap-4'>
-          <AddItem sectionId={id} addItem={addItem} />
+          <AddItem sectionId={id} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} addItem={addItem} />
           <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
 }

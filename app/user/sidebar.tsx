@@ -54,8 +54,6 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  console.log(lists)
-
   return (
     <aside className='w-48 bg-content1 p-4 flex flex-col gap-4'>
       <NavItem name='Today' link='/user' />
