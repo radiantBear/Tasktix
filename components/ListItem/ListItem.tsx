@@ -165,8 +165,8 @@ export default function ListItem({ item, members, tagsAvailable, hasTimeTracking
             hasDueDates 
               ? (
                 isComplete
-                  ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + formatDate(item.dateDue)}</span>
-                  : (<DateInput color='secondary' displayContent={`Due ${formatDate(item.dateDue)}`} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+                  ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + (item.dateDue ? formatDate(item.dateDue) : '')}</span>
+                  : (<DateInput color='secondary' displayContent={item.dateDue ? `Due ${formatDate(item.dateDue)}` : 'Set due date'} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
               )
               : <></>
           }
@@ -200,7 +200,7 @@ export default function ListItem({ item, members, tagsAvailable, hasTimeTracking
   );
 }
 
-function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms: number, disabled: boolean, updateMs: (ms: number) => any }) {
+function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms: number|null, disabled: boolean, updateMs: (ms: number) => any }) {
   const [value, setValue] = useState(ms);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -209,7 +209,8 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
     api.patch(`/item/${itemId}`, { expectedMs: value })
       .then(res => {
         addSnackbar(res.message, 'success');
-        updateMs(value);
+        if(value !== null)
+          updateMs(value);
         setIsOpen(false);
       })
       .catch(err => addSnackbar(err.message, 'error'));
@@ -219,12 +220,12 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
     <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
       <PopoverTrigger className='-mr-2 -my-3 -px-2 relative top-3'>
         <Button tabIndex={0} disabled={disabled} isIconOnly className={`w-fit !px-2 bg-transparent p-0 ${disabled ? '' : 'hover:bg-foreground/10'}`}>
-          <Time label='Expected' ms={ms} />
+          <Time label='Expected' ms={ms || 0} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='p-3'>
         <form onSubmit={_updateTime} className='flex flex-row items-center gap-2'>
-          <TimeInput value={value} onValueChange={setValue} size='sm' variant='underlined' color='primary' className='w-12 grow-0' />
+          <TimeInput value={value || undefined} onValueChange={setValue} size='sm' variant='underlined' color='primary' className='w-12 grow-0' />
           <Button type='submit' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
             <Check />
           </Button>

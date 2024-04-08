@@ -15,7 +15,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   for(const section of builtList.sections) {
     for(const item of section.items) {
       item.dateCreated = new Date(item.dateCreated);
-      item.dateDue = new Date(item.dateDue);
+      item.dateDue = item.dateDue ? new Date(item.dateDue) : null;
       item.dateStarted = item.dateStarted ? new Date(item.dateStarted) : null;
       item.dateCompleted = item.dateCompleted ? new Date(item.dateCompleted) : null;
     }
