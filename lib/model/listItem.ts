@@ -12,10 +12,10 @@ export default class ListItem {
   status: Status;
   priority: Priority;
   isUnclear: boolean;
-  expectedMs: number;
+  expectedMs: number|null;
   elapsedMs: number;
   dateCreated: Date;
-  dateDue: Date;
+  dateDue: Date|null;
   dateStarted: Date|null;
   dateCompleted: Date|null;
   assignees: Assignee[];
@@ -24,9 +24,9 @@ export default class ListItem {
   sectionId?: string;
 
   constructor(
-    name: string, expectedMs: number, 
-    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [], listId, sectionId }:
-    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedMs?: number, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[], listId?: string, sectionId?: string }
+    name: string, 
+    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, expectedMs = null, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [], listId, sectionId }:
+    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, expectedMs?: number|null, elapsedMs?: number, dateCreated?: Date, dateDue?: Date|null, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[], listId?: string, sectionId?: string }
   ) {
     if(!id)
       id = generateId();
@@ -62,14 +62,14 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
 
   const listItem = new ListItem(
     row.i_name,
-    row.i_expectedMs,
     { id: row.i_id,
       status: row.i_status,
       priority: row.i_priority,
       isUnclear: row.i_isUnclear,
+      expectedMs: row.i_expectedMs,
       elapsedMs: row.i_elapsedMs,
       dateCreated: new Date(row.i_dateCreated),
-      dateDue: new Date(row.i_dateDue),
+      dateDue: row.i_dateDue ? new Date(row.i_dateDue) : null,
       dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,
       dateCompleted: row.i_dateCompleted ? new Date(row.i_dateCompleted) : null,
       assignees,

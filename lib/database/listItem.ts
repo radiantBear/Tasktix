@@ -26,12 +26,12 @@ export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_status: Status;
   i_priority: Priority;
   i_isUnclear: boolean;
-  i_expectedMs: number;
+  i_expectedMs: number|null;
   i_elapsedMs: number;
   i_parentId: string;
   i_ls_id: string;
   i_dateCreated: Date;
-  i_dateDue: Date;
+  i_dateDue: Date|null;
   i_dateStarted: Date|null;
   i_dateCompleted: Date|null;
 }
@@ -70,7 +70,7 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
     );
   `;
   
-  const result = await execute(sql, { sectionId, ...listItem });
+  const result = await execute(sql, { ...listItem, sectionId });
   
   if(!result)
     return false;

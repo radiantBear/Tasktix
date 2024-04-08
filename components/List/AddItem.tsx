@@ -14,7 +14,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, addIt
   const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
 
   const [isOpen, setIsOpen] = useState(false);
-  const [values, setValues] = useState<{name: string, dueDate: Date, priority: Selection, duration: number}>(startingInputValues);
+  const [values, setValues] = useState<{name: string, dueDate?: Date, priority: Selection, duration?: number}>(startingInputValues);
   const focusInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -37,13 +37,19 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, addIt
 
   function createItem() {
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
-    const duration = values.duration;
-    api.post('/item', { ...values, sectionId, priority, duration })
+
+    const newItem = { ...values, sectionId, priority };
+    if(!hasTimeTracking)
+      delete newItem.duration;
+    if(!hasDueDates)
+      delete newItem.dueDate;
+
+    api.post('/item', newItem)
       .then(res => {
         setValues(startingInputValues);
 
         const id = res.content?.split('/').at(-1);
-        const item = new ListItem(values.name, duration, { priority, dateDue: values.dueDate, id });
+        const item = new ListItem(values.name, { priority, expectedMs: newItem.duration, dateDue: newItem.dueDate, id });
         addItem(item);
       })
       .catch(err => addSnackbar(err.message, 'error'));

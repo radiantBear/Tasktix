@@ -82,6 +82,31 @@ export async function getListById(id: string): Promise<List|false> {
   return mergeLists(result.map(extractListFromRow))[0];
 }
 
+export async function getListBySectionId(id: string): Promise<List|false> {
+  const sql = `
+    SELECT * FROM \`lists\`
+      LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`users\` ON \`users\`.\`u_id\` = \`listMembers\`.\`lm_u_id\`
+      LEFT JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`items\` ON \`items\`.\`i_ls_id\` = \`listSections\`.\`ls_id\`
+      LEFT JOIN \`itemTags\` ON \`itemTags\`.\`it_i_id\` = \`items\`.\`i_id\`
+      LEFT JOIN \`tags\` ON \`tags\`.\`t_id\` = \`itemTags\`.\`it_t_id\`
+      LEFT JOIN \`itemAssignees\` ON \`itemAssignees\`.\`ia_i_id\` = \`items\`.\`i_id\`
+    WHERE \`l_id\` IN (
+      SELECT \`listSections\`.\`ls_l_id\` FROM \`listSections\`
+      WHERE \`listSections\`.\`ls_id\` = :id
+    )
+    ORDER BY \`listSections\`.\`ls_name\` ASC;
+  `;
+
+  const result = await query<DB_List>(sql, { id });
+
+  if(!result)
+    return false;
+
+  return mergeLists(result.map(extractListFromRow))[0];
+}
+
 export async function getListsByUser(id: string): Promise<List[]|false> {
   const sql = `
     SELECT * FROM \`lists\`
