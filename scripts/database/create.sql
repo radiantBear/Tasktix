@@ -18,7 +18,9 @@ CREATE TABLE `sessions` (
 CREATE TABLE `lists` (
   `l_id` char(16) NOT NULL PRIMARY KEY,
   `l_name` varchar(64) NOT NULL,
-  `l_description` text NULL DEFAULT NULL
+  `l_description` text NULL DEFAULT NULL,
+  `l_hasTimeTracking` boolean NOT NULL DEFAULT TRUE,
+  `l_hasDueDates` boolean NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE `listSections` (

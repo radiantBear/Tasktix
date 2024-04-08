@@ -21,6 +21,8 @@ export interface DB_ListMember extends DB_User {
 export interface DB_List extends DB_ListMember, DB_ListSection {
   l_id: string;
   l_name: string;
+  l_hasTimeTracking: boolean;
+  l_hasDueDates: boolean;
 }
 
 export async function createList(list: List): Promise<boolean> {
@@ -205,6 +207,23 @@ export async function getTagsByListId(id: string): Promise<Tag[]|false> {
     return false;
 
   return result.map(extractTagFromRow);
+}
+
+export async function updateList(list: List): Promise<boolean> {
+  let sql = `
+    UPDATE \`lists\` 
+    SET
+      \`l_name\` = :name,
+      \`l_hasTimeTracking\` = :hasTimeTracking,
+      \`l_hasDueDates\` = :hasDueDates
+    WHERE \`l_id\` = :id;
+  `;
+  
+  let result = await execute(sql, { ...list });
+  if(!result)
+    return false;
+  
+  return true;
 }
 
 export async function deleteList(id: string): Promise<boolean> {
