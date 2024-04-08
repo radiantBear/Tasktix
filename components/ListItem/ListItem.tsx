@@ -12,7 +12,7 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { Check } from 'react-bootstrap-icons';
+import { Check, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
@@ -170,7 +170,7 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
           <Time label='Elapsed' ms={elapsedLive} />
         </span>
         <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
-        <More deleteItem={_deleteItem} />
+        <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
       </span>
     </div>
   );
