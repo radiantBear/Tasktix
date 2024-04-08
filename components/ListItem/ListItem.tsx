@@ -1,10 +1,8 @@
-import { Button, Checkbox, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
+import { Button, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
-import User from '@/lib/model/user';
-import More from './More';
 import Tags from './Tags';
 import Time from './Time';
 import Priority from './Priority';
@@ -12,7 +10,7 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { Check, TrashFill } from 'react-bootstrap-icons';
+import { Check, StopwatchFill, ThreeDots, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
@@ -116,6 +114,18 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
+  function resetTime() {
+    const status = item.status == 'Completed' ? 'Completed' : 'Unstarted'
+    api.patch(`/item/${item.id}`, { startTime: null, status, elapsedMs: 0 })
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        _stopRunning();
+        setElapsedLive(0);
+        setStatus(status);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
   function _deleteItem() {
     api.delete(`/item/${item.id}`)
       .then(res => {
@@ -170,7 +180,15 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
           <Time label='Elapsed' ms={elapsedLive} />
         </span>
         <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
-        <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
+        <Dropdown>
+          <DropdownTrigger>
+            <Button tabIndex={0} variant='ghost' isIconOnly><ThreeDots /></Button>
+          </DropdownTrigger>
+          <DropdownMenu>
+            <DropdownItem onPress={resetTime} startContent={<StopwatchFill />} className='text-warning' color='warning'>Reset time</DropdownItem>
+            <DropdownItem onPress={_deleteItem} startContent={<TrashFill />} className='text-danger' color='danger'>Delete</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </span>
     </div>
   );
