@@ -235,7 +235,7 @@ export async function getTagsByListId(id: string): Promise<Tag[]|false> {
 }
 
 export async function updateList(list: List): Promise<boolean> {
-  let sql = `
+  const sql = `
     UPDATE \`lists\` 
     SET
       \`l_name\` = :name,
@@ -244,7 +244,7 @@ export async function updateList(list: List): Promise<boolean> {
     WHERE \`l_id\` = :id;
   `;
   
-  let result = await execute(sql, { ...list });
+  const result = await execute(sql, { ...list });
   if(!result)
     return false;
   
@@ -252,20 +252,12 @@ export async function updateList(list: List): Promise<boolean> {
 }
 
 export async function deleteList(id: string): Promise<boolean> {
-  let sql = `
-    DELETE FROM \`listMembers\` 
-    WHERE \`lm_l_id\` = :id;
-  `;
-  
-  let result = await execute(sql, { id });
-  if(!result)
-    return false;
-
-  sql = `
+  const sql = `
   DELETE FROM \`lists\`
   WHERE \`l_id\` = :id;
   `;
-  result = await execute(sql, { id });
+  
+  const result = await execute(sql, { id });
   if(!result)
     return false;
   

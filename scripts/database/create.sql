@@ -13,6 +13,7 @@ CREATE TABLE `sessions` (
   `s_u_id` char(16) NOT NULL,
   `s_dateExpire` datetime NOT NULL,
   FOREIGN KEY (`s_u_id`) REFERENCES `users` (`u_id`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `lists` (
@@ -28,6 +29,7 @@ CREATE TABLE `listSections` (
   `ls_l_id` char(16) NOT NULL,
   `ls_name` char(64) NOT NULL,
   FOREIGN KEY (`ls_l_id`) REFERENCES `lists` (`l_id`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `items` (
@@ -44,8 +46,10 @@ CREATE TABLE `items` (
   `i_dateDue` datetime NULL DEFAULT NULL,
   `i_dateStarted` datetime NULL DEFAULT NULL,
   `i_dateCompleted` datetime NULL DEFAULT NULL,
-  FOREIGN KEY (`i_parentId`) REFERENCES `items` (`i_id`),
+  FOREIGN KEY (`i_parentId`) REFERENCES `items` (`i_id`)
+    ON DELETE CASCADE,
   FOREIGN KEY (`i_ls_id`) REFERENCES `listSections` (`ls_id`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `tags` (
@@ -54,14 +58,17 @@ CREATE TABLE `tags` (
   `t_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
   `t_l_id` char(16) NOT NULL,
   FOREIGN KEY (`t_l_id`) REFERENCES `lists` (`l_id`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `itemTags` (
   `it_i_id` char(16) NOT NULL,
   `it_t_id` char(16) NOT NULL,
   PRIMARY KEY (`it_i_id`, `it_t_id`),
-  FOREIGN KEY (`it_i_id`) REFERENCES `items` (`i_id`),
+  FOREIGN KEY (`it_i_id`) REFERENCES `items` (`i_id`)
+    ON DELETE CASCADE,
   FOREIGN KEY (`it_t_id`) REFERENCES `tags` (`t_id`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `listMembers` (
@@ -72,8 +79,10 @@ CREATE TABLE `listMembers` (
   `lm_canComplete` boolean NOT NULL DEFAULT 0,
   `lm_canAssign` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (`lm_u_id`, `lm_l_id`),
-  FOREIGN KEY (`lm_u_id`) REFERENCES `users` (`u_id`),
+  FOREIGN KEY (`lm_u_id`) REFERENCES `users` (`u_id`)
+    ON DELETE CASCADE,
   FOREIGN KEY (`lm_l_id`) REFERENCES `lists` (`l_id`)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE `itemAssignees` (
@@ -81,6 +90,8 @@ CREATE TABLE `itemAssignees` (
   `ia_i_id` char(16) NOT NULL,
   `ia_role` varchar(64) NOT NULL,
   PRIMARY KEY (`ia_u_id`, `ia_i_id`),
-  FOREIGN KEY (`ia_u_id`) REFERENCES `users` (`u_id`),
+  FOREIGN KEY (`ia_u_id`) REFERENCES `users` (`u_id`)
+    ON DELETE CASCADE,
   FOREIGN KEY (`ia_i_id`) REFERENCES `items` (`i_id`)
+    ON DELETE CASCADE
 );
