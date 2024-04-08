@@ -127,6 +127,7 @@ export async function getListItemsByUser(userId: string): Promise<ListItem[]|fal
       LEFT JOIN \`tags\` ON \`tags\`.\`t_id\` = \`itemTags\`.\`it_t_id\`
       LEFT JOIN \`itemAssignees\` ON \`itemAssignees\`.\`ia_i_id\` = \`items\`.\`i_id\`
       INNER JOIN \`listSections\` ON \`listSections\`.\`ls_id\` = \`items\`.\`i_ls_id\`
+      INNER JOIN \`lists\` ON \`lists\`.\`l_id\` = \`listSections\`.\`ls_l_id\`
       INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`listSections\`.\`ls_l_id\`
     WHERE \`listMembers\`.\`lm_u_id\` = :userId
     ORDER BY \`tags\`.\`t_name\` ASC;

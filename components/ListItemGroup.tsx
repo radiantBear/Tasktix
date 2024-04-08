@@ -2,10 +2,14 @@
 
 import { useState } from 'react';
 import ListItem from '@/components/ListItem';
+import sortItems from '@/lib/sortItems'; 
+import { api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
-import sortItems from '@/lib/sortItems';
+import Tag from '@/lib/model/tag';
+import ListMember from '@/lib/model/listMember';
+import Color from '@/lib/model/color';
 
-export default function ListItemGroup({ startingItems }: { startingItems: string }) {
+export default function ListItemGroup({ startingItems, startingTags, members }: { startingItems: string, startingTags: string, members: string }) {
   const builtItems: ListItemModel[] = JSON.parse(startingItems);
   for(const item of builtItems) {
     item.dateCreated = new Date(item.dateCreated);
@@ -15,6 +19,8 @@ export default function ListItemGroup({ startingItems }: { startingItems: string
   }
   
   const [items, setItems] = useState<ListItemModel[]>(builtItems);
+  const [tags, setTags] = useState<{[id: string]: Tag[]}>(JSON.parse(startingTags));
+  const parsedMembers: {[id: string]: ListMember[]} = JSON.parse(members);
 
   function setStatus(index: number, status: ListItemModel['status']) {
     const newItems = structuredClone(items);
@@ -47,11 +53,30 @@ export default function ListItemGroup({ startingItems }: { startingItems: string
     setItems(newItems);
   }
 
+  function addNewTag(listId: string|undefined, name: string, color: Color) {
+    if(!listId)
+      return new Promise((_, reject) => reject('No list ID'));
+
+    return new Promise((resolve, reject) => {
+      api.post(`/list/${listId}/tag`, { name, color })
+        .then(res => {
+          const id = res.content?.split('/').at(-1) || '';
+
+          const newTags = structuredClone(tags);
+          newTags[listId].push(new Tag(name, color, id));
+          setTags(newTags);
+
+          resolve(id);
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   return (
     <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border'>
       {
         items.sort(sortItems).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-          <ListItem key={item.id} item={item} tagsAvailable={item.tags} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={() => {}} />
+          <ListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
         )
       }
     </div>

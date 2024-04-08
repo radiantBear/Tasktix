@@ -1,5 +1,6 @@
 'use server';
 
+import ListMember, { extractListMemberFromRow } from '../model/listMember';
 import { extractTagFromRow } from '../model/tag';
 import { execute, query } from './db_connect';
 import { DB_Tag } from './listItem';
@@ -93,6 +94,57 @@ export async function getListsByUser(id: string): Promise<List[]|false> {
     return false;
 
   return mergeLists(result.map(extractListFromRow));
+}
+
+export async function getTagsByUser(userId: string) : Promise<{[id: string]: Tag[]}|false> {
+  const sql = `
+    SELECT * FROM \`lists\`
+      LEFT JOIN \`tags\` ON \`tags\`.\`t_l_id\` = \`lists\`.\`l_id\`
+      INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    WHERE \`listMembers\`.\`lm_u_id\` = :userId
+    ORDER BY \`lists\`.\`l_id\` ASC, \`tags\`.\`t_name\` ASC;
+  `;
+
+  const result = await query<DB_List>(sql, { userId });
+
+  if(!result)
+    return false;
+
+  const returnVal: {[id: string]: Tag[]} = {};
+  for(const row of result) {
+    if(!returnVal[row.l_id])
+      returnVal[row.l_id] = [extractTagFromRow(row)]
+    else
+      returnVal[row.l_id].push(extractTagFromRow(row));
+  }
+
+  return returnVal;
+}
+
+export async function getListMembersByUser(userId: string) : Promise<{[id: string]: ListMember[]}|false> {
+  const sql = `
+    SELECT * FROM \`lists\`
+    WHERE \`lists\`.\`l_id\` IN (
+      SELECT \`listMembers\`.\`lm_l_id\` FROM \`listMembers\`
+      WHERE \`listMembers\`.\`lm_u_id\` = :userId
+    )
+    ORDER BY \`lists\`.\`l_id\` ASC;
+  `;
+
+  const result = await query<DB_List>(sql, { userId });
+
+  if(!result)
+    return false;
+
+  const returnVal: {[id: string]: ListMember[]} = {};
+  for(const row of result) {
+    if(!returnVal[row.l_id])
+      returnVal[row.l_id] = [extractListMemberFromRow(row)]
+    else
+      returnVal[row.l_id].push(extractListMemberFromRow(row));
+  }
+
+  return returnVal;
 }
 
 export async function getIsListAssignee(userId: string, listId: string): Promise<boolean> {

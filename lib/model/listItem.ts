@@ -20,11 +20,13 @@ export default class ListItem {
   dateCompleted: Date|null;
   assignees: Assignee[];
   tags: Tag[];
+  listId?: string;
+  sectionId?: string;
 
   constructor(
     name: string, expectedMs: number, 
-    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [] }:
-    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedMs?: number, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[] }
+    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [], listId, sectionId }:
+    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, elapsedMs?: number, dateCreated?: Date, dateDue?: Date, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[], listId?: string, sectionId?: string }
   ) {
     if(!id)
       id = generateId();
@@ -42,6 +44,8 @@ export default class ListItem {
     this.dateCompleted = dateCompleted;
     this.assignees = assignees;
     this.tags = tags;
+    this.listId = listId;
+    this.sectionId = sectionId;
   }
 }
 
@@ -69,7 +73,9 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
       dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,
       dateCompleted: row.i_dateCompleted ? new Date(row.i_dateCompleted) : null,
       assignees,
-      tags 
+      tags,
+      listId: row.l_id,
+      sectionId: row.ls_id
     }
   );
 
