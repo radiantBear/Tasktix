@@ -25,7 +25,7 @@ export default class List {
 
 export function extractListFromRow(row: DB_List): List {
   const listMember = 
-    row.ia_role
+    row.lm_u_id
       ? [extractListMemberFromRow(row)]
       : [];
   
@@ -51,7 +51,8 @@ export function mergeLists(original: List[]): List[] {
       
       // Add any new members
       last?.members.push(...current.members);
-      last?.members.filter((item: ListMember, index: number, arr: ListMember[]) => arr.indexOf(item) == index);
+      if(last)
+        last.members = last.members.filter((item: ListMember, index: number, arr: ListMember[]) => arr.findIndex(_item => _item.user.id == item.user.id) == index); 
       
       const lastSection = last?.sections.at(-1);
       if(lastSection && lastSection?.id == current.sections.at(0)?.id) {

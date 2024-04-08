@@ -3,6 +3,7 @@ import { formatDate } from '@/lib/date';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
+import User from '@/lib/model/user';
 import More from './More';
 import Tags from './Tags';
 import Time from './Time';
@@ -15,8 +16,9 @@ import { Check } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
+import ListMember from '@/lib/model/listMember';
 
-export default function ListItem({ item, tagsAvailable, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function ListItem({ item, members, tagsAvailable, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -155,7 +157,7 @@ export default function ListItem({ item, tagsAvailable, setStatus, setCompleted,
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
         <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
-        <Users assignees={item.assignees} isComplete={isComplete} />
+        <Users assignees={item.assignees} members={members} isComplete={isComplete} />
       </span>
       <span className='flex gap-4 items-center justify-end'>
         <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>

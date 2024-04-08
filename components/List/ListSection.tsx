@@ -7,8 +7,9 @@ import { TrashFill } from 'react-bootstrap-icons';
 import { Button } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
 import sortItems from '@/lib/sortItems';
+import ListMember from '@/lib/model/listMember';
 
-export default function ListSection({ id, name, startingItems, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+export default function ListSection({ id, name, startingItems, members, tagsAvailable, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
   const [items, setItems] = useState<ListItemModel[]>(startingItems);
 
   function setStatus(id: string, status: ListItemModel['status']) {
@@ -68,7 +69,7 @@ export default function ListSection({ id, name, startingItems, tagsAvailable, de
           <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
     </div>
   )
 }

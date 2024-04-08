@@ -9,12 +9,12 @@ import List, { extractListFromRow, mergeLists } from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
 
 export interface DB_ListMember extends DB_User {
-  la_l_id: string;
-  la_u_id: string;
-  la_canAdd: boolean;
-  la_canRemove: boolean;
-  la_canComplete: boolean;
-  la_canAssign: boolean;
+  lm_l_id: string;
+  lm_u_id: string;
+  lm_canAdd: boolean;
+  lm_canRemove: boolean;
+  lm_canComplete: boolean;
+  lm_canAssign: boolean;
 }
 
 export interface DB_List extends DB_ListMember, DB_ListSection {
@@ -61,6 +61,7 @@ export async function getListById(id: string): Promise<List|false> {
   const sql = `
     SELECT * FROM \`lists\`
       LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`users\` ON \`users\`.\`u_id\` = \`listMembers\`.\`lm_u_id\`
       LEFT JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
       LEFT JOIN \`items\` ON \`items\`.\`i_ls_id\` = \`listSections\`.\`ls_id\`
       LEFT JOIN \`itemTags\` ON \`itemTags\`.\`it_i_id\` = \`items\`.\`i_id\`
