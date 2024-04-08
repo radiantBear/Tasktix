@@ -80,7 +80,7 @@ export default function AddItem({ sectionId, addItem }: { sectionId: string, add
             variant='underlined' 
             labelPlacement='outside' 
             size='sm' 
-            className={'w-24 -mt-4'}
+            className={'w-28 -mt-4'}
             label={<span className='ml-2 text-foreground'>Priority</span>}
             classNames={{trigger: `${(values.priority == 'all' || values.priority.has('High')) ? 'border-danger' : values.priority.has('Medium') ? 'border-warning' : 'border-success'}`, mainWrapper: '-mt-6'}}
             placeholder='Select...' 
