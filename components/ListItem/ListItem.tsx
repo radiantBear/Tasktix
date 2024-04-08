@@ -237,7 +237,7 @@ function ElapsedInput({ disabled, ms, resetTime }: { disabled: boolean, ms: numb
         </Button>
       </PopoverTrigger>
       <PopoverContent className='p-2'>
-        <Button variant='light' onPress={() => {resetTime(); setIsOpen(false)}} color='danger'>
+        <Button variant='light' onPress={() => {resetTime(); setIsOpen(false)}} color='warning'>
           <ArrowCounterclockwise />
           Reset
         </Button>
