@@ -157,7 +157,7 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
         </div>
         <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
         <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
-        <Users assignees={item.assignees} members={members} isComplete={isComplete} />
+        <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
       </span>
       <span className='flex gap-4 items-center justify-end'>
         <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>

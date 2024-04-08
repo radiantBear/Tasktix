@@ -4,25 +4,37 @@ import { useState } from 'react';
 import { PeopleFill, Plus, X } from 'react-bootstrap-icons';
 import { getBackgroundColor, getTextColor } from '@/lib/color';
 import ListMember from '@/lib/model/listMember';
+import { api } from '@/lib/api';
+import { addSnackbar } from '../Snackbar';
 
-export default function Users({ assignees, members, isComplete }: { assignees: Assignee[], members: ListMember[], isComplete: boolean }) {
+export default function Users({ itemId, assignees, members, isComplete }: { itemId: string, assignees: Assignee[], members: ListMember[], isComplete: boolean }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [_assignees, setAssignees] = useState(assignees);
 
   function addAssignee(userId: string) {
-    const newAssignees = structuredClone(_assignees);
-    for(const member of members)
-      if(member.user.id == userId)
-        newAssignees.push(new Assignee(member.user, ''));
-    setAssignees(newAssignees);
+    api.post(`/item/${itemId}/assignee/${userId}`, {})
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        const newAssignees = structuredClone(_assignees);
+        for(const member of members)
+          if(member.user.id == userId)
+            newAssignees.push(new Assignee(member.user, ''));
+        setAssignees(newAssignees);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
   }
 
   function removeAssignee(userId: string) {
-    const newAssignees = structuredClone(_assignees);
-    for(let i = 0; i < newAssignees.length; i++)
-      if(newAssignees[i].user.id == userId)
-        newAssignees.splice(i, 1);
-    setAssignees(newAssignees);
+    api.delete(`/item/${itemId}/assignee/${userId}`)
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        const newAssignees = structuredClone(_assignees);
+        for(let i = 0; i < newAssignees.length; i++)
+          if(newAssignees[i].user.id == userId)
+            newAssignees.splice(i, 1);
+        setAssignees(newAssignees);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
   }
 
   
@@ -30,7 +42,7 @@ export default function Users({ assignees, members, isComplete }: { assignees: A
     <Popover placement='bottom' isOpen={isPopoverOpen} onOpenChange={open => {if(!isComplete) setIsPopoverOpen(open)}}>
       <PopoverTrigger>
         <Card tabIndex={isComplete ? 1 : 0} className={`px-4 w-1/4 flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer ${isComplete ? 'opacity-50' : 'hover:bg-foreground/10 focus:z-10 focus:outline-2 focus:outline-focus focus:outline-offset-2'}`}>
-          <PeopleFill className='mr-2 shrink-0' />
+          <PeopleFill className='mr-4 shrink-0' />
           <AvatarGroup max={4}  className={isComplete ? 'opacity-50' : ''}>
             {_assignees.map(assignee => 
               <Avatar key={assignee.user.id} name={assignee.user.username ?? ''} classNames={{base: getBackgroundColor(assignee.user.color)}} size='sm' />

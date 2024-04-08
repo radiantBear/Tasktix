@@ -160,6 +160,28 @@ export async function linkTag(itemId: string, tagId: string): Promise<boolean> {
   return true;
 }
 
+export async function linkAssignee(itemId: string, userId: string, role: string): Promise<boolean> {
+  const sql = `
+    INSERT INTO \`itemAssignees\`(
+      \`ia_i_id\`,
+      \`ia_u_id\`,
+      \`ia_role\`
+    )
+    VALUES (
+      :itemId,
+      :userId,
+      :role
+    );
+  `;
+  
+  const result = await execute(sql, { itemId, userId, role });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
 export async function updateListItem(item: ListItem): Promise<boolean> {
   const sql = `
     UPDATE \`items\` SET 
@@ -206,6 +228,21 @@ export async function unlinkTag(itemId: string, tagId: string): Promise<boolean>
   `;
   
   const result = await execute(sql, { itemId, tagId });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
+export async function unlinkAssignee(itemId: string, userId: string): Promise<boolean> {
+  const sql = `
+    DELETE FROM \`itemAssignees\`
+    WHERE \`ia_i_id\` = :itemId
+      AND \`ia_u_id\` = :userId;
+  `;
+  
+  const result = await execute(sql, { itemId, userId });
   
   if(!result)
     return false;
