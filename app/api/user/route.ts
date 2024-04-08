@@ -29,12 +29,14 @@ export async function POST(request: Request) {
     if(await getUserByEmail(email))
       return ClientError.BadRequest('Another account already uses this email');
 
-    const user = new User();
-    user.username = username;
-    user.email = email;
-    user.password = await hash(password);
-    user.dateCreated = new Date();
-    user.dateSignedIn = new Date();
+    const user = new User(
+      username,
+      email,
+      await hash(password),
+      new Date(),
+      new Date(),
+      {}
+    );
 
     let result = await createUser(user);
     

@@ -3,6 +3,7 @@ CREATE TABLE `users` (
   `u_username` varchar(32) NOT NULL,
   `u_email` varchar(128) NOT NULL,
   `u_password` varchar(256) NOT NULL,
+  `u_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
   `u_dateCreated` datetime NOT NULL,
   `u_dateSignedIn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -77,7 +78,6 @@ CREATE TABLE `itemAssignees` (
   `ia_u_id` char(16) NOT NULL,
   `ia_i_id` char(16) NOT NULL,
   `ia_role` varchar(64) NOT NULL,
-  `ia_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
   PRIMARY KEY (`ia_u_id`, `ia_i_id`),
   FOREIGN KEY (`ia_u_id`) REFERENCES `users` (`u_id`),
   FOREIGN KEY (`ia_i_id`) REFERENCES `items` (`i_id`)

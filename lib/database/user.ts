@@ -3,12 +3,14 @@
 import User, { extractUserFromRow } from '@/lib/model/user';
 import { RowDataPacket } from 'mysql2/promise';
 import { execute, query } from './db_connect';
+import Color from '@/lib/model/color';
 
 export interface DB_User extends RowDataPacket {
   u_id: string;
   u_username: string;
   u_email: string;
   u_password: string;
+  u_color: Color;
   u_dateCreated: Date;
   u_dateSignedIn: Date;
 }

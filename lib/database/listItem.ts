@@ -18,7 +18,6 @@ export interface DB_Assignee extends DB_User {
   ia_u_id: string;
   ia_i_id: string;
   ia_role: string;
-  ia_color: Color;
 }
 
 export interface DB_ListItem extends DB_Assignee, DB_Tag {

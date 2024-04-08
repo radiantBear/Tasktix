@@ -53,3 +53,23 @@ export function getBackgroundColor(color: Color): string {
       return 'bg-violet-500';
   }
 }
+
+export function randomColor(): Color {
+  const colors: Color[] = [
+    'Pink',
+    'Red',
+    'Orange',
+    'Amber',
+    'Yellow',
+    'Lime',
+    'Green',
+    'Emerald',
+    'Cyan',
+    'Blue',
+    'Violet'
+  ];
+
+  const index = Math.floor(Math.random() * colors.length);
+
+  return colors[index];
+}
