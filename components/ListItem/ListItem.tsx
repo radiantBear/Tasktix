@@ -10,7 +10,7 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { Check, StopwatchFill, ThreeDots, TrashFill } from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, Check, StopwatchFill, ThreeDots, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
@@ -177,18 +177,10 @@ export default function ListItem({ item, members, tagsAvailable, setStatus, setC
         <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
           <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
           <span className='border-r-1 border-content3'></span>
-          <Time label='Elapsed' ms={elapsedLive} />
+          <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
         </span>
         <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
-        <Dropdown>
-          <DropdownTrigger>
-            <Button tabIndex={0} variant='ghost' isIconOnly><ThreeDots /></Button>
-          </DropdownTrigger>
-          <DropdownMenu>
-            <DropdownItem onPress={resetTime} startContent={<StopwatchFill />} className='text-warning' color='warning'>Reset time</DropdownItem>
-            <DropdownItem onPress={_deleteItem} startContent={<TrashFill />} className='text-danger' color='danger'>Delete</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
       </span>
     </div>
   );
@@ -217,7 +209,7 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
 
   return (
     <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
-      <PopoverTrigger className='-mr-2 -my-3 -px-2 relative' style={{top: '10px'}}>
+      <PopoverTrigger className='-mr-2 -my-3 -px-2 relative top-3'>
         <Button tabIndex={0} disabled={disabled} isIconOnly className={`w-fit !px-2 bg-transparent p-0 ${disabled ? '' : 'hover:bg-foreground/10'}`}>
           <Time label='Expected' ms={ms} />
         </Button>
@@ -229,6 +221,26 @@ function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms:
             <Check />
           </Button>
         </form>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function ElapsedInput({ disabled, ms, resetTime }: { disabled: boolean, ms: number, resetTime: () => any }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
+      <PopoverTrigger className='-mx-2 -px-2'>
+        <Button tabIndex={0} disabled={disabled} isIconOnly className={`w-fit !px-2 bg-transparent p-0 ${disabled ? '' : 'hover:bg-foreground/10'}`}>
+          <Time label='Elapsed' ms={ms} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className='p-2'>
+        <Button variant='light' onPress={() => {resetTime(); setIsOpen(false)}} color='danger'>
+          <ArrowCounterclockwise />
+          Reset
+        </Button>
       </PopoverContent>
     </Popover>
   );
