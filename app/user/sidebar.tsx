@@ -38,6 +38,9 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
   }
 
   function deleteList(id: string) {
+    if(!confirm('Are you sure you want to delete this list? This action is irreversible.'))
+      return;
+
     api.delete(`/list/${id}`)
       .then(res => {
         addSnackbar(res.message, 'success');

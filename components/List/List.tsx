@@ -49,6 +49,9 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   }
 
   function deleteListSection(id: string) {
+    if(!confirm('Are you sure you want to delete this section? This action is irreversible.'))
+      return;
+
     api.delete(`/list/${list.id}/section/${id}`)
       .then(res => {
         addSnackbar(res.message, 'success');
