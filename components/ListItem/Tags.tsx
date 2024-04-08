@@ -10,7 +10,7 @@ import { addSnackbar } from '../Snackbar';
 import Color from '@/lib/model/color';
 import ColorPicker from '../ColorPicker';
 
-export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: TagModel[], isComplete: boolean, tagsAvailable: TagModel[], addNewTag: (name: string, color: Color) => any }) {
+export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], addNewTag: (name: string, color: Color) => any }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [tags, setTags] = useState<TagModel[]>(initialTags);
   const [newTagName, setNewTagName] = useState('');
@@ -25,7 +25,7 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
         const newTags = structuredClone(tags);
 
         if(!name || !color){
-          const tag = tagsAvailable.find(tag => tag.id == id);
+          const tag = tagsAvailable?.find(tag => tag.id == id);
           if(!tag)
             throw Error('Could not find tag with id '+id);
 
@@ -89,15 +89,17 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
             ))
           }
           {
-            tagsAvailable.map(tag => {
-              if(!tags.some(usedTag => usedTag.id == tag.id))
-                return (
-                  <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
-                    {tag.name}
-                    <Button onPress={linkTag.bind(null, tag.id, undefined, undefined)} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Plus /></Button>
-                  </div>
-                );
-            })
+            tagsAvailable
+              ? tagsAvailable.map(tag => {
+                if(!tags.some(usedTag => usedTag.id == tag.id))
+                  return (
+                    <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
+                      {tag.name}
+                      <Button onPress={linkTag.bind(null, tag.id, undefined, undefined)} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Plus /></Button>
+                    </div>
+                  );
+              })
+              : <></>
           }
           <div key='add' className='flex w-full p-1.5 pl-1 gap-2'>
             <Input variant='underlined' placeholder='Add tag...' className='w-24' size='sm' value={newTagName} onValueChange={setNewTagName} />
