@@ -8,7 +8,7 @@ import ListItem from '@/lib/model/listItem';
 import TimeInput from '../TimeInput';
 import DateInput2 from '../DateInput2';
 
-export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, addItem }: { sectionId: string, hasTimeTracking: boolean, hasDueDates: boolean, addItem: (_: ListItem) => any }) {
+export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextIndex, addItem }: { sectionId: string, hasTimeTracking: boolean, hasDueDates: boolean, nextIndex: number, addItem: (_: ListItem) => any }) {
   const zeroMin = new Date();
   zeroMin.setTime(0);
   const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
@@ -38,7 +38,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, addIt
   function createItem() {
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
 
-    const newItem = { ...values, sectionId, priority };
+    const newItem = { ...values, sectionId, priority, sectionIndex: nextIndex };
     if(!hasTimeTracking)
       delete newItem.duration;
     if(!hasDueDates)
@@ -49,7 +49,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, addIt
         setValues(startingInputValues);
 
         const id = res.content?.split('/').at(-1);
-        const item = new ListItem(values.name, { priority, expectedMs: newItem.duration, dateDue: newItem.dueDate, id });
+        const item = new ListItem(values.name, { priority, expectedMs: newItem.duration, sectionIndex: nextIndex, dateDue: newItem.dueDate, id });
         addItem(item);
       })
       .catch(err => addSnackbar(err.message, 'error'));

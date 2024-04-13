@@ -66,7 +66,7 @@ export default function ListSection({ id, name, startingItems, members, tagsAvai
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
         <span>{name}</span>
         <span className='flex gap-4'>
-          <AddItem sectionId={id} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} addItem={addItem} />
+          <AddItem sectionId={id} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} nextIndex={items.length} addItem={addItem} />
           <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
