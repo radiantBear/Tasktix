@@ -195,7 +195,7 @@ export async function updateListItem(item: ListItem): Promise<boolean> {
       \`i_isUnclear\` = :isUnclear,
       \`i_expectedMs\` = :expectedMs,
       \`i_elapsedMs\` = :elapsedMs,
-      \`i_sectionIndex\` = :sectionIndex
+      \`i_sectionIndex\` = :sectionIndex,
       \`i_dateCreated\` = :dateCreated,
       \`i_dateDue\` = :dateDue,
       \`i_dateStarted\` = :dateStarted,
@@ -203,6 +203,7 @@ export async function updateListItem(item: ListItem): Promise<boolean> {
     WHERE \`i_id\` = :id;
   `;
   
+  console.log(item)
   const result = await execute(sql, { ...item });
 
   if(!result)
