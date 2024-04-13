@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ListItem from '@/components/ListItem';
+import { StaticListItem } from '@/components/ListItem';
 import { sortItemsByCompleted } from '@/lib/sortItems'; 
 import { api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
@@ -13,7 +13,7 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
   const builtItems: ListItemModel[] = JSON.parse(startingItems);
   for(const item of builtItems) {
     item.dateCreated = new Date(item.dateCreated);
-    item.dateDue = new Date(item.dateDue);
+    item.dateDue = item.dateDue ? new Date(item.dateDue) : null;
     item.dateStarted = item.dateStarted ? new Date(item.dateStarted) : null;
     item.dateCompleted = item.dateCompleted ? new Date(item.dateCompleted) : null;
   }
@@ -76,7 +76,7 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
     <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border'>
       {
         items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-          <ListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
+          <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
         )
       }
     </div>
