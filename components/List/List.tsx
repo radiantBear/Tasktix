@@ -67,7 +67,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   
   return (
     <>
-      {list.sections.map(section => <ListSection key={section.id} id={section.id} listId={list.id} name={section.name} members={list.members} startingItems={section.items} tagsAvailable={tagsAvailable} hasTimeTracking={list.hasTimeTracking} hasDueDates={list.hasDueDates} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
+      {list.sections.map(section => <ListSection key={section.id} id={section.id} listId={list.id} name={section.name} members={list.members} startingItems={section.items} tagsAvailable={tagsAvailable} hasTimeTracking={list.hasTimeTracking} hasDueDates={list.hasDueDates} isAutoOrdered={list.isAutoOrdered} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
       <AddListSection listId={list.id} addListSection={addListSection} />
     </>
   );
