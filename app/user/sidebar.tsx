@@ -19,10 +19,11 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
   function finalizeNew(name: string) {
     api.post('/list', { name })
       .then(res => {
+        const id = res.content?.split('/').at(-1);
         router.push(`/user${res.content}`);
         
         const newLists = structuredClone(lists);
-        newLists.push(new List(name, [], [], true, true, res.content));
+        newLists.push(new List(name, [], [], true, true, id));
         setLists(newLists);
       })
       .catch(err => addSnackbar(err.message, 'error'));
