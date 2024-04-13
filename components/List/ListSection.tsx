@@ -8,6 +8,7 @@ import { Button } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
 import sortItems from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
+import { Reorder } from 'framer-motion';
 
 export default function ListSection({ id, name, startingItems, members, tagsAvailable, hasTimeTracking, hasDueDates, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
   const [items, setItems] = useState<ListItemModel[]>(startingItems);
@@ -69,7 +70,13 @@ export default function ListSection({ id, name, startingItems, members, tagsAvai
           <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      {items.sort(sortItems).map(item => <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />)}
+      <Reorder.Group axis='y' values={items} onReorder={setItems}>
+        {
+          items.map(item => (
+              <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
+          ))
+        }
+      </Reorder.Group>
     </div>
   )
 }

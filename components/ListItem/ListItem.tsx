@@ -10,11 +10,12 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { ArrowCounterclockwise, Check, TrashFill } from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, Check, GripVertical, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
 import ListMember from '@/lib/model/listMember';
+import { Reorder, useDragControls } from 'framer-motion';
 
 export default function ListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
@@ -26,6 +27,8 @@ export default function ListItem({ item, members, tagsAvailable, hasTimeTracking
   const [elapsedLive, setElapsedLive] = useState(item.elapsedMs + (item.dateStarted ? Date.now() - item.dateStarted.getTime() : 0));
   const [name, setName] = useState(item.name);
   const [prevName, setPrevName] = useState(item.name);
+
+  const controls = useDragControls();
 
   // Use effect to keep track of the changing timer function
   useEffect(() => {
@@ -144,59 +147,62 @@ export default function ListItem({ item, members, tagsAvailable, hasTimeTracking
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  console.log(hasDueDates)
-
   return (
-    <div className='border-b-1 border-content3 p-4 bg-content1 flex gap-4 items-center justify-between w-full last:border-b-0 flex-wrap'>
-      <span className='flex gap-4 items-center justify-start grow'>
-        <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} className='-mr-3' />
-        <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
+    <Reorder.Item key={item.id} value={item} dragListener={false} dragControls={controls} className='border-b-1 border-content3 last:border-b-0'>
+      <div className='p-4 bg-content1 flex gap-4 items-center justify-between w-full flex-wrap'>
+        <span className='flex gap-4 items-center justify-start grow'>
+          <div onPointerDown={e => {e.preventDefault(); controls.start(e)}} className='px-1 py-2 -mx-3 rounded-lg text-content4 text-lg cursor-grab reorder-handle'>
+            <GripVertical />
+          </div>
+          <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} className='-mr-3' />
+          <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
+            {
+              isComplete 
+                ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{item.name}</span>
+                : <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
+                    <Input value={name} onValueChange={setName} size='sm' variant='underlined' classNames={{inputWrapper: 'border-transparent', input: '-mb-2'}} />
+                    <Button onPress={updateName} color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${name == prevName ? 'invisible' : 'visible'}`}>
+                      <Check />
+                    </Button>
+                  </span>
+            }
+            {
+              hasDueDates 
+                ? (
+                  isComplete
+                    ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + (item.dateDue ? formatDate(item.dateDue) : '')}</span>
+                    : (<DateInput color='secondary' displayContent={item.dateDue ? `Due ${formatDate(item.dateDue)}` : 'Set due date'} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+                )
+                : <></>
+            }
+          </div>
+          <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
+          <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
           {
-            isComplete 
-              ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{item.name}</span>
-              : <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
-                  <Input value={name} onValueChange={setName} size='sm' variant='underlined' classNames={{inputWrapper: 'border-transparent', input: '-mb-2'}} />
-                  <Button onPress={updateName} color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${name == prevName ? 'invisible' : 'visible'}`}>
-                    <Check />
-                  </Button>
-                </span>
+            members.length > 1
+              ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
+              : <></>
           }
+        </span>
+        <span className='flex gap-4 items-center justify-end grow-0 shrink-0'>
           {
-            hasDueDates 
+            hasTimeTracking
               ? (
-                isComplete
-                  ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + (item.dateDue ? formatDate(item.dateDue) : '')}</span>
-                  : (<DateInput color='secondary' displayContent={item.dateDue ? `Due ${formatDate(item.dateDue)}` : 'Set due date'} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+                <>
+                  <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
+                    <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
+                    <span className='border-r-1 border-content3'></span>
+                    <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
+                  </span>
+                  <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
+                </>
               )
               : <></>
           }
-        </div>
-        <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
-        <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
-        {
-          members.length > 1
-            ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
-            : <></>
-        }
-      </span>
-      <span className='flex gap-4 items-center justify-end grow-0 shrink-0'>
-        {
-          hasTimeTracking
-            ? (
-              <>
-                <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
-                  <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
-                  <span className='border-r-1 border-content3'></span>
-                  <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
-                </span>
-                <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
-              </>
-            )
-            : <></>
-        }
-        <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
-      </span>
-    </div>
+          <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
+        </span>
+      </div>
+    </Reorder.Item>
   );
 }
 
