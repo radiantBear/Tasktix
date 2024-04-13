@@ -1,6 +1,6 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
 import { getIsListAssignee } from '@/lib/database/list';
-import { updateIndices } from '@/lib/database/listSection';
+import { updateSectionIndices } from '@/lib/database/listItem';
 import { getUser } from '@/lib/session';
 
 export async function PATCH(request: Request, { params }: { params: { id: string, sectionId: string } }) {
@@ -18,7 +18,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const index = requestBody.index;
   const oldIndex = requestBody.oldIndex;
 
-  const result = await updateIndices(params.sectionId, itemId, index, oldIndex);
+  const result = await updateSectionIndices(params.sectionId, itemId, index, oldIndex);
 
   if(!result)
     return ServerError.Internal('Could not reorder items');
