@@ -49,7 +49,7 @@ const config: Config = {
   })],
   safelist: [
     {
-      pattern: /bg-(red|green|blue|orange)-(100|500|700)/,
+      pattern: /(bg|text)-(pink|red|orange|amber|yellow|lime|green|emerald|cyan|blue|violet)-500/,
     }
   ]
 };
