@@ -241,7 +241,8 @@ export async function updateList(list: List): Promise<boolean> {
     SET
       \`l_name\` = :name,
       \`l_hasTimeTracking\` = :hasTimeTracking,
-      \`l_hasDueDates\` = :hasDueDates
+      \`l_hasDueDates\` = :hasDueDates,
+      \`l_isAutoOrdered\` = :isAutoOrdered
     WHERE \`l_id\` = :id;
   `;
   

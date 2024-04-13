@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import { Button, Input, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link } from "@nextui-org/react";
-import { CalendarMinus, Check, Sliders2, StopwatchFill, Plus, TrashFill } from "react-bootstrap-icons";
+import { CalendarMinus, Check, Sliders2, StopwatchFill, Plus, TrashFill, SortDown } from "react-bootstrap-icons";
 import { usePathname, useRouter } from 'next/navigation';
 import { api } from "@/lib/api";
 import { addSnackbar } from "@/components/Snackbar";
@@ -64,7 +64,7 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
         {
           lists.sort((a, b) => a.name > b.name ? 1 : 0)
-            .map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} endContent={<ListSettings listId={list.id} dueDates={list.hasDueDates} timeTracking={list.hasTimeTracking} deleteList={deleteList.bind(null, list.id)} />} />)
+            .map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} endContent={<ListSettings listId={list.id} dueDates={list.hasDueDates} timeTracking={list.hasTimeTracking} autoOrdered={list.isAutoOrdered} deleteList={deleteList.bind(null, list.id)} />} />)
         }
         {addingList ? <NewItem finalize={finalizeNew} remove={removeNew} /> : <></>}
       </NavSection>
@@ -120,9 +120,10 @@ function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove
   );
 }
 
-export function ListSettings({ listId, timeTracking, dueDates, deleteList }: { listId: string, timeTracking: boolean, dueDates: boolean, deleteList: () => any }) {
+export function ListSettings({ listId, timeTracking, autoOrdered, dueDates, deleteList }: { listId: string, timeTracking: boolean, dueDates: boolean, autoOrdered: boolean, deleteList: () => any }) {
   const [hasTimeTracking, setHasTimeTracking] = useState(timeTracking);
   const [hasDueDates, setHasDueDates] = useState(dueDates);
+  const [isAutoOrdered, setIsAutoOrdered] = useState(autoOrdered);
 
   function updateHasTimeTracking() {
     api.patch(`/list/${listId}`, { hasTimeTracking: !hasTimeTracking })
@@ -141,6 +142,15 @@ export function ListSettings({ listId, timeTracking, dueDates, deleteList }: { l
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
+
+  function updateIsAutoOrdered() {
+    api.patch(`/list/${listId}`, { isAutoOrdered: !isAutoOrdered })
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        setIsAutoOrdered(!isAutoOrdered);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
   
   return (
     <Dropdown>
@@ -152,6 +162,7 @@ export function ListSettings({ listId, timeTracking, dueDates, deleteList }: { l
       <DropdownMenu>
         <DropdownItem onPress={updateHasTimeTracking} key='toggleTime' startContent={<StopwatchFill />}>{hasTimeTracking ? 'Disable' : 'Enable'} time tracking</DropdownItem>
         <DropdownItem onPress={updateHasDueDates} startContent={<CalendarMinus />}>{hasDueDates ? 'Disable' : 'Enable'} due dates</DropdownItem>
+        <DropdownItem onPress={updateIsAutoOrdered} startContent={<SortDown />}>{isAutoOrdered ? 'Disable' : 'Enable'} auto ordering</DropdownItem>
         <DropdownItem onPress={deleteList} startContent={<TrashFill />} className='text-danger' color='danger'>Delete list</DropdownItem>
       </DropdownMenu>
     </Dropdown>

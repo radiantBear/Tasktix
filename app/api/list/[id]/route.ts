@@ -24,6 +24,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     list.hasTimeTracking = requestBody.hasTimeTracking;
   if(requestBody.hasDueDates != undefined)
     list.hasDueDates = requestBody.hasDueDates;
+  if(requestBody.isAutoOrdered != undefined)
+    list.isAutoOrdered = requestBody.isAutoOrdered;
 
   const result = await updateList(list);
 
