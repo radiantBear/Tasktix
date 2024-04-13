@@ -42,13 +42,13 @@ export default function CalendarInput({ defaultValue, color = 'default', value, 
           <Button onPress={() => updateCurrentRange(1)} isIconOnly className='bg-transparent hover:bg-foreground/10'><ChevronRight /></Button>
         </span>
         <span className='flex justify-between px-2'>
-          <span>S</span>
+          <span className='text-foreground/65'>S</span>
           <span>M</span>
           <span>T</span>
           <span>W</span>
           <span>T</span>
           <span>F</span>
-          <span>S</span>
+          <span className='text-foreground/65'>S</span>
         </span>
       </div>
       <CalendarInputBody color={color} current={date} month={currentRange} onSelect={handleSelect} />
@@ -98,7 +98,7 @@ function CalendarInputBody({ color, current, month, onSelect }: { color: 'defaul
     if(isCurrentMonth && current.getDate() == i)
       days.push(<Button key={`${monthNum}:${i}`} variant='solid' onPress={() => onSelect(i)} className='w-6 min-w-6 h-6 min-h-6 rounded-md' color={color} isIconOnly>{i}</Button>)
     else
-      days.push(<Button key={`${monthNum}:${i}`} variant='light' onPress={() => onSelect(i)} className={`w-6 min-w-6 h-6 min-h-6 rounded-md text-foreground ${hoverColor}`} color={color} isIconOnly>{i}</Button>)
+      days.push(<Button key={`${monthNum}:${i}`} variant='light' onPress={() => onSelect(i)} className={`w-6 min-w-6 h-6 min-h-6 rounded-md ${[0, 6].includes((before + i - 1) % 7) ? 'text-foreground/65' : 'text-foreground'} ${hoverColor}`} color={color} isIconOnly>{i}</Button>)
     
   return (
     <div className='grid grid-cols-7 w-full gap-1 p-1'>
