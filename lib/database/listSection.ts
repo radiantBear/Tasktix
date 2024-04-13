@@ -28,6 +28,33 @@ export async function createListSection(listId: string, listSection: ListSection
   return true;
 }
 
+export async function updateIndices(sectionId: string, itemId: string, index: number, oldIndex: number): Promise<boolean> {
+  const sql = `
+    UPDATE \`items\`
+    SET \`i_sectionIndex\` = CASE 
+      WHEN i_id = :itemId 
+        THEN :index
+        ELSE \`i_sectionIndex\` ${oldIndex > index? '+ 1' : '- 1'}
+      END
+    WHERE i_ls_id = :sectionId
+      AND i_sectionIndex >= :indexOne
+      AND i_sectionIndex <= :indexTwo;
+  `;
+
+  const result = await execute(sql, { 
+    sectionId,
+    itemId,
+    index,
+    indexOne: Math.min(oldIndex, index),
+    indexTwo: Math.max(oldIndex, index)
+  });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
 export async function deleteListSection(id: string): Promise<boolean> {
   const sql = `
     DELETE FROM \`listSections\`

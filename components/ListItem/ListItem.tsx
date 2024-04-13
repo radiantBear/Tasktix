@@ -17,7 +17,7 @@ import DateInput from '../DateInput';
 import ListMember from '@/lib/model/listMember';
 import { Reorder, useDragControls } from 'framer-motion';
 
-export default function ListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+export default function ListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag, reorder }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any, reorder: () => any }) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -148,7 +148,7 @@ export default function ListItem({ item, members, tagsAvailable, hasTimeTracking
   }
 
   return (
-    <Reorder.Item key={item.id} value={item} dragListener={false} dragControls={controls} className='border-b-1 border-content3 last:border-b-0'>
+    <Reorder.Item key={item.id} value={item} dragListener={false} dragControls={controls} onDragEnd={reorder} className='border-b-1 border-content3 last:border-b-0'>
       <div className='p-4 bg-content1 flex gap-4 items-center justify-between w-full flex-wrap'>
         <span className='flex gap-4 items-center justify-start grow'>
           <div onPointerDown={e => {e.preventDefault(); if(!isComplete) controls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${isComplete ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>

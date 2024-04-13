@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ListItem from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
@@ -9,9 +9,19 @@ import Tag from '@/lib/model/tag';
 import { sortItemsByCompleted, sortItemsByIndex } from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
 import { Reorder } from 'framer-motion';
+import { api } from '@/lib/api';
+import { addSnackbar } from '../Snackbar';
 
-export default function ListSection({ id, name, startingItems, members, tagsAvailable, hasTimeTracking, hasDueDates, deleteSection, addNewTag }: { id: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
-  const [items, setItems] = useState<ListItemModel[]>(startingItems.sort(sortItemsByCompleted).sort(sortItemsByIndex));
+interface Item extends ListItemModel {
+  visualIndex?: number;
+}
+
+export default function ListSection({ id, listId, name, startingItems, members, tagsAvailable, hasTimeTracking, hasDueDates, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+  const [items, setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
+    const newItem: Item = structuredClone(item);
+    newItem.visualIndex = i;
+    return newItem;
+  }));
 
   function setStatus(id: string, status: ListItemModel['status']) {
     const newItems = structuredClone(items);
@@ -53,6 +63,38 @@ export default function ListSection({ id, name, startingItems, members, tagsAvai
     setItems(newItems);
   }
 
+  function reorderItem(item: ListItemModel, lastVisualIndex: number) {
+    const index = items.findIndex(i => i.id == item.id);
+    if(index == lastVisualIndex)
+      return;
+    
+    const oldIndex = item.sectionIndex;
+    const newIndex = index > lastVisualIndex 
+      ? items[index-1].sectionIndex 
+      : items[index+1].sectionIndex;
+
+    if(newIndex == oldIndex)
+      return;
+
+    api.patch(`/list/${listId}/section/${id}/item`, { itemId: item.id, index: newIndex, oldIndex: oldIndex })
+      .then(res => {
+        addSnackbar(res.message, 'success');
+        
+        const index1 = Math.min(newIndex, oldIndex);
+        const index2 = Math.max(newIndex, oldIndex);
+        const newItems = structuredClone(items);
+        for(let i = 0; i < newItems.length; i++) {
+          newItems[i].visualIndex = i;
+          if(newItems[i].sectionIndex >= index1 && newItems[i].sectionIndex <= index2)
+            newItems[i].sectionIndex += oldIndex > newIndex ? 1 : -1;
+          if(newItems[i].id == item.id)
+            newItems[i].sectionIndex = newIndex;
+        }
+        setItems(newItems);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
   function deleteItem(id: string) {
     const newItems = structuredClone(items);
     for(let i = 0; i < newItems.length; i++)
@@ -70,10 +112,10 @@ export default function ListSection({ id, name, startingItems, members, tagsAvai
           <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
         </span>
       </div>
-      <Reorder.Group axis='y' values={items} onReorder={setItems}>
+      <Reorder.Group axis='y' values={items} onReorder={items => setItems(items.sort(sortItemsByCompleted))}>
         {
-          items.sort(sortItemsByCompleted).map(item => (
-              <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
+          items.map(item => (
+            <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
           ))
         }
       </Reorder.Group>
