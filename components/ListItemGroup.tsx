@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import ListItem from '@/components/ListItem';
-import sortItems from '@/lib/sortItems'; 
+import { sortItemsByCompleted } from '@/lib/sortItems'; 
 import { api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
@@ -75,7 +75,7 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
   return (
     <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border'>
       {
-        items.sort(sortItems).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
+        items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
           <ListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
         )
       }

@@ -151,7 +151,7 @@ export default function ListItem({ item, members, tagsAvailable, hasTimeTracking
     <Reorder.Item key={item.id} value={item} dragListener={false} dragControls={controls} className='border-b-1 border-content3 last:border-b-0'>
       <div className='p-4 bg-content1 flex gap-4 items-center justify-between w-full flex-wrap'>
         <span className='flex gap-4 items-center justify-start grow'>
-          <div onPointerDown={e => {e.preventDefault(); controls.start(e)}} className='px-1 py-2 -mx-3 rounded-lg text-content4 text-lg cursor-grab reorder-handle'>
+          <div onPointerDown={e => {e.preventDefault(); if(!isComplete) controls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${isComplete ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
             <GripVertical />
           </div>
           <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} className='-mr-3' />

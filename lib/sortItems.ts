@@ -1,6 +1,6 @@
 import ListItem from "@/lib/model/listItem";
 
-export default function sortItems(a: ListItem, b: ListItem): number {
+export function sortItemsByCompleted(a: ListItem, b: ListItem): number {
   if(a.dateCompleted && b.dateCompleted) {
     if(a.dateCompleted < b.dateCompleted)
       return 1;
@@ -15,20 +15,13 @@ export default function sortItems(a: ListItem, b: ListItem): number {
   if(b.status == 'Completed' && a.status != 'Completed')
     return -1;
 
-  if(a.dateDue > b.dateDue)
-    return 1;
-  if(b.dateDue > a.dateDue)
-    return -1;
+  return 0;
+}
 
-  if(
-    (a.priority == 'Low' && (b.priority == 'Medium' || b.priority == 'High'))
-    || (a.priority == 'Medium' && b.priority == 'High') 
-  )
+export function sortItemsByIndex(a: ListItem, b: ListItem): number {
+  if(a.sectionIndex > b.sectionIndex)
     return 1;
-  if(
-    (b.priority == 'Low' && (a.priority == 'Medium' || a.priority == 'High'))
-    || (b.priority == 'Medium' && a.priority == 'High') 
-  )
+  if(b.sectionIndex > a.sectionIndex)
     return -1;
 
   return 0;
