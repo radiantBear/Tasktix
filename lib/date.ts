@@ -7,7 +7,7 @@ export function getDayOffset(date: Date): number {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return Math.trunc(getDateDiff(date, today) / day);
+  return Math.floor(getDateDiff(date, today) / day);
 }
 
 export function formatDate(date: Date, pretty: boolean = true): string {
