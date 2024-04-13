@@ -16,6 +16,7 @@ export async function POST(request: Request) {
   const dueDate = requestBody.dueDate ? new Date(requestBody.dueDate) : null;
   const priority = requestBody.priority;
   const sectionId = requestBody.sectionId;
+  const sectionIndex = requestBody.sectionIndex;
   const expectedMs = requestBody.duration || null;
 
   const isMember = await getIsListAssigneeBySection(user.id, sectionId);
@@ -36,10 +37,12 @@ export async function POST(request: Request) {
     return ClientError.BadRequest('Invalid priority');
   if(!sectionId)
     return ClientError.BadRequest('Invalid section ID');
+  if(!sectionIndex)
+    return ClientError.BadRequest('Invalid section Index');
   if(!expectedMs && list.hasTimeTracking)
     return ClientError.BadRequest('Invalid expected duration');
 
-  const listItem = new ListItem(name, { priority, expectedMs, dateDue: dueDate });
+  const listItem = new ListItem(name, { priority, expectedMs, sectionIndex, dateDue: dueDate });
 
   console.log(listItem)
   const result = await createListItem(sectionId, listItem);

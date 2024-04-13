@@ -14,6 +14,7 @@ export default class ListItem {
   isUnclear: boolean;
   expectedMs: number|null;
   elapsedMs: number;
+  sectionIndex: number;
   dateCreated: Date;
   dateDue: Date|null;
   dateStarted: Date|null;
@@ -25,8 +26,8 @@ export default class ListItem {
 
   constructor(
     name: string, 
-    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, expectedMs = null, elapsedMs = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [], listId, sectionId }:
-    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, expectedMs?: number|null, elapsedMs?: number, dateCreated?: Date, dateDue?: Date|null, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[], listId?: string, sectionId?: string }
+    {id, status = 'Unstarted', priority = 'Low', isUnclear = false, expectedMs = null, elapsedMs = 0, sectionIndex = 0, dateCreated = new Date(), dateDue = new Date(), dateStarted = null, dateCompleted = null, assignees = [], tags = [], listId, sectionId }:
+    {id?: string, status?: Status, priority?: Priority, isUnclear?: boolean, expectedMs?: number|null, elapsedMs?: number, sectionIndex?: number, dateCreated?: Date, dateDue?: Date|null, dateStarted?: Date|null, dateCompleted?: Date|null, assignees?: Assignee[], tags?: Tag[], listId?: string, sectionId?: string }
   ) {
     if(!id)
       id = generateId();
@@ -38,6 +39,7 @@ export default class ListItem {
     this.isUnclear = !!isUnclear;
     this.expectedMs = expectedMs;
     this.elapsedMs = elapsedMs;
+    this.sectionIndex = sectionIndex;
     this.dateCreated = dateCreated;
     this.dateDue = dateDue;
     this.dateStarted = dateStarted;
@@ -68,6 +70,7 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
       isUnclear: row.i_isUnclear,
       expectedMs: row.i_expectedMs,
       elapsedMs: row.i_elapsedMs,
+      sectionIndex: row.i_sectionIndex,
       dateCreated: new Date(row.i_dateCreated),
       dateDue: row.i_dateDue ? new Date(row.i_dateDue) : null,
       dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,

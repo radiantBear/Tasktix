@@ -43,6 +43,7 @@ CREATE TABLE `items` (
   `i_elapsedMs` integer NOT NULL DEFAULT 0,
   `i_parentId` char(16) NULL DEFAULT NULL,
   `i_ls_id` char(16) NOT NULL,
+  `i_sectionIndex` integer NOT NULL DEFAULT 0,
   `i_dateCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `i_dateDue` datetime NULL DEFAULT NULL,
   `i_dateStarted` datetime NULL DEFAULT NULL,
