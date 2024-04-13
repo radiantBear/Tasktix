@@ -9,10 +9,11 @@ export default class List {
   name: string;
   hasTimeTracking: boolean;
   hasDueDates: boolean;
+  isAutoOrdered: boolean;
   members: ListMember[];
   sections: ListSection[];
 
-  constructor(name: string, members: ListMember[], sections: ListSection[], hasTimeTracking: boolean, hasDueDates: boolean, id?: string) {
+  constructor(name: string, members: ListMember[], sections: ListSection[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, id?: string) {
     if(!id)
       id = generateId();
 
@@ -20,6 +21,7 @@ export default class List {
     this.name = name;
     this.hasTimeTracking = hasTimeTracking;
     this.hasDueDates = hasDueDates;
+    this.isAutoOrdered = isAutoOrdered;
     this.members = members;
     this.sections = sections;
   }
@@ -36,7 +38,7 @@ export function extractListFromRow(row: DB_List): List {
       ? [extractListSectionFromRow(row)]
       : [];
 
-  const list = new List(row.l_name, listMember, listSection, row.l_hasTimeTracking, row.l_hasDueDates, row.l_id);
+  const list = new List(row.l_name, listMember, listSection, row.l_hasTimeTracking, row.l_hasDueDates, row.l_isAutoOrdered, row.l_id);
   list.id = row.l_id;
 
   return list;

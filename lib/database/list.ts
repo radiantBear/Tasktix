@@ -23,6 +23,7 @@ export interface DB_List extends DB_ListMember, DB_ListSection {
   l_name: string;
   l_hasTimeTracking: boolean;
   l_hasDueDates: boolean;
+  l_isAutoOrdered: boolean;
 }
 
 export async function createList(list: List): Promise<boolean> {

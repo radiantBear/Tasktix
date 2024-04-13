@@ -23,7 +23,7 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
         router.push(`/user${res.content}`);
         
         const newLists = structuredClone(lists);
-        newLists.push(new List(name, [], [], true, true, id));
+        newLists.push(new List(name, [], [], true, true, true, id));
         setLists(newLists);
       })
       .catch(err => addSnackbar(err.message, 'error'));

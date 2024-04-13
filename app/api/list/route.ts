@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     return ClientError.BadRequest('Invalid list name');
   
   const listMember = new ListMember(session, true, true, true, true);
-  const list = new List(name, [listMember], [], true, true);
+  const list = new List(name, [listMember], [], true, true, true);
 
   const result = await createList(list);
 
