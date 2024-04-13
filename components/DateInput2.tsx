@@ -22,7 +22,7 @@ export default function DateInput2({ label, placeholder, className, classNames, 
       onValueChange && onValueChange(value);
     else
       setDate(value);
-    setIsOpen(false);
+    debounceOpenChange(false);
   }
   
   function debounceOpenChange(isOpen: boolean) {
