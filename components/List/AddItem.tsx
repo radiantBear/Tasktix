@@ -51,6 +51,8 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
         const id = res.content?.split('/').at(-1);
         const item = new ListItem(values.name, { priority, expectedMs: newItem.duration, sectionIndex: nextIndex, dateDue: newItem.dueDate, id });
         addItem(item);
+
+        setIsOpen(false);
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
