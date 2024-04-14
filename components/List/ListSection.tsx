@@ -6,7 +6,7 @@ import Color from '@/lib/model/color';
 import { TrashFill } from 'react-bootstrap-icons';
 import { Button } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
-import { sortItemsByCompleted, sortItemsByIndex } from '@/lib/sortItems';
+import { sortItems, sortItemsByCompleted, sortItemsByIndex } from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
 import { Reorder } from 'framer-motion';
 import { api } from '@/lib/api';
@@ -115,7 +115,7 @@ export default function ListSection({ id, listId, name, startingItems, members, 
       {
         isAutoOrdered
           ? (
-            items.map(item => (
+            items.sort(sortItems).map(item => (
               <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
             ))
           )
