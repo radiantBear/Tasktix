@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
 import Snackbar from '@/components/Snackbar';
 import Image from 'next/image';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 
 export let setLoggedIn: () => void;
@@ -28,6 +29,7 @@ export default function Body({ children, isLoggedInAtStart }: { children: ReactN
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify='end'>
+          <ThemeSwitcher />
           <AccountButton isLoggedIn={isLoggedIn} />
         </NavbarContent>
       </Navbar>

@@ -73,7 +73,7 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
   }
 
   return (
-    <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border'>
+    <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border shadow-lg shadow-content2'>
       {
         items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
           <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />

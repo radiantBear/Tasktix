@@ -20,7 +20,7 @@ export default function AddListSection({ listId, addListSection }: { listId: str
   }
   
   return (
-    <div className='rounded-md w-100 overfLow-hidden border-1 border-content3 bg-content1 p-4 h-18 flex items-center justify-center gap-4'>
+    <div className='rounded-md w-100 overfLow-hidden border-1 border-content3 bg-content1 p-4 h-18 flex items-center justify-center gap-4 shadow-lg shadow-content2'>
       <Input placeholder='Name' value={name} onValueChange={setName} variant='underlined' className='w-52' />
       <Button tabIndex={0} variant='flat' color='primary' onPress={createSection}>Add Section</Button>
     </div>

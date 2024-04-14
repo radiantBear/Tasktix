@@ -104,7 +104,7 @@ export default function ListSection({ id, listId, name, startingItems, members, 
   }
 
   return (
-    <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border shrink-0'>
+    <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border shrink-0 shadow-lg shadow-content2'>
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
         <span>{name}</span>
         <span className='flex gap-4'>

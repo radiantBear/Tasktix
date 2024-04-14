@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return (
-    <html lang='en' className='dark'>
+    <html lang='en' suppressHydrationWarning>
       <body >
         <Providers>
           <Body isLoggedInAtStart={!!await getUser()}>
