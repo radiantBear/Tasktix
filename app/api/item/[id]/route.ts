@@ -29,7 +29,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     item.dateDue = new Date(requestBody.dateDue);
   if(requestBody.expectedMs)
     item.expectedMs = requestBody.expectedMs;
-  if(requestBody.elapsedMs)
+  if(requestBody.elapsedMs !== undefined)
     item.elapsedMs = requestBody.elapsedMs;
   if(requestBody.startTime !== undefined)
     item.dateStarted = requestBody.startTime ? new Date(requestBody.startTime) : null;
