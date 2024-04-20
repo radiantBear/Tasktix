@@ -23,7 +23,7 @@ export default function ListSection({ id, listId, name, startingItems, members, 
     return newItem;
   }));
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(!items.reduce((prev, curr) => prev || curr.status != 'Completed', false));
 
   function setStatus(id: string, status: ListItemModel['status']) {
     const newItems = structuredClone(items);
