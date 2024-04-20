@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     return ClientError.BadRequest('Invalid priority');
   if(!sectionId)
     return ClientError.BadRequest('Invalid section ID');
-  if(!sectionIndex)
+  if(!sectionIndex && sectionIndex !== 0)
     return ClientError.BadRequest('Invalid section Index');
   if(!expectedMs && list.hasTimeTracking)
     return ClientError.BadRequest('Invalid expected duration');
