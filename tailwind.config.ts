@@ -21,6 +21,9 @@ const config: Config = {
       },
       animation: {
         'slide-from-right': 'slideLeft 0.5s, slideRight 0.5s 4s forwards'
+      },
+      boxShadow: {
+        'l-lg': '0 -3px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color)'
       }
     },
   },

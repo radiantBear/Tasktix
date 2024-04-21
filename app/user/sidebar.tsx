@@ -59,7 +59,7 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
   }
 
   return (
-    <aside className='w-48 bg-transparent shadow-lg shadow-content4 p-4 flex flex-col gap-4 overflow-y-scroll'>
+    <aside className='w-48 bg-transparent shadow-l-lg shadow-content4 p-4 flex flex-col gap-4 overflow-y-scroll'>
       <NavItem name='Today' link='/user' />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
         {
