@@ -3,7 +3,7 @@ import { ListItem, StaticListItem } from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
-import { ChevronBarContract, ChevronBarExpand, TrashFill } from 'react-bootstrap-icons';
+import { ChevronContract, ChevronExpand, TrashFill } from 'react-bootstrap-icons';
 import { Button } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
 import { sortItems, sortItemsByCompleted, sortItemsByIndex } from '@/lib/sortItems';
@@ -110,7 +110,7 @@ export default function ListSection({ id, listId, name, startingItems, members, 
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
         <span>
           <Button onPress={() => setIsCollapsed(!isCollapsed)} isIconOnly className='hover:bg-foreground/10 -ml-2 mr-2'>
-            {isCollapsed ? <ChevronBarExpand /> : <ChevronBarContract />}
+            {isCollapsed ? <ChevronExpand /> : <ChevronContract />}
           </Button>
           {name}
         </span>
