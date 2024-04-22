@@ -50,7 +50,7 @@ export default function Snackbar() {
   
   return (
     <div className='absolute bottom-0 right-0 w-96 overflow-x-clip'>
-      <div key={snackbarQueue[0] ? snackbarQueue[0].id : 'empty' } className={`bg-background z-50 absolute bottom-4 w-80 p-0 flex overflow-hidden rounded-md ${snackbarQueue[0] ? 'animate-slide-from-right right-4' : 'right-[-20rem]'}`}>
+      <div key={snackbarQueue[0] ? snackbarQueue[0].id : 'empty' } className={`bg-background/50 backdrop-blur-md z-50 absolute bottom-4 w-80 p-0 flex overflow-hidden rounded-md ${snackbarQueue[0] ? 'animate-slide-from-right right-4' : 'right-[-20rem]'}`}>
         <span className={`w-full h-full py-2 px-3 grow ${snackbarQueue[0] ? styles[snackbarQueue[0].color] : styles.default}`}>
           {snackbarQueue[0] ? snackbarQueue[0].message : ''}
         </span>
