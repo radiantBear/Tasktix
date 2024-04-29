@@ -10,7 +10,7 @@ import { addSnackbar } from '../Snackbar';
 import Color from '@/lib/model/color';
 import ColorPicker from '../ColorPicker';
 
-export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, addNewTag }: { itemId: string, initialTags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], addNewTag: (name: string, color: Color) => any }) {
+export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, className, addNewTag }: { itemId: string, initialTags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], className?: string, addNewTag: (name: string, color: Color) => any }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [tags, setTags] = useState<TagModel[]>(initialTags);
   const [newTagName, setNewTagName] = useState('');
@@ -72,7 +72,7 @@ export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, a
   return (
       <Popover placement='bottom' isOpen={isPopoverOpen} onOpenChange={open => {if(!isComplete) setIsPopoverOpen(open)}}>
         <PopoverTrigger>
-          <Card tabIndex={isComplete ? 1 : 0} className={`px-4 basis-1/6 grow shrink flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer bg-transparent ${isComplete ? 'opacity-50 cursor-default' : 'hover:bg-foreground/10 focus:z-10 focus:outline-2 focus:outline-focus focus:outline-offset-2'}`}>
+          <Card tabIndex={isComplete ? 1 : 0} className={`px-4 basis-1/6 grow shrink flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer bg-transparent ${isComplete ? 'opacity-50 cursor-default' : 'hover:bg-foreground/10 focus:z-10 focus:outline-2 focus:outline-focus focus:outline-offset-2'} ${className}`}>
             <TagsIcon className='shrink-0' />
             <span className='ml-2 flex flex-row items-center justify-start overflow-hidden flex-nowrap'>
               {tags.map(tag => <Chip key={tag.id} variant='dot' size='sm' classNames={{dot: getBackgroundColor(tag.color), base: 'border-0', content: getTextColor(tag.color)}}>{tag.name}</Chip>)}

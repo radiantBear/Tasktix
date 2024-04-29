@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
+import { Button, Checkbox, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@nextui-org/react';
 import { formatDate } from '@/lib/date';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
@@ -10,12 +10,14 @@ import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { ArrowCounterclockwise, Check, GripVertical, TrashFill } from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, Check, GripVertical, ThreeDots, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
 import DateInput from '../DateInput';
 import ListMember from '@/lib/model/listMember';
 import { DragControls } from 'framer-motion';
+import DateInput2 from '../DateInput2';
+import Name from './Name';
 
 export default function StaticListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, reorderControls, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, reorderControls?: DragControls, setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
   const minute = 1000 * 60;
@@ -25,8 +27,6 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
   const updateTime = useRef(() => {});
   const lastTime = useRef(new Date());
   const [elapsedLive, setElapsedLive] = useState(item.elapsedMs + (item.dateStarted ? Date.now() - item.dateStarted.getTime() : 0));
-  const [name, setName] = useState(item.name);
-  const [prevName, setPrevName] = useState(item.name);
 
   // Use effect to keep track of the changing timer function
   useEffect(() => {
@@ -136,11 +136,14 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  function updateName() {
+  function updateName(name: string) {
     api.patch(`/item/${item.id}`, { name })
       .then(res => {
         addSnackbar(res.message, 'success');
-        setPrevName(name);
+        const newItem = structuredClone(item);
+        newItem.name = name;
+        // TODO: Start converting all functions to update the whole item
+        setItem(newItem);
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
@@ -160,12 +163,11 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
           {
             isComplete 
               ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{item.name}</span>
-              : <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
-                  <Input value={name} onValueChange={setName} size='sm' variant='underlined' classNames={{inputWrapper: 'border-transparent', input: '-mb-2'}} />
-                  <Button onPress={updateName} color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${name == prevName ? 'invisible' : 'visible'}`}>
-                    <Check />
-                  </Button>
-                </span>
+              : (
+                  <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
+                    <Name name={item.name} updateName={updateName} />
+                  </span>
+                )
           }
           {
             hasDueDates 
@@ -200,7 +202,7 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
             )
             : <></>
         }
-        <Button onPress={_deleteItem} variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
+        <More item={item} tagsAvailable={tagsAvailable} members={members} hasDueDates={hasDueDates} hasTimeTracking={hasTimeTracking} elapsedLive={elapsedLive} updateName={updateName} updateDueDate={_updateDueDate} addNewTag={addNewTag} updateExpectedMs={updateExpectedMs} startRunning={startRunning} pauseRunning={pauseRunning} resetTime={resetTime} setComplete={setComplete} deleteItem={_deleteItem} />
       </span>
     </div>
   );
@@ -258,5 +260,75 @@ function ElapsedInput({ disabled, ms, resetTime }: { disabled: boolean, ms: numb
         </Button>
       </PopoverContent>
     </Popover>
+  );
+}
+
+function More({ item, tagsAvailable, members, hasDueDates, hasTimeTracking, elapsedLive, updateName, updateDueDate, addNewTag, updateExpectedMs, startRunning, pauseRunning, resetTime, setComplete, deleteItem }: { item: ListItemModel, tagsAvailable: Tag[], members: ListMember[], hasDueDates: boolean, hasTimeTracking: boolean, elapsedLive: number, updateName: (name: string) => any, updateDueDate: (date: Date) => any, addNewTag: (name: string, color: Color) => any, updateExpectedMs: (ms: number) => any, startRunning: () => any, pauseRunning: () => any, resetTime: () => any, setComplete: (e: ChangeEvent<HTMLInputElement>) => any, deleteItem: () => any }) {
+  const isComplete = item.status == 'Completed';
+  
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+  return (
+    <>
+      <Button onPress={onOpen} variant='ghost' isIconOnly><ThreeDots /></Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className='justify-center'>
+                Details
+              </ModalHeader>
+
+              <ModalBody className='gap-4 py-4'>
+                <div className='flex gap-4 items-center'>
+                  <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} />
+                  <span className='flex grow'>
+                    <Name showLabel name={item.name} updateName={updateName} disabled={isComplete} />
+                  </span>
+                </div>
+                <div className='flex gap-4 items-center'>
+                  <Priority isComplete={isComplete} itemId={item.id} startingPriority={item.priority} wrapperClassName='!my-0 w-1/2' className='w-full' />
+                  {
+                    hasDueDates 
+                      ? (
+                        <DateInput2 disabled={isComplete} label='Due date' value={item.dateDue || undefined} onValueChange={updateDueDate} color='primary' variant='underlined' className='w-1/2' />
+                      )
+                      : <></>
+                  }
+                </div>
+
+                <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} className='py-2' />
+
+                {
+                  members.length > 1
+                    ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} className='py-2' />
+                    : <></>
+                }
+
+                <div className='flex gap-6 justify-between'>
+                  {
+                    hasTimeTracking
+                      ? (
+                        <>
+                          <span className={`flex gap-6 ${isComplete ? 'opacity-50' : ''}`}>
+                            <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
+                            <span className='border-r-1 border-content3'></span>
+                            <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
+                          </span>
+                          <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />  
+                        </>
+                      )
+                      : <></>
+                  }
+                  <Button onPress={() => { onClose(); deleteItem(); }} variant='ghost' color='danger'>
+                    <TrashFill />Delete
+                  </Button>
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import CalendarInput from './CalendarInput';
 import { formatDate } from '@/lib/date';
 
-export default function DateInput2({ label, placeholder, className, classNames, defaultValue, color = 'default', size, variant, tabIndex, value, onValueChange }: { label?: string, placeholder?: string, className: string, classNames: SlotsToClasses<'label'|'input'|'base'|'description'|'errorMessage'|'mainWrapper'|'inputWrapper'|'innerWrapper'|'clearButton'|'helperWrapper'>, defaultValue?: Date, color?: 'default'|'primary'|'secondary'|'danger'|'warning'|'success', size?: 'sm'|'md'|'lg', tabIndex?: number, variant?: 'flat'|'faded'|'bordered'|'underlined', value?: Date, onValueChange?: (date: Date) => any }) {
+export default function DateInput2({ label, placeholder, className, classNames, defaultValue, color = 'default', size, variant, tabIndex, disabled, value, onValueChange }: { label?: string, placeholder?: string, className?: string, classNames?: SlotsToClasses<'label'|'input'|'base'|'description'|'errorMessage'|'mainWrapper'|'inputWrapper'|'innerWrapper'|'clearButton'|'helperWrapper'>, defaultValue?: Date, color?: 'default'|'primary'|'secondary'|'danger'|'warning'|'success', size?: 'sm'|'md'|'lg', tabIndex?: number, variant?: 'flat'|'faded'|'bordered'|'underlined', disabled?: boolean, value?: Date, onValueChange?: (date: Date) => any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(value || defaultValue || null);
   const input = useRef<HTMLInputElement|null>();
@@ -37,11 +37,13 @@ export default function DateInput2({ label, placeholder, className, classNames, 
     lastTrigger.current = new Date();
     
     if(isOpen) {
-      setIsOpen(true)
-      if(input.current) {
-        input.current.blur();
-        input.current.dataset.focusWithin = 'true';
-        input.current.dataset.focus = 'true';
+      if(!disabled) {
+        setIsOpen(true)
+        if(input.current) {
+          input.current.blur();
+          input.current.dataset.focusWithin = 'true';
+          input.current.dataset.focus = 'true';
+        }
       }
     }
     else {
@@ -64,9 +66,9 @@ export default function DateInput2({ label, placeholder, className, classNames, 
       defaultValue={defaultValue ? formatDate(defaultValue) : undefined}
       variant={variant}
       onFocusChange={debounceOpenChange}
-      className={className}
+      className={`${className} ${disabled ? 'opacity-50' : ''}`}
       classNames={classNames}
-      autoFocus
+      disabled={disabled}
       startContent={
         <Popover placement='bottom-start' isOpen={isOpen} onOpenChange={debounceOpenChange}>
           <PopoverTrigger className='-ml-2 -mb-2 mt-1'>
