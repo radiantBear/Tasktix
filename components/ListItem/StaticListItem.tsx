@@ -165,7 +165,7 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
               ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{item.name}</span>
               : (
                   <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
-                    <Name name={item.name} updateName={updateName} />
+                    <Name name={item.name} updateName={updateName} className='shrink' />
                   </span>
                 )
           }
@@ -179,8 +179,8 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
               : <></>
           }
         </div>
-        <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} />
-        <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} />
+        <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} className='hidden md:flex' />
+        <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} className='hidden lg:flex' />
         {
           members.length > 1
             ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
@@ -191,14 +191,14 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
         {
           hasTimeTracking
             ? (
-              <>
+              <span className='hidden xl:flex gap-4'>
                 <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
                   <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
                   <span className='border-r-1 border-content3'></span>
                   <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
                 </span>
                 <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
-              </>
+              </span>
             )
             : <></>
         }

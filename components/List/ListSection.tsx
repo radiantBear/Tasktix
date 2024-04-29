@@ -108,7 +108,7 @@ export default function ListSection({ id, listId, name, startingItems, members, 
   return (
     <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border shrink-0 shadow-lg shadow-content2'>
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
-        <span>
+        <span className='min-w-fit shrink-0'>
           <Button onPress={() => setIsCollapsed(!isCollapsed)} isIconOnly className='hover:bg-foreground/10 -ml-2 mr-2'>
             {isCollapsed ? <ChevronExpand /> : <ChevronContract />}
           </Button>

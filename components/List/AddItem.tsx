@@ -60,7 +60,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
   return (
     <span className='flex justify-between items-center overflow-y-visible'>
       <span className='overflow-x-clip'>
-        <span className={`flex gap-4 pr-4 transition-transform${isOpen ? '' : ' translate-x-full'}`}>
+        <span className={`hidden lg:flex gap-4 pr-4 transition-transform${isOpen ? '' : ' translate-x-full'}`}>
           <Input 
             label='Name'
             placeholder='Add item...' 
