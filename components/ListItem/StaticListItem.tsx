@@ -1,23 +1,23 @@
-import { Button, Checkbox, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@nextui-org/react';
-import { formatDate } from '@/lib/date';
-import ListItemModel from '@/lib/model/listItem';
-import Color from '@/lib/model/color';
-import Tag from '@/lib/model/tag';
-import Tags from './Tags';
-import Time from './Time';
+import { useEffect, useRef, useState } from 'react';
+import { Checkbox } from '@nextui-org/react';
+import { DragControls } from 'framer-motion';
+import { GripVertical } from 'react-bootstrap-icons';
+import DateInput from '../DateInput';
+import { addSnackbar } from '../Snackbar';
+import ExpectedInput from './ExpectedInput';
+import ElapsedInput from './ElapsedInput';
+import More from './More';
+import Name from './Name';
 import Priority from './Priority';
+import Tags from './Tags';
+import TimeButton from './TimeButton';
 import Users from './Users';
 import { api } from '@/lib/api';
-import { addSnackbar } from '../Snackbar';
-import { FormEvent, useEffect, useRef, useState } from 'react';
-import { ArrowCounterclockwise, Check, GripVertical, ThreeDots, TrashFill } from 'react-bootstrap-icons';
-import TimeButton from './TimeButton';
-import TimeInput from '../TimeInput';
-import DateInput from '../DateInput';
+import { formatDate } from '@/lib/date';
+import Color from '@/lib/model/color';
+import ListItemModel from '@/lib/model/listItem';
 import ListMember from '@/lib/model/listMember';
-import { DragControls } from 'framer-motion';
-import DateInput2 from '../DateInput2';
-import Name from './Name';
+import Tag from '@/lib/model/tag';
 
 interface StaticListItemParams { 
   item: ListItemModel,
@@ -66,7 +66,6 @@ export default function StaticListItem(
   } : StaticListItemParams
 ) {  
   const minute = 1000 * 60;
-  const isComplete = item.status == 'Completed';
 
   const timer = useRef<NodeJS.Timeout>();
   const updateTime = useRef(() => {});
@@ -370,126 +369,5 @@ export default function StaticListItem(
         <More item={_item} tags={tags} tagsAvailable={tagsAvailable} members={members} hasDueDates={hasDueDates} hasTimeTracking={hasTimeTracking} elapsedLive={elapsedLive} set={set} addNewTag={addNewTag} />
       </span>
     </div>
-  );
-}
-
-function ExpectedInput({ ms, disabled, updateMs }: { ms: number|null, disabled: boolean, updateMs: (ms: number) => any }) {
-  const [value, setValue] = useState(ms ?? 0);
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => setValue(ms ?? 0), [ms]);
-
-  function _updateTime(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    updateMs(value);
-    setIsOpen(false);
-  }
-
-  return (
-    <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
-      <PopoverTrigger className='-mr-2 -my-3 -px-2 relative top-3'>
-        <Button tabIndex={0} disabled={disabled} isIconOnly className={`w-fit !px-2 bg-transparent p-0 ${disabled ? '' : 'hover:bg-foreground/10'}`}>
-          <Time label='Expected' ms={ms || 0} />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className='p-3'>
-        <form onSubmit={_updateTime} className='flex flex-row items-center gap-2'>
-          <TimeInput value={value || undefined} onValueChange={setValue} size='sm' variant='underlined' color='primary' className='w-12 grow-0' />
-          <Button type='submit' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'>
-            <Check />
-          </Button>
-        </form>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-function ElapsedInput({ disabled, ms, resetTime }: { disabled: boolean, ms: number, resetTime: () => any }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <Popover placement='bottom' isOpen={isOpen} onOpenChange={open => {if(!disabled) setIsOpen(open)}}>
-      <PopoverTrigger className='-mx-2 -px-2'>
-        <Button tabIndex={0} disabled={disabled} isIconOnly className={`w-fit !px-2 bg-transparent p-0 ${disabled ? '' : 'hover:bg-foreground/10'}`}>
-          <Time label='Elapsed' ms={ms} />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className='p-2'>
-        <Button variant='light' onPress={() => {resetTime(); setIsOpen(false)}} color='warning'>
-          <ArrowCounterclockwise />
-          Reset
-        </Button>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-function More({ item, tags, tagsAvailable, members, hasDueDates, hasTimeTracking, elapsedLive, set, addNewTag }: { item: ListItemModel, tags: Tag[], tagsAvailable: Tag[], members: ListMember[], hasDueDates: boolean, hasTimeTracking: boolean, elapsedLive: number, set: SetItem, addNewTag: (name: string, color: Color) => any }) {
-  const isComplete = item.status == 'Completed';
-  
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
-  return (
-    <>
-      <Button onPress={onOpen} variant='ghost' isIconOnly><ThreeDots /></Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className='justify-center'>
-                Details
-              </ModalHeader>
-
-              <ModalBody className='gap-4 py-4'>
-                <div className='flex gap-4 items-center'>
-                  <Checkbox tabIndex={0} isSelected={isComplete} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} />
-                  <span className='flex grow'>
-                    <Name showLabel name={item.name} updateName={set.name} disabled={isComplete} />
-                  </span>
-                </div>
-                <div className='flex gap-4 items-center'>
-                  <Priority isComplete={isComplete} priority={item.priority} wrapperClassName='!my-0 w-1/2' className='w-full' setPriority={set.priority} />
-                  {
-                    hasDueDates 
-                      ? (
-                        <DateInput2 disabled={isComplete} label='Due date' value={item.dateDue || undefined} onValueChange={set.dueDate} color='primary' variant='underlined' className='w-1/2' />
-                      )
-                      : <></>
-                  }
-                </div>
-
-                <Tags tags={tags} tagsAvailable={tagsAvailable} isComplete={item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='py-2' />
-
-                {
-                  members.length > 1
-                    ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} className='py-2' />
-                    : <></>
-                }
-
-                <div className='flex gap-6 justify-between'>
-                  {
-                    hasTimeTracking
-                      ? (
-                        <>
-                          <span className={`flex gap-6 ${isComplete ? 'opacity-50' : ''}`}>
-                            <ExpectedInput ms={item.expectedMs} disabled={isComplete} updateMs={set.expectedMs} />
-                            <span className='border-r-1 border-content3'></span>
-                            <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={set.resetTime} />
-                          </span>
-                          <TimeButton status={item.status} startRunning={set.startedRunning} pauseRunning={set.pausedRunning} />  
-                        </>
-                      )
-                      : <></>
-                  }
-                  <Button onPress={() => { onClose(); set.deleted(); }} variant='ghost' color='danger'>
-                    <TrashFill />Delete
-                  </Button>
-                </div>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
   );
 }
