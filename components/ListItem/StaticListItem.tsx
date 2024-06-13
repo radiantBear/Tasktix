@@ -9,7 +9,7 @@ import Priority from './Priority';
 import Users from './Users';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowCounterclockwise, Check, GripVertical, ThreeDots, TrashFill } from 'react-bootstrap-icons';
 import TimeButton from './TimeButton';
 import TimeInput from '../TimeInput';
@@ -19,7 +19,52 @@ import { DragControls } from 'framer-motion';
 import DateInput2 from '../DateInput2';
 import Name from './Name';
 
-export default function StaticListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, reorderControls, setStatus, setCompleted, updateDueDate, updateExpectedMs, deleteItem, addNewTag }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, reorderControls?: DragControls, setStatus: (status: ListItemModel['status']) => any, setCompleted: (status: ListItemModel['status'], date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any }) {  
+interface StaticListItemParams { 
+  item: ListItemModel,
+  members: ListMember[],
+  tagsAvailable: Tag[],
+  hasTimeTracking: boolean,
+  hasDueDates: boolean,
+  reorderControls?: DragControls,
+  setStatus: (status: ListItemModel['status']) => any,
+  updateDueDate: (date: Date) => any,
+  deleteItem: () => any,
+  setDateCompleted: (date: ListItemModel['dateCompleted']) => any,
+  updateExpectedMs: (ms: number) => any,
+  addNewTag: (name: string, color: Color) => any 
+}
+
+interface SetItem {
+  name: (name: string) => void,
+  dueDate: (date: Date) => void,
+  priority: (priority: ListItemModel['priority']) => void,
+  complete: () => void,
+  incomplete: () => void,
+  expectedMs: (ms: number) => void,
+  startedRunning: () => void,
+  pausedRunning: () => void,
+  resetTime: () => void,
+  linkedTag: (id: string, name?: string, color?: Color) => void,
+  unlinkedTag: (id: string) => void,
+  deleted: () => void
+}
+
+export default function StaticListItem(
+  {
+    item: item, 
+    members, 
+    tagsAvailable, 
+    hasTimeTracking, 
+    hasDueDates, 
+    reorderControls, 
+    setStatus, 
+    updateDueDate, 
+    deleteItem, 
+    setDateCompleted, 
+    updateExpectedMs, 
+    addNewTag 
+  } : StaticListItemParams
+) {  
   const minute = 1000 * 60;
   const isComplete = item.status == 'Completed';
 
@@ -27,11 +72,216 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
   const updateTime = useRef(() => {});
   const lastTime = useRef(new Date());
   const [elapsedLive, setElapsedLive] = useState(item.elapsedMs + (item.dateStarted ? Date.now() - item.dateStarted.getTime() : 0));
+  const [_item, _setItem] = useState(item);
+  const [tags, setTags] = useState<Tag[]>(item.tags);
+
+  /** 
+   * Functions that
+   *    - Update the database
+   *    - Update internal item state 
+   *    - Propagate changes to the parent 
+   */
+  const set: SetItem = {
+    name: (name: string): void => {
+      api.patch(`/item/${_item.id}`, { name })
+        .then(() => {
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.name = name;
+          _setItem(newItem);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    dueDate: (date: Date): void => {
+      api.patch(`/item/${_item.id}`, { dateDue: date })
+        .then(() => {
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.dateDue = date;
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          updateDueDate(date);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    priority: (priority: ListItemModel['priority']): void => {
+      api.patch(`/item/${_item.id}`, { priority })
+        .then(() => {
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.priority = priority;
+          _setItem(newItem);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    incomplete: () => {
+      api.patch(`/item/${_item.id}`, { status: 'Paused', dateCompleted: null })
+        .then(() => {
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.status = 'Paused';
+          newItem.dateCompleted = null;
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          setStatus('Paused');
+          setDateCompleted(null);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    complete: () => {
+      // Store time before starting POST request to ensure it's accurate
+      const dateCompleted = new Date();
+      const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
+      
+      api.patch(`/item/${_item.id}`, { status: 'Completed', dateCompleted })
+        .then(() => {
+          _stopRunning();
+          // Ensure time is accurate since user stopped time before POST request
+          setElapsedLive(newElapsed);
+          
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.status = 'Completed';
+          newItem.dateCompleted = dateCompleted;
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          setStatus('Completed')
+          setDateCompleted(dateCompleted);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    expectedMs: (ms: number) => {
+      api.patch(`/item/${item.id}`, { expectedMs: ms })
+        .then(() => {
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.expectedMs = ms;
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          updateExpectedMs(ms);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    startedRunning: () => {
+      const startedDate = new Date();
+      api.patch(`/item/${_item.id}`, { startTime: startedDate, status: 'In Progress' })
+        .then(() => {
+          // Update the timer
+          lastTime.current = startedDate;
+          clearTimeout(timer.current);    // Just for safety
+          timer.current = setTimeout(updateTime.current, minute - elapsedLive % minute + 5);
+          
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.status = 'In Progress';
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          setStatus('In Progress');
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+  
+    pausedRunning: () => {
+      const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
+      api.patch(`/item/${_item.id}`, { startTime: null, elapsedMs: newElapsed, status: 'Paused' })
+        .then(() => {
+          _stopRunning();
+
+          // Ensure time is accurate since user stopped time before POST request
+          setElapsedLive(newElapsed);
+
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.status = 'Paused';
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          setStatus('Paused');
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    resetTime: () => {
+      const status = _item.status == 'Completed' ? 'Completed' : 'Unstarted'
+      api.patch(`/item/${_item.id}`, { startTime: null, status, elapsedMs: 0 })
+        .then(() => {
+          _stopRunning();
+
+          // Clear timer
+          setElapsedLive(0);
+
+          // Update the internal state
+          const newItem = structuredClone(_item);
+          newItem.status = status;
+          _setItem(newItem);
+
+          // Send parent the update for reordering items
+          setStatus(status);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    linkedTag: (id: string, name?: string, color?: Color) => {
+      api.post(`/item/${_item.id}/tag/${id}`, {})
+      .then(() => {
+        // Update the internal state
+        const newTags = structuredClone(tags);
+
+        if(!name || !color){
+          const tag = tagsAvailable?.find(tag => tag.id == id);
+          if(!tag)
+            throw Error('Could not find tag with id '+id);
+
+          newTags.push(new Tag(tag.name, tag.color, id));
+        }
+        else
+          newTags.push(new Tag(name, color, id));
+        
+        setTags(newTags);
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    unlinkedTag: (id: string) => {
+      api.delete(`/item/${_item.id}/tag/${id}`)
+        .then(() => {
+          // Update the internal state
+          const newTags = structuredClone(tags);
+          for(let i = 0; i < newTags.length; i++)
+            if(newTags[i].id == id)
+              newTags.splice(i, 1);
+          setTags(newTags);
+        })
+        .catch(err => addSnackbar(err.message, 'error'));
+    },
+
+    deleted: () => {
+      api.delete(`/item/${_item.id}`)
+      .then(res => {
+        // Send parent the update to remove this component
+        deleteItem();
+
+        // Let the user know we succeeded
+        addSnackbar(res.message, 'success')
+      })
+      .catch(err => addSnackbar(err.message, 'error'));
+    }
+  }
 
   // Use effect to keep track of the changing timer function
   useEffect(() => {
     updateTime.current = () => {
-      console.log(`update: setting timer for ${minute} ms`)
       timer.current = setTimeout(() => updateTime.current(), minute);
       setElapsedLive(elapsedLive + (Date.now() - lastTime.current.getTime()));
       lastTime.current = new Date();
@@ -40,10 +290,9 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
 
   // Start the timer if it should be running when the component is first rendered
   useEffect(() => {
-    if(item.status == 'In Progress' && !timer.current) {
-      console.log(`onload: setting timer for ${minute - elapsedLive % minute + 5} ms`)
+    if(_item.status == 'In Progress' && !timer.current)
       timer.current = setTimeout(updateTime.current, minute - elapsedLive % minute + 5);
-    }
+    
     // Dependencies intentionally excluded to only trigger this when the component is first rendered
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -55,173 +304,85 @@ export default function StaticListItem({ item, members, tagsAvailable, hasTimeTr
     }
   }
 
-  function startRunning() {
-    const startedDate = new Date();
-    api.patch(`/item/${item.id}`, { startTime: startedDate, status: 'In Progress' })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        lastTime.current = startedDate;
-        clearTimeout(timer.current);    // Just for safety
-        console.log(`startRunning: setting timer for ${minute - elapsedLive % minute + 5} ms`)
-        timer.current = setTimeout(updateTime.current, minute - elapsedLive % minute + 5);
-        setStatus('In Progress');
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-  
-  function pauseRunning() {
-    const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
-    api.patch(`/item/${item.id}`, { startTime: null, elapsedMs: newElapsed, status: 'Paused' })
-      .then(res => {
-        _stopRunning();
-        addSnackbar(res.message, 'success');
-        setElapsedLive(newElapsed);   // Ensure time is up-to-date since timer was cancelled
-        setStatus('Paused');
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-  
-  function setComplete(e: ChangeEvent<HTMLInputElement>) {
-    const newState: { status: 'Completed'|'Paused', dateCompleted: Date|null, startTime?: null, elapsedMs?: number } 
-      = e.target.checked
-        ? { status: 'Completed', dateCompleted: new Date() }
-        : { status: 'Paused', dateCompleted: null };
-
-    const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
-
-    // Stop timer if going
-    if(e.target.checked && timer.current) {
-      newState.startTime = null;
-      newState.elapsedMs = newElapsed;
-    }
-    
-    api.patch(`/item/${item.id}`, newState)
-      .then(res => {
-        _stopRunning();
-        addSnackbar(res.message, 'success');
-        if(newState.elapsedMs)
-          setElapsedLive(newState.elapsedMs);   // Ensure time is up-to-date since timer was cancelled
-        setCompleted(newState.status, newState.dateCompleted);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function _updateDueDate(date: Date) {
-    api.patch(`/item/${item.id}`, { dateDue: date })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        updateDueDate(date);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function resetTime() {
-    const status = item.status == 'Completed' ? 'Completed' : 'Unstarted'
-    api.patch(`/item/${item.id}`, { startTime: null, status, elapsedMs: 0 })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        _stopRunning();
-        setElapsedLive(0);
-        setStatus(status);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function _deleteItem() {
-    api.delete(`/item/${item.id}`)
-      .then(res => {
-        deleteItem();
-        addSnackbar(res.message, 'success')
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function updateName(name: string) {
-    api.patch(`/item/${item.id}`, { name })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        const newItem = structuredClone(item);
-        newItem.name = name;
-        // TODO: Start converting all functions to update the whole item
-        setItem(newItem);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
   return (
     <div className={`p-4 bg-content1 flex gap-4 items-center justify-between w-full flex-wrap ${reorderControls || 'border-b-1 border-content3 last:border-b-0'}`}>
       <span className='flex gap-4 items-center justify-start grow'>
+
         {
           reorderControls 
-            ? <div onPointerDown={e => {e.preventDefault(); if(!isComplete) reorderControls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${isComplete ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
+            ? <div onPointerDown={e => {e.preventDefault(); if(_item.status != 'Completed') reorderControls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
                 <GripVertical />
               </div>
             : <></>
         }
-        <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} className='-mr-3' />
+
+        <Checkbox tabIndex={0} isSelected={_item.status == 'Completed'} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} className='-mr-3' />
+
         <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
-            isComplete 
-              ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{item.name}</span>
+            _item.status == 'Completed' 
+              ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{_item.name}</span>
               : (
                   <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
-                    <Name name={item.name} updateName={updateName} className='shrink' />
+                    <Name name={_item.name} updateName={set.name} className='shrink' />
                   </span>
                 )
           }
+
           {
             hasDueDates 
               ? (
-                isComplete
-                  ? <span className='text-xs text-secondary/75 relative top-3'>{item.dateCompleted ? 'Completed ' + formatDate(item.dateCompleted) : 'Due ' + (item.dateDue ? formatDate(item.dateDue) : '')}</span>
-                  : (<DateInput color='secondary' displayContent={item.dateDue ? `Due ${formatDate(item.dateDue)}` : 'Set due date'} value={item.dateDue || new Date()} onValueChange={_updateDueDate} />)
+                _item.status == 'Completed'
+                  ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>
+                  : (<DateInput color='secondary' displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} />)
               )
               : <></>
           }
         </div>
-        <Priority isComplete={isComplete} startingPriority={item.priority} itemId={item.id} className='hidden md:flex' />
-        <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} className='hidden lg:flex' />
+
+        <Priority isComplete={_item.status == 'Completed'} priority={_item.priority} className='hidden md:flex' setPriority={set.priority} />
+
+        <Tags tags={tags} tagsAvailable={tagsAvailable} isComplete={_item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='hidden lg:flex' />
+        
         {
           members.length > 1
-            ? <Users itemId={item.id} assignees={item.assignees} members={members} isComplete={isComplete} />
+            ? <Users itemId={_item.id} assignees={_item.assignees} members={members} isComplete={_item.status == 'Completed'} />
             : <></>
         }
       </span>
+
       <span className='flex gap-4 items-center justify-end grow-0 shrink-0'>
         {
           hasTimeTracking
             ? (
               <span className='hidden xl:flex gap-4'>
-                <span className={`flex gap-4 ${isComplete ? 'opacity-50' : ''}`}>
-                  <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
+                <span className={`flex gap-4 ${_item.status == 'Completed' ? 'opacity-50' : ''}`}>
+                  <ExpectedInput ms={_item.expectedMs} disabled={_item.status == 'Completed'} updateMs={set.expectedMs} />
                   <span className='border-r-1 border-content3'></span>
-                  <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
+                  <ElapsedInput ms={elapsedLive} disabled={_item.status == 'Completed'} resetTime={set.resetTime} />
                 </span>
-                <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />
+                <TimeButton status={_item.status} startRunning={set.startedRunning} pauseRunning={set.pausedRunning} />
               </span>
             )
             : <></>
         }
-        <More item={item} tagsAvailable={tagsAvailable} members={members} hasDueDates={hasDueDates} hasTimeTracking={hasTimeTracking} elapsedLive={elapsedLive} updateName={updateName} updateDueDate={_updateDueDate} addNewTag={addNewTag} updateExpectedMs={updateExpectedMs} startRunning={startRunning} pauseRunning={pauseRunning} resetTime={resetTime} setComplete={setComplete} deleteItem={_deleteItem} />
+
+        <More item={_item} tags={tags} tagsAvailable={tagsAvailable} members={members} hasDueDates={hasDueDates} hasTimeTracking={hasTimeTracking} elapsedLive={elapsedLive} set={set} addNewTag={addNewTag} />
       </span>
     </div>
   );
 }
 
-function ExpectedInput({ itemId, ms, disabled, updateMs }: { itemId: string, ms: number|null, disabled: boolean, updateMs: (ms: number) => any }) {
-  const [value, setValue] = useState(ms);
+function ExpectedInput({ ms, disabled, updateMs }: { ms: number|null, disabled: boolean, updateMs: (ms: number) => any }) {
+  const [value, setValue] = useState(ms ?? 0);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => setValue(ms ?? 0), [ms]);
 
   function _updateTime(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    api.patch(`/item/${itemId}`, { expectedMs: value })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        if(value !== null)
-          updateMs(value);
-        setIsOpen(false);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
+    updateMs(value);
+    setIsOpen(false);
   }
 
   return (
@@ -263,7 +424,7 @@ function ElapsedInput({ disabled, ms, resetTime }: { disabled: boolean, ms: numb
   );
 }
 
-function More({ item, tagsAvailable, members, hasDueDates, hasTimeTracking, elapsedLive, updateName, updateDueDate, addNewTag, updateExpectedMs, startRunning, pauseRunning, resetTime, setComplete, deleteItem }: { item: ListItemModel, tagsAvailable: Tag[], members: ListMember[], hasDueDates: boolean, hasTimeTracking: boolean, elapsedLive: number, updateName: (name: string) => any, updateDueDate: (date: Date) => any, addNewTag: (name: string, color: Color) => any, updateExpectedMs: (ms: number) => any, startRunning: () => any, pauseRunning: () => any, resetTime: () => any, setComplete: (e: ChangeEvent<HTMLInputElement>) => any, deleteItem: () => any }) {
+function More({ item, tags, tagsAvailable, members, hasDueDates, hasTimeTracking, elapsedLive, set, addNewTag }: { item: ListItemModel, tags: Tag[], tagsAvailable: Tag[], members: ListMember[], hasDueDates: boolean, hasTimeTracking: boolean, elapsedLive: number, set: SetItem, addNewTag: (name: string, color: Color) => any }) {
   const isComplete = item.status == 'Completed';
   
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -281,23 +442,23 @@ function More({ item, tagsAvailable, members, hasDueDates, hasTimeTracking, elap
 
               <ModalBody className='gap-4 py-4'>
                 <div className='flex gap-4 items-center'>
-                  <Checkbox tabIndex={0} isSelected={isComplete} onChange={setComplete} />
+                  <Checkbox tabIndex={0} isSelected={isComplete} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} />
                   <span className='flex grow'>
-                    <Name showLabel name={item.name} updateName={updateName} disabled={isComplete} />
+                    <Name showLabel name={item.name} updateName={set.name} disabled={isComplete} />
                   </span>
                 </div>
                 <div className='flex gap-4 items-center'>
-                  <Priority isComplete={isComplete} itemId={item.id} startingPriority={item.priority} wrapperClassName='!my-0 w-1/2' className='w-full' />
+                  <Priority isComplete={isComplete} priority={item.priority} wrapperClassName='!my-0 w-1/2' className='w-full' setPriority={set.priority} />
                   {
                     hasDueDates 
                       ? (
-                        <DateInput2 disabled={isComplete} label='Due date' value={item.dateDue || undefined} onValueChange={updateDueDate} color='primary' variant='underlined' className='w-1/2' />
+                        <DateInput2 disabled={isComplete} label='Due date' value={item.dateDue || undefined} onValueChange={set.dueDate} color='primary' variant='underlined' className='w-1/2' />
                       )
                       : <></>
                   }
                 </div>
 
-                <Tags itemId={item.id} initialTags={item.tags} isComplete={isComplete} tagsAvailable={tagsAvailable} addNewTag={addNewTag} className='py-2' />
+                <Tags tags={tags} tagsAvailable={tagsAvailable} isComplete={item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='py-2' />
 
                 {
                   members.length > 1
@@ -311,16 +472,16 @@ function More({ item, tagsAvailable, members, hasDueDates, hasTimeTracking, elap
                       ? (
                         <>
                           <span className={`flex gap-6 ${isComplete ? 'opacity-50' : ''}`}>
-                            <ExpectedInput itemId={item.id} ms={item.expectedMs} disabled={isComplete} updateMs={updateExpectedMs} />
+                            <ExpectedInput ms={item.expectedMs} disabled={isComplete} updateMs={set.expectedMs} />
                             <span className='border-r-1 border-content3'></span>
-                            <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={resetTime} />
+                            <ElapsedInput ms={elapsedLive} disabled={isComplete} resetTime={set.resetTime} />
                           </span>
-                          <TimeButton status={item.status} startRunning={startRunning} pauseRunning={pauseRunning} />  
+                          <TimeButton status={item.status} startRunning={set.startedRunning} pauseRunning={set.pausedRunning} />  
                         </>
                       )
                       : <></>
                   }
-                  <Button onPress={() => { onClose(); deleteItem(); }} variant='ghost' color='danger'>
+                  <Button onPress={() => { onClose(); set.deleted(); }} variant='ghost' color='danger'>
                     <TrashFill />Delete
                   </Button>
                 </div>

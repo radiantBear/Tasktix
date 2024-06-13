@@ -1,21 +1,9 @@
 import { Select, SelectItem, Selection, SlotsToClasses } from "@nextui-org/react";
 import { useState } from "react";
 import ListItem from "@/lib/model/listItem";
-import { api } from "@/lib/api";
-import { addSnackbar } from "../Snackbar";
 
-export default function Priority({ isComplete, startingPriority, itemId, className, wrapperClassName, classNames }: { isComplete: boolean, startingPriority: ListItem['priority'], itemId: string, className?: string, wrapperClassName?: string, classNames?: SlotsToClasses<"description"|"errorMessage"|"label"|"base"|"value"|"mainWrapper"|"trigger"|"innerWrapper"|"selectorIcon"|"spinner"|"listboxWrapper"|"listbox"|"popoverContent"|"helperWrapper"> }) {
-  const [priority, setPriority] = useState<Selection>(new Set([startingPriority]));
-  
-  function updatePriority(keys: Selection) {
-    const priority = (keys != 'all' && keys.keys().next().value) || 'Low';
-    api.patch(`/item/${itemId}`, { priority })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        setPriority(keys);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
+export default function Priority({ isComplete, priority, className, wrapperClassName, classNames, setPriority }: { isComplete: boolean, priority: ListItem['priority'], className?: string, wrapperClassName?: string, classNames?: SlotsToClasses<"description"|"errorMessage"|"label"|"base"|"value"|"mainWrapper"|"trigger"|"innerWrapper"|"selectorIcon"|"spinner"|"listboxWrapper"|"listbox"|"popoverContent"|"helperWrapper">, setPriority: (priority: ListItem['priority']) => any }) {
+  const _priority = new Set([priority])
 
   return (
     <div className={`-mt-2 -mb-2 ${wrapperClassName}`}>
@@ -27,9 +15,9 @@ export default function Priority({ isComplete, startingPriority, itemId, classNa
         className={`w-28 grow-0 shrink-0 ${className || ''}`}
         label={<span className='ml-2 text-foreground'>Priority</span>}
         placeholder='Select...' 
-        selectedKeys={priority}
-        onSelectionChange={updatePriority}
-        color={`${(priority == 'all' || priority.has('High')) ? 'danger' : priority.has('Medium') ? 'warning' : priority.has('Low') ? 'success' : 'default'}`}
+        selectedKeys={_priority}
+        onSelectionChange={(keys: Selection) => setPriority((keys != 'all' && keys.keys().next().value) || 'Low')}
+        color={`${priority == 'High' ? 'danger' : ( priority == 'Medium' ? 'warning' : 'success' )}`}
         classNames={classNames}
       >
         <SelectItem key='High' value='High' color='danger'>High</SelectItem>

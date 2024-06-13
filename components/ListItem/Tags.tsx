@@ -1,6 +1,5 @@
 'use client';
 
-import { api } from '@/lib/api';
 import { getBackgroundColor, getTextColor } from '@/lib/color';
 import TagModel from '@/lib/model/tag';
 import { Button, Chip, Card, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
@@ -10,48 +9,10 @@ import { addSnackbar } from '../Snackbar';
 import Color from '@/lib/model/color';
 import ColorPicker from '../ColorPicker';
 
-export default function Tags({ itemId, initialTags, isComplete, tagsAvailable, className, addNewTag }: { itemId: string, initialTags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], className?: string, addNewTag: (name: string, color: Color) => any }) {
+export default function Tags({ tags, isComplete, tagsAvailable, className, addNewTag, linkTag, unlinkTag }: { tags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], className?: string, addNewTag: (name: string, color: Color) => any, linkTag: (id: string, name?: string, color?: Color) => any, unlinkTag: (id: string) => any }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [tags, setTags] = useState<TagModel[]>(initialTags);
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState<Color|null>(null);
-
-  function linkTag(id: string, name?: string, color?: Color) {
-    api.post(`/item/${itemId}/tag/${id}`, {})
-      .then(res => {
-        addSnackbar(res.message, 'success');
-
-        // Add the tag
-        const newTags = structuredClone(tags);
-
-        if(!name || !color){
-          const tag = tagsAvailable?.find(tag => tag.id == id);
-          if(!tag)
-            throw Error('Could not find tag with id '+id);
-
-          newTags.push(new TagModel(tag.name, tag.color, id));
-        }
-        else
-          newTags.push(new TagModel(name, color, id));
-        
-        setTags(newTags);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function unlinkTag(id: string) {
-    api.delete(`/item/${itemId}/tag/${id}`)
-      .then(res => {
-        addSnackbar(res.message, 'success');
-
-        const newTags = structuredClone(tags);
-        for(let i = 0; i < newTags.length; i++)
-          if(newTags[i].id == id)
-            newTags.splice(i, 1);
-        setTags(newTags);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
 
   async function linkNewTag() {
     if(!newTagColor) {
