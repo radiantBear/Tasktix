@@ -1,5 +1,4 @@
 import { api } from '@/lib/api';
-import { dateToInput, inputToDate, parseTime } from '@/lib/date'
 import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
@@ -12,6 +11,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
   const zeroMin = new Date();
   zeroMin.setTime(0);
   const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
+  startingInputValues.dueDate.setHours(0, 0, 0, 0);
 
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState<{name: string, dueDate?: Date, priority: Selection, duration?: number}>(startingInputValues);
