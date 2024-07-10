@@ -9,11 +9,11 @@ export default function Name({ name, showLabel, disabled, className, updateName 
   useEffect(() => setPrevName(name), [name]);
 
   return (
-    <>
+    <form onSubmit={e => {e.preventDefault(); updateName(newName)}} className='flex'>
       <Input label={showLabel && 'Name'} value={newName} onValueChange={setNewName} disabled={disabled} size='sm' variant='underlined' className={`${disabled && 'opacity-50'} ${className}`} classNames={{inputWrapper: `${showLabel || 'border-transparent'}`, input: `${showLabel || '-mb-2'}`}} />
-      <Button onPress={ () => updateName(newName) } color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${newName == prevName ? 'hidden' : ''} ${showLabel ? 'mt-4' : ''}`}>
+      <Button type='submit' color='primary' isIconOnly className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${newName == prevName ? 'hidden' : ''} ${showLabel ? 'mt-4' : ''}`}>
         <Check />
       </Button>
-    </>
+    </form>
   );
 }

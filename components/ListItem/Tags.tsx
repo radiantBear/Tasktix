@@ -3,7 +3,7 @@
 import { getBackgroundColor, getTextColor } from '@/lib/color';
 import TagModel from '@/lib/model/tag';
 import { Button, Chip, Card, Input, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { X, Check, Plus, Tags as TagsIcon } from 'react-bootstrap-icons';
 import { addSnackbar } from '../Snackbar';
 import Color from '@/lib/model/color';
@@ -14,7 +14,8 @@ export default function Tags({ tags, isComplete, tagsAvailable, className, addNe
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState<Color|null>(null);
 
-  async function linkNewTag() {
+  async function linkNewTag(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if(!newTagColor) {
       addSnackbar('Please specify a tag color', 'error');
       return;
@@ -62,11 +63,11 @@ export default function Tags({ tags, isComplete, tagsAvailable, className, addNe
               })
               : <></>
           }
-          <div key='add' className='flex w-full p-1.5 pl-1 gap-2'>
+          <form onSubmit={linkNewTag} key='add' className='flex w-full p-1.5 pl-1 gap-2'>
             <Input variant='underlined' placeholder='Add tag...' className='w-24' size='sm' value={newTagName} onValueChange={setNewTagName} />
             <ColorPicker value={newTagColor} onValueChange={setNewTagColor} className='rounded-lg w-8 h-8 min-w-8 min-h-8' />
-            <Button onPress={linkNewTag} variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Check /></Button>
-          </div>
+            <Button type='submit' variant='flat' color='primary' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><Check /></Button>
+          </form>
         </PopoverContent>
       </Popover>
   );

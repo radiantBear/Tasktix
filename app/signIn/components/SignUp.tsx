@@ -4,7 +4,7 @@ import { getUsernameMessage, getEmailMessage, getPasswordMessage } from '../mess
 import Message, { InputMessage } from '@/components/InputMessage';
 import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
 import { addSnackbar } from '@/components/Snackbar';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
 import { api } from '@/lib/api';
@@ -38,7 +38,8 @@ export default function SignUp() {
     setInputMsgs({...inputMsgs, password: getPasswordMessage(input)});
   }
 
-  function handleSubmit() {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if(!validateUsername(inputs.username) || !validateEmail(inputs.email) || !validatePassword(inputs.password).valid) {
       /* Ensure inputs that have never received input still get the appropriate error message */
       const messages = {
@@ -67,7 +68,7 @@ export default function SignUp() {
   }
 
 	return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Input 
         label='Username' 
         value={inputs.username}
@@ -96,7 +97,7 @@ export default function SignUp() {
         variant='underlined'
       />
       <div className='flex justify-center mt-6'>
-        <Button color='primary' onPress={handleSubmit}>Sign Up</Button>
+        <Button type='submit' color='primary'>Sign Up</Button>
       </div>
     </form>
 	);

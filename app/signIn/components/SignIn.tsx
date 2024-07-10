@@ -2,7 +2,7 @@
 
 import Message, { InputMessage } from '@/components/InputMessage';
 import { Button, Input } from '@nextui-org/react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { addSnackbar } from '@/components/Snackbar';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
@@ -28,7 +28,8 @@ export default function SignIn() {
     setInputs({...inputs, password: input});
   }
 
-	function handleSubmit() {
+	function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     api.post('/session', inputs)
       .then(() => {
         setLoggedIn();
@@ -38,7 +39,7 @@ export default function SignIn() {
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Input 
         label='Username' 
         value={inputs.username}
@@ -58,7 +59,7 @@ export default function SignIn() {
         variant='underlined'
       />
       <div className='flex justify-center mt-6'>
-        <Button color='primary' onPress={handleSubmit} >Sign In</Button>
+        <Button type='submit' color='primary'>Sign In</Button>
       </div>
     </form>
 	);

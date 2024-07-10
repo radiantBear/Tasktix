@@ -1,6 +1,6 @@
 import { api } from '@/lib/api';
 import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
 import { addSnackbar } from '@/components/Snackbar';
 import ListItem from '@/lib/model/listItem';
@@ -35,7 +35,8 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
     setValues({name: values.name, dueDate: values.dueDate, priority: new Set(values.priority), duration: duration});
   }
 
-  function createItem() {
+  function createItem(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
 
     const newItem = { ...values, sectionId, priority, sectionIndex: nextIndex };
@@ -60,7 +61,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
   return (
     <span className='flex justify-between items-center overflow-y-visible'>
       <span className='overflow-x-clip'>
-        <span className={`hidden lg:flex gap-4 pr-4 transition-transform${isOpen ? '' : ' translate-x-full'}`}>
+        <form onSubmit={createItem} className={`hidden lg:flex gap-4 pr-4 transition-transform${isOpen ? '' : ' translate-x-full'}`}>
           <Input 
             label='Name'
             placeholder='Add item...' 
@@ -123,8 +124,8 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
               )
               : <></>
           }
-          <Button tabIndex={isOpen ? 0 : 1} onPress={createItem} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
-        </span>
+          <Button type='submit' tabIndex={isOpen ? 0 : 1} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
+        </form>
       </span>
       <Button tabIndex={0} variant='ghost' isIconOnly onPress={() => setIsOpen(!isOpen)} color={isOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isOpen ? ' -rotate-45' : ''}`}/></Button>
     </span>
