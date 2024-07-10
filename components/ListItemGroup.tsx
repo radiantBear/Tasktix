@@ -10,7 +10,8 @@ import ListMember from '@/lib/model/listMember';
 import Color from '@/lib/model/color';
 
 export default function ListItemGroup({ startingItems, startingTags, members }: { startingItems: string, startingTags: string, members: string }) {
-  const builtItems: ListItemModel[] = JSON.parse(startingItems);
+  const builtItems: ListItemModel[] = JSON.parse(startingItems) || [];
+  
   for(const item of builtItems) {
     item.dateCreated = new Date(item.dateCreated);
     item.dateDue = item.dateDue ? new Date(item.dateDue) : null;
@@ -28,9 +29,16 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
     setItems(newItems);
   }
 
-  function setCompleted(index: number, status: ListItemModel['status'], date: ListItemModel['dateCompleted']) {
+  function setPaused(index: number) {
     const newItems = structuredClone(items);
-    newItems[index].status = status;
+    newItems[index].status = 'Paused';
+    newItems[index].dateCompleted = null;
+    setItems(newItems);
+  }
+
+  function setCompleted(index: number, date: ListItemModel['dateCompleted']) {
+    const newItems = structuredClone(items);
+    newItems[index].status = 'Completed';
     newItems[index].dateCompleted = date;
     setItems(newItems);
   }
@@ -76,7 +84,7 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
     <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border shadow-lg shadow-content2'>
       {
         items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-          <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
+          <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={setPaused.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
         )
       }
     </div>

@@ -29,7 +29,8 @@ interface StaticListItemParams {
   setStatus: (status: ListItemModel['status']) => any,
   updateDueDate: (date: Date) => any,
   deleteItem: () => any,
-  setDateCompleted: (date: ListItemModel['dateCompleted']) => any,
+  setPaused: () => any,
+  setCompleted: (date: ListItemModel['dateCompleted']) => any,
   updateExpectedMs: (ms: number) => any,
   addNewTag: (name: string, color: Color) => any 
 }
@@ -60,7 +61,8 @@ export default function StaticListItem(
     setStatus, 
     updateDueDate, 
     deleteItem, 
-    setDateCompleted, 
+    setPaused,
+    setCompleted, 
     updateExpectedMs, 
     addNewTag 
   } : StaticListItemParams
@@ -127,8 +129,7 @@ export default function StaticListItem(
           _setItem(newItem);
 
           // Send parent the update for reordering items
-          setStatus('Paused');
-          setDateCompleted(null);
+          setPaused();
         })
         .catch(err => addSnackbar(err.message, 'error'));
     },
@@ -151,8 +152,7 @@ export default function StaticListItem(
           _setItem(newItem);
 
           // Send parent the update for reordering items
-          setStatus('Completed')
-          setDateCompleted(dateCompleted);
+          setCompleted(dateCompleted);
         })
         .catch(err => addSnackbar(err.message, 'error'));
     },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { ListItem, StaticListItem } from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
@@ -17,11 +17,13 @@ interface Item extends ListItemModel {
 }
 
 export default function ListSection({ id, listId, name, startingItems, members, tagsAvailable, hasTimeTracking, hasDueDates, isAutoOrdered, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
-  const [items, setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
+  const [items, _setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
     const newItem: Item = structuredClone(item);
     newItem.visualIndex = i;
     return newItem;
   }));
+  const setItems: Dispatch<SetStateAction<ListItemModel[]>>
+    = newItems => {console.log(newItems); _setItems(newItems)}
 
   const [isCollapsed, setIsCollapsed] = useState(!items.reduce((prev, curr) => prev || curr.status != 'Completed', false));
 
@@ -33,11 +35,23 @@ export default function ListSection({ id, listId, name, startingItems, members, 
     setItems(newItems);
   }
 
-  function setDateCompleted(id: string, date: ListItemModel['dateCompleted']) {
+  function setPaused(id: string) {
     const newItems = structuredClone(items);
     for(const item of newItems)
-      if(item.id == id)
+      if(item.id == id) {
+        item.status = 'Paused';
+        item.dateCompleted = null;
+      }
+    setItems(newItems);
+  }
+
+  function setCompleted(id: string, date: ListItemModel['dateCompleted']) {
+    const newItems = structuredClone(items);
+    for(const item of newItems)
+      if(item.id == id) {
+        item.status = 'Completed'
         item.dateCompleted = date;
+      }
     setItems(newItems);
   }
   
@@ -136,14 +150,14 @@ export default function ListSection({ id, listId, name, startingItems, members, 
                 isAutoOrdered
                   ? (
                     items.sort(sortItems).map(item => (
-                      <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setDateCompleted={setDateCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
+                      <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={setPaused.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
                     ))
                   )
                   : (
                     <Reorder.Group axis='y' values={items} onReorder={items => setItems(items.sort(sortItemsByCompleted))}>
                       {
                         items.map(item => (
-                          <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setDateCompleted={setDateCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
+                          <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={setPaused.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
                         ))
                       }
                     </Reorder.Group>
