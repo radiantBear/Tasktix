@@ -28,6 +28,7 @@ interface StaticListItemParams {
   reorderControls?: DragControls,
   setStatus: (status: ListItemModel['status']) => any,
   updateDueDate: (date: Date) => any,
+  updatePriority: (priority: ListItemModel['priority']) => any,
   deleteItem: () => any,
   setPaused: () => any,
   setCompleted: (date: ListItemModel['dateCompleted']) => any,
@@ -60,6 +61,7 @@ export default function StaticListItem(
     reorderControls, 
     setStatus, 
     updateDueDate, 
+    updatePriority,
     deleteItem, 
     setPaused,
     setCompleted, 
@@ -115,6 +117,9 @@ export default function StaticListItem(
           const newItem = structuredClone(_item);
           newItem.priority = priority;
           _setItem(newItem);
+
+          // Send parent the update for reordering items
+          updatePriority(priority);
         })
         .catch(err => addSnackbar(err.message, 'error'));
     },

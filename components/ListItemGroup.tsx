@@ -49,6 +49,12 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
     setItems(newItems);
   }
 
+  function updatePriority(index: number, priority: ListItemModel['priority']) {
+    const newItems = structuredClone(items);
+    newItems[index].priority = priority;
+    setItems(newItems);
+  }
+
   function updateDueDate(index: number, date: Date) {
     const newItems = structuredClone(items);
     newItems[index].dateDue = date;
@@ -84,7 +90,7 @@ export default function ListItemGroup({ startingItems, startingTags, members }: 
     <div className='rounded-md w-100 overflow-hidden border-1 border-content3 box-border shadow-lg shadow-content2'>
       {
         items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-          <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={setPaused.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
+          <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={setPaused.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
         )
       }
     </div>
