@@ -130,6 +130,8 @@ export function ListSettings({ listId, timeTracking, autoOrdered, dueDates, dele
       .then(res => {
         addSnackbar(res.message, 'success');
         setHasTimeTracking(!hasTimeTracking);
+        if(`/list/${listId}` == window.location.pathname)
+          location.reload();
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
@@ -139,6 +141,8 @@ export function ListSettings({ listId, timeTracking, autoOrdered, dueDates, dele
       .then(res => {
         addSnackbar(res.message, 'success');
         setHasDueDates(!hasDueDates);
+        if(`/list/${listId}` == window.location.pathname)
+          location.reload();
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
@@ -148,6 +152,8 @@ export function ListSettings({ listId, timeTracking, autoOrdered, dueDates, dele
       .then(res => {
         addSnackbar(res.message, 'success');
         setIsAutoOrdered(!isAutoOrdered);
+        if(`/list/${listId}` == window.location.pathname)
+          location.reload();
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
