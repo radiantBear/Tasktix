@@ -70,7 +70,7 @@ export default function More({ item, tags, tagsAvailable, members, hasDueDates, 
                     : <></>
                 }
 
-                <div className='flex gap-6 justify-between'>
+                <div className='flex gap-6 justify-end'>
                   {
                     hasTimeTracking
                       ? (
