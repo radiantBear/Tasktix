@@ -2,6 +2,12 @@ import Color from '@/lib/model/color';
 
 export function getTextColor(color: Color): string {
   switch(color) {
+    case 'danger':
+      return 'text-danger';
+    case 'warning':
+      return 'text-warning';
+    case 'success':
+      return 'text-success';
     case 'Pink':
       return 'text-pink-500';
     case 'Red':
@@ -29,6 +35,12 @@ export function getTextColor(color: Color): string {
 
 export function getBackgroundColor(color: Color): string {
   switch(color) {
+    case 'danger':
+      return 'bg-danger';
+    case 'warning':
+      return 'bg-warning';
+    case 'success':
+      return 'bg-success';
     case 'Pink':
       return 'bg-pink-500';
     case 'Red':
