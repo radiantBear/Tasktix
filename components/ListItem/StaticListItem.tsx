@@ -338,7 +338,7 @@ export default function StaticListItem(
               ? (
                 _item.status == 'Completed'
                   ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>
-                  : (<DateInput color='secondary' displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} />)
+                  : (<DateInput color='secondary' displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
               )
               : <></>
           }

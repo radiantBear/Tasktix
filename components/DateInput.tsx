@@ -5,7 +5,7 @@ import { Button, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/rea
 import { ReactNode, useEffect, useState } from "react";
 import CalendarInput from "./CalendarInput";
 
-export default function DateInput({ placeholder, defaultValue, displayContent, color = 'default', value, onValueChange }: { placeholder?: string, defaultValue?: Date, displayContent?: ReactNode, color?: 'default'|'primary'|'secondary'|'danger'|'warning'|'success', value?: Date, onValueChange?: (date: Date) => any }) {
+export default function DateInput({ label, placeholder, defaultValue, displayContent, color = 'default', className, value, onValueChange }: { label?: string, placeholder?: string, defaultValue?: Date, displayContent?: ReactNode, color?: 'default'|'primary'|'secondary'|'danger'|'warning'|'success', className?: string, value?: Date, onValueChange?: (date: Date) => any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(value || defaultValue || null);
 
@@ -26,11 +26,11 @@ export default function DateInput({ placeholder, defaultValue, displayContent, c
   return (
     <Popover placement='bottom' isOpen={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger className='-ml-2 -mb-2 mt-1'>
-        <Button color={color} variant='light' className='w-fit min-w-0 h-fit px-2 py-1 text-xs justify-start'>
+        <Button color={color} variant='light' className={`w-fit min-w-0 px-2 py-1 text-xs justify-start ${className}`}>
           { 
             displayContent
-              ? displayContent
-              : date ? formatDate(date) : placeholder || 'Choose date' 
+              ? `${label || ''} ${displayContent}`
+              : `${label || ''} ${date ? formatDate(date) : placeholder || 'Choose date'}`
           }
         </Button>
       </PopoverTrigger>
