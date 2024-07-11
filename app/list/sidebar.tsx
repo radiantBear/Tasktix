@@ -60,11 +60,11 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
 
   return (
     <aside className='w-48 bg-transparent shadow-l-lg shadow-content4 p-4 flex flex-col gap-4 overflow-y-scroll'>
-      <NavItem name='Today' link='/user' />
+      <NavItem name='Today' link='/list' />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
         {
           lists.sort((a, b) => a.name > b.name ? 1 : 0)
-            .map(list => <NavItem key={list.id} name={list.name} link={`/user/list/${list.id}`} endContent={<ListSettings listId={list.id} dueDates={list.hasDueDates} timeTracking={list.hasTimeTracking} autoOrdered={list.isAutoOrdered} deleteList={deleteList.bind(null, list.id)} />} />)
+            .map(list => <NavItem key={list.id} name={list.name} link={`/list/${list.id}`} endContent={<ListSettings listId={list.id} dueDates={list.hasDueDates} timeTracking={list.hasTimeTracking} autoOrdered={list.isAutoOrdered} deleteList={deleteList.bind(null, list.id)} />} />)
         }
         {addingList ? <NewItem finalize={finalizeNew} remove={removeNew} /> : <></>}
       </NavSection>
