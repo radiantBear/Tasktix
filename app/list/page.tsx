@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <main className='p-8 w-full flex flex-col gap-8 overflow-y-scroll'>
-      <ListItemGroup startingItems={JSON.stringify(items)} startingTags={JSON.stringify(tags)} members={JSON.stringify(members)} />
+      <ListItemGroup startingItems={JSON.stringify(items)} startingTags={JSON.stringify(tags)} members={JSON.stringify(members)} alternate="You're all caught up!" />
     </main>
   );
 }
