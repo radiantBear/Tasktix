@@ -10,6 +10,7 @@ import Tag from '@/lib/model/tag';
 import Color from '@/lib/model/color';
 import { useState } from 'react';
 import SearchBar from '@/components/SearchBar';
+import { InputOption, InputOptionGroup } from '@/components/SearchBar/types';
 
 export default function List({ startingList, startingTagsAvailable }: { startingList: string, startingTagsAvailable: string }) {
   const builtList: ListModel = JSON.parse(startingList);
@@ -24,6 +25,55 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   
   const [list, setList] = useState<ListModel>(builtList);
   const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(JSON.parse(startingTagsAvailable));
+
+  const generalOptions: InputOption[] = [
+    { type: 'String', label: 'name' },
+    { type: 'Select', label: 'priority', selectOptions: [{name: 'High', color: 'danger'}, {name: 'Medium', color: 'warning'}, {name: 'Low', color: 'success'}] },
+    { type: 'Select', label: 'tag', selectOptions: tagsAvailable },
+  ];
+  if(builtList.members.length > 1)
+    generalOptions.push({ 
+      type: 'Select', 
+      label: 'user', 
+      selectOptions: builtList.members.map(member => {
+        return { name: member.user.username, color: member.user.color }
+      })
+    });
+
+  const inputOptions: InputOptionGroup[] = [
+    { label: 'General', options: generalOptions },
+    { label: 'Completed', options: [
+      { type: 'Toggle', label: 'completed' },
+      { type: 'Date', label: 'completedBefore' },
+      { type: 'Date', label: 'completedOn' },
+      { type: 'Date', label: 'completedAfter' },
+    ] },
+  ];
+  if(builtList.hasDueDates)
+    inputOptions.push({
+      label: 'Due', options: [
+        { type: 'Date', label: 'dueBefore' },
+        { type: 'Date', label: 'dueOn' },
+        { type: 'Date', label: 'dueAfter' },
+      ]
+    });
+  if(builtList.hasTimeTracking)
+    inputOptions.push(
+      {
+        label: 'Expected Time', options: [
+          { type: 'Time', label: 'expectedTimeAbove'},
+          { type: 'Time', label: 'expectedTimeAt'},
+          { type: 'Time', label: 'expectedTimeBelow'},
+        ]
+      },
+      {
+        label: 'Elapsed Time', options: [
+          { type: 'Time', label: 'elapsedTimeAbove'},
+          { type: 'Time', label: 'elapsedTimeAt'},
+          { type: 'Time', label: 'elapsedTimeBelow'},
+        ]
+      }
+    );
 
   function addNewTag(name: string, color: Color) {
     return new Promise((resolve, reject) => {
@@ -69,39 +119,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   return (
     <>
       <span className='flex gap-2 items-center'>
-          <SearchBar inputOptions={[
-            { label: 'General', options: [
-              { type: 'String', label: 'name' },
-              { type: 'Select', label: 'priority', selectOptions: [{name: 'High', color: 'danger'}, {name: 'Medium', color: 'warning'}, {name: 'Low', color: 'success'}] },
-              { type: 'Select', label: 'tag', selectOptions: [{name: 'TekBots', color: 'Orange'}, {name: 'Schedule-It', color: 'Blue'}] },
-              { type: 'Select', label: 'user', selectOptions: [{name: 'You'}]},
-            ]},
-            { label: 'Completed', options: [
-              { type: 'Toggle', label: 'completed' },
-              { type: 'Date', label: 'completedBefore' },
-              { type: 'Date', label: 'completedOn' },
-              { type: 'Date', label: 'completedAfter' },
-            ] },
-            { label: 'Due', options: [
-              { type: 'Date', label: 'dueBefore' },
-              { type: 'Date', label: 'dueOn' },
-              { type: 'Date', label: 'dueAfter' },
-            ]},
-            {
-              label: 'Expected Time', options: [
-                { type: 'Time', label: 'expectedTimeAbove'},
-                { type: 'Time', label: 'expectedTimeAt'},
-                { type: 'Time', label: 'expectedTimeBelow'},
-              ]
-            },
-            {
-              label: 'Elapsed Time', options: [
-                { type: 'Time', label: 'elapsedTimeAbove'},
-                { type: 'Time', label: 'elapsedTimeAt'},
-                { type: 'Time', label: 'elapsedTimeBelow'},
-              ]
-            }
-          ]} />
+          <SearchBar inputOptions={inputOptions} />
         </span>
       {list.sections.map(section => <ListSection key={section.id} id={section.id} listId={list.id} name={section.name} members={list.members} startingItems={section.items} tagsAvailable={tagsAvailable} hasTimeTracking={list.hasTimeTracking} hasDueDates={list.hasDueDates} isAutoOrdered={list.isAutoOrdered} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
       <AddListSection listId={list.id} addListSection={addListSection} />
