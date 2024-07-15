@@ -1,8 +1,8 @@
 'use client';
 
 import { ReactNode, useState } from "react";
-import { Button, Input, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link } from "@nextui-org/react";
-import { CalendarMinus, Check, Sliders2, StopwatchFill, Plus, TrashFill, SortDown } from "react-bootstrap-icons";
+import { Button, Input, Link } from "@nextui-org/react";
+import { Check, Plus } from "react-bootstrap-icons";
 import { usePathname, useRouter } from 'next/navigation';
 import { api } from "@/lib/api";
 import { addSnackbar } from "@/components/Snackbar";
@@ -14,7 +14,6 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
   const [lists, setLists] = useState<List[]>(JSON.parse(startingLists));
   const [addingList, setAddingList] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
 
   function finalizeNew(name: string) {
     api.post('/list', { name })
@@ -38,33 +37,13 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
     setAddingList(false);
   }
 
-  function deleteList(id: string) {
-    if(!confirm('Are you sure you want to delete this list? This action is irreversible.'))
-      return;
-
-    api.delete(`/list/${id}`)
-      .then(res => {
-        addSnackbar(res.message, 'success');
-
-        if(`/user/list/${id}` == pathname)
-          router.replace('/user');
-
-        const newLists = structuredClone(lists);
-        for(let i = 0; i < newLists.length; i++)
-          if(newLists[i].id == id)
-            newLists.splice(i, 1);
-        setLists(newLists);
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
   return (
-    <aside className='w-48 bg-transparent shadow-l-lg shadow-content4 p-4 flex flex-col gap-4 overflow-y-scroll'>
+    <aside className='w-48 bg-transparent shadow-l-lg shadow-content4 p-4 pr-0 flex flex-col gap-4 overflow-y-scroll'>
       <NavItem name='Today' link='/list' />
       <NavSection name='Lists' endContent={<AddList addList={() => setAddingList(true)} />}>
         {
           lists.sort((a, b) => a.name > b.name ? 1 : 0)
-            .map(list => <NavItem key={list.id} name={list.name} link={`/list/${list.id}`} endContent={<ListSettings listId={list.id} dueDates={list.hasDueDates} timeTracking={list.hasTimeTracking} autoOrdered={list.isAutoOrdered} deleteList={deleteList.bind(null, list.id)} />} />)
+            .map(list => <NavItem key={list.id} name={list.name} link={`/list/${list.id}`} />)
         }
         {addingList ? <NewItem finalize={finalizeNew} remove={removeNew} /> : <></>}
       </NavSection>
@@ -88,7 +67,7 @@ export function NavItem({ name, link, endContent }: { name: string, link: string
   const isActive = pathname == link;
 
   return (
-    <span className={`pl-2 flex items-center justify-between border-l-2${isActive ? ' border-primary' : ' border-transparent'} text-sm`}>
+    <span className={`pl-2 my-1 flex items-center justify-between border-l-2${isActive ? ' border-primary' : ' border-transparent'} text-sm`}>
       <Link href={link} color='foreground' >{name}</Link>
       {endContent}
     </span>
@@ -117,60 +96,5 @@ function NewItem({ finalize, remove }: { finalize: (name: string) => any, remove
         <Check />
       </Button>
     </form>
-  );
-}
-
-export function ListSettings({ listId, timeTracking, autoOrdered, dueDates, deleteList }: { listId: string, timeTracking: boolean, dueDates: boolean, autoOrdered: boolean, deleteList: () => any }) {
-  const [hasTimeTracking, setHasTimeTracking] = useState(timeTracking);
-  const [hasDueDates, setHasDueDates] = useState(dueDates);
-  const [isAutoOrdered, setIsAutoOrdered] = useState(autoOrdered);
-
-  function updateHasTimeTracking() {
-    api.patch(`/list/${listId}`, { hasTimeTracking: !hasTimeTracking })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        setHasTimeTracking(!hasTimeTracking);
-        if(`/list/${listId}` == window.location.pathname)
-          location.reload();
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function updateHasDueDates() {
-    api.patch(`/list/${listId}`, { hasDueDates: !hasDueDates })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        setHasDueDates(!hasDueDates);
-        if(`/list/${listId}` == window.location.pathname)
-          location.reload();
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-
-  function updateIsAutoOrdered() {
-    api.patch(`/list/${listId}`, { isAutoOrdered: !isAutoOrdered })
-      .then(res => {
-        addSnackbar(res.message, 'success');
-        setIsAutoOrdered(!isAutoOrdered);
-        if(`/list/${listId}` == window.location.pathname)
-          location.reload();
-      })
-      .catch(err => addSnackbar(err.message, 'error'));
-  }
-  
-  return (
-    <Dropdown>
-      <DropdownTrigger>
-        <Button type='button' color='primary' isIconOnly variant='ghost' className='border-0 text-foreground rounded-lg w-8 h-8 min-w-8 min-h-8'>
-          <Sliders2 />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownItem onPress={updateHasTimeTracking} key='toggleTime' startContent={<StopwatchFill />}>{hasTimeTracking ? 'Disable' : 'Enable'} time tracking</DropdownItem>
-        <DropdownItem onPress={updateHasDueDates} startContent={<CalendarMinus />}>{hasDueDates ? 'Disable' : 'Enable'} due dates</DropdownItem>
-        <DropdownItem onPress={updateIsAutoOrdered} startContent={<SortDown />}>{isAutoOrdered ? 'Disable' : 'Enable'} auto ordering</DropdownItem>
-        <DropdownItem onPress={deleteList} startContent={<TrashFill />} className='text-danger' color='danger'>Delete list</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
   );
 }

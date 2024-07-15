@@ -6,14 +6,12 @@ import { addSnackbar } from '@/components/Snackbar';
 import { api } from '@/lib/api';
 import { default as ListModel } from '@/lib/model/list';
 import { default as ListSectionModel } from '@/lib/model/listSection';
-import ListItem from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
 import Color from '@/lib/model/color';
 import { useState } from 'react';
 import SearchBar from '@/components/SearchBar';
 import { Filters, InputOption, InputOptionGroup } from '@/components/SearchBar/types';
-import { Button } from '@nextui-org/react';
-import { Motherboard, Sliders2 } from 'react-bootstrap-icons';
+import { ListSettings } from './ListSettings';
 
 export default function List({ startingList, startingTagsAvailable }: { startingList: string, startingTagsAvailable: string }) {
   const builtList: ListModel = JSON.parse(startingList);
@@ -30,7 +28,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(JSON.parse(startingTagsAvailable));
   const [filters, setFilters] = useState<Filters>([]);
 
-  const filterOptions = getFilterOptions(builtList, tagsAvailable);  
+  const filterOptions = getFilterOptions(list, tagsAvailable);  
 
   function addNewTag(name: string, color: Color) {
     return new Promise((resolve, reject) => {
@@ -77,6 +75,13 @@ export default function List({ startingList, startingTagsAvailable }: { starting
     <>
       <span className='flex gap-4 items-center'>
         <SearchBar inputOptions={filterOptions} onValueChange={setFilters} />
+        <ListSettings 
+          listId={list.id} 
+          hasTimeTracking={list.hasTimeTracking} isAutoOrdered={list.isAutoOrdered} hasDueDates={list.hasDueDates} 
+          setHasTimeTracking={ (value: boolean) => {const newList = structuredClone(list); newList.hasTimeTracking = value; setList(newList)} }
+          setIsAutoOrdered={ (value: boolean) => {const newList = structuredClone(list); newList.isAutoOrdered = value; setList(newList)} }
+          setHasDueDates={ (value: boolean) => {const newList = structuredClone(list); newList.hasDueDates = value; setList(newList)} }
+        />
       </span>
 
       {
