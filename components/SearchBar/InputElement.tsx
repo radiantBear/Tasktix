@@ -18,25 +18,25 @@ export default function InputElement({ inputOption, value, dispatchFilters, onVa
   switch(inputOption.type) {
     case 'String':
       return (
-        <Input value={value[inputOption.label]} onValueChange={handleInput} label={`${inputOption.label}:`} labelPlacement='outside-left' size='sm' className='flex items-center w-52 h-fit mt-1 shrink-0' />
+        <Input value={value[inputOption.label]} onValueChange={handleInput} label={`${inputOption.label}:`} autoFocus labelPlacement='outside-left' size='sm' className='flex items-center w-52 h-fit mt-1 shrink-0' />
       );
     
     case 'Select':
       return (
-        <Select selectedKeys={value[inputOption.label]} onSelectionChange={handleInput} label={`${inputOption.label}:`} selectionMode='multiple' labelPlacement='outside-left' size='sm' className='flex items-center w-52 shrink-0'>
+        <Select selectedKeys={value[inputOption.label]} onSelectionChange={handleInput} label={`${inputOption.label}:`} autoFocus selectionMode='multiple' labelPlacement='outside-left' size='sm' className='flex items-center w-52 shrink-0'>
           { inputOption?.selectOptions?.map(option => <SelectItem key={option.name} value={option.name} className={option.color ? '!'+getTextColor(option.color) : ''}>{option.name}</SelectItem>) || <></> }
         </Select>
       );
 
     case 'Date':
-      return <DateInput value={value[inputOption.label]} onValueChange={handleInput} label={`${inputOption.label}:`} className='!mb-1 h-unit-8 rounded-small' />;
+      return <DateInput value={value[inputOption.label]} onValueChange={handleInput} label={`${inputOption.label}:`} autoFocus className='!mb-1 h-unit-8 rounded-small' />;
     
     case 'Time':
       return <TimeInput value={value[inputOption.label]} onValueChange={handleInput} label={`${inputOption.label}:`} size='sm' labelPlacement='outside-left' className='shrink-0' classNames={{input: 'w-12'}} />;
     
     case 'Toggle':
       return (
-        <Switch value={value[inputOption.label]} onValueChange={handleInput} classNames={{base: 'flex-row-reverse gap-2 -mr-2', label: 'text-tiny'}}>{`${inputOption.label}:`}</Switch>
+        <Switch value={value[inputOption.label]} onValueChange={handleInput} autoFocus classNames={{base: 'flex-row-reverse gap-2 -mr-2', label: 'text-tiny'}}>{`${inputOption.label}:`}</Switch>
       );
   }
 }
