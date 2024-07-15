@@ -10,3 +10,12 @@ export interface InputOption {
   label: string,
   selectOptions?: { name: string, color?: Color }[]
 }
+
+export interface InputAction {
+  type: 'Add' | 'Update' | 'Remove' | 'Clear',
+  label: string,
+  value: string,
+  callback: (value: Filters) => any
+}
+
+export type Filters = { [key: string]: any };
