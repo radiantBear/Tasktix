@@ -70,6 +70,8 @@ export default function StaticListItem(
   } : StaticListItemParams
 ) {  
   const minute = 1000 * 60;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const timer = useRef<NodeJS.Timeout>();
   const updateTime = useRef(() => {});
@@ -338,7 +340,7 @@ export default function StaticListItem(
               ? (
                 _item.status == 'Completed'
                   ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>
-                  : (<DateInput color={(_item.dateDue && _item.dateDue.getTime() < Date.now()) ? 'danger' : 'secondary'} displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
+                  : (<DateInput color={(_item.dateDue && _item.dateDue < today) ? 'danger' : 'secondary'} displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
               )
               : <></>
           }
