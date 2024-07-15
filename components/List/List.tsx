@@ -26,59 +26,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   const [list, setList] = useState<ListModel>(builtList);
   const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(JSON.parse(startingTagsAvailable));
 
-  const generalOptions: InputOption[] = [
-    { type: 'String', label: 'name' },
-    { type: 'Select', label: 'priority', selectOptions: [{name: 'High', color: 'danger'}, {name: 'Medium', color: 'warning'}, {name: 'Low', color: 'success'}] },
-    { type: 'Select', label: 'tag', selectOptions: tagsAvailable },
-  ];
-  if(builtList.members.length > 1)
-    generalOptions.push({ 
-      type: 'Select', 
-      label: 'user', 
-      selectOptions: builtList.members.map(member => {
-        return { name: member.user.username, color: member.user.color }
-      })
-    });
-  if(builtList.hasTimeTracking)
-    generalOptions.push({
-      type: 'Select',
-      label: 'state',
-      selectOptions: [{name: 'Unstarted'}, {name: 'In Progress'}, {name: 'Paused'}, {name: 'Completed'}]
-    });
-
-  const inputOptions: InputOptionGroup[] = [
-    { label: 'General', options: generalOptions },
-    { label: 'Completed', options: [
-      { type: 'Date', label: 'completedBefore' },
-      { type: 'Date', label: 'completedOn' },
-      { type: 'Date', label: 'completedAfter' },
-    ] },
-  ];
-  if(builtList.hasDueDates)
-    inputOptions.push({
-      label: 'Due', options: [
-        { type: 'Date', label: 'dueBefore' },
-        { type: 'Date', label: 'dueOn' },
-        { type: 'Date', label: 'dueAfter' },
-      ]
-    });
-  if(builtList.hasTimeTracking)
-    inputOptions.push(
-      {
-        label: 'Expected Time', options: [
-          { type: 'Time', label: 'expectedTimeAbove'},
-          { type: 'Time', label: 'expectedTimeAt'},
-          { type: 'Time', label: 'expectedTimeBelow'},
-        ]
-      },
-      {
-        label: 'Elapsed Time', options: [
-          { type: 'Time', label: 'elapsedTimeAbove'},
-          { type: 'Time', label: 'elapsedTimeAt'},
-          { type: 'Time', label: 'elapsedTimeBelow'},
-        ]
-      }
-    );
+  const filterOptions = getFilterOptions(builtList, tagsAvailable);
 
   function addNewTag(name: string, color: Color) {
     return new Promise((resolve, reject) => {
@@ -130,4 +78,62 @@ export default function List({ startingList, startingTagsAvailable }: { starting
       <AddListSection listId={list.id} addListSection={addListSection} />
     </>
   );
+}
+
+function getFilterOptions(list: ListModel, tagsAvailable: Tag[]): InputOptionGroup[] {
+  const generalOptions: InputOption[] = [
+    { type: 'String', label: 'name' },
+    { type: 'Select', label: 'priority', selectOptions: [{name: 'High', color: 'danger'}, {name: 'Medium', color: 'warning'}, {name: 'Low', color: 'success'}] },
+    { type: 'Select', label: 'tag', selectOptions: tagsAvailable },
+  ];
+  if(list.members.length > 1)
+    generalOptions.push({ 
+      type: 'Select', 
+      label: 'user', 
+      selectOptions: list.members.map(member => {
+        return { name: member.user.username, color: member.user.color }
+      })
+    });
+  if(list.hasTimeTracking)
+    generalOptions.push({
+      type: 'Select',
+      label: 'state',
+      selectOptions: [{name: 'Unstarted'}, {name: 'In Progress'}, {name: 'Paused'}, {name: 'Completed'}]
+    });
+
+  const filterOptions: InputOptionGroup[] = [
+    { label: 'General', options: generalOptions },
+    { label: 'Completed', options: [
+      { type: 'Date', label: 'completedBefore' },
+      { type: 'Date', label: 'completedOn' },
+      { type: 'Date', label: 'completedAfter' },
+    ] },
+  ];
+  if(list.hasDueDates)
+    filterOptions.push({
+      label: 'Due', options: [
+        { type: 'Date', label: 'dueBefore' },
+        { type: 'Date', label: 'dueOn' },
+        { type: 'Date', label: 'dueAfter' },
+      ]
+    });
+  if(list.hasTimeTracking)
+    filterOptions.push(
+      {
+        label: 'Expected Time', options: [
+          { type: 'Time', label: 'expectedTimeAbove'},
+          { type: 'Time', label: 'expectedTimeAt'},
+          { type: 'Time', label: 'expectedTimeBelow'},
+        ]
+      },
+      {
+        label: 'Elapsed Time', options: [
+          { type: 'Time', label: 'elapsedTimeAbove'},
+          { type: 'Time', label: 'elapsedTimeAt'},
+          { type: 'Time', label: 'elapsedTimeBelow'},
+        ]
+      }
+    );
+
+  return filterOptions;
 }
