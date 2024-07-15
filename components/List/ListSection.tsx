@@ -11,12 +11,14 @@ import ListMember from '@/lib/model/listMember';
 import { AnimatePresence, motion, Reorder } from 'framer-motion';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
+import { Filters } from '../SearchBar/types';
 
 interface Item extends ListItemModel {
   visualIndex?: number;
 }
 
-export default function ListSection({ id, listId, name, startingItems, members, tagsAvailable, hasTimeTracking, hasDueDates, isAutoOrdered, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+export default function ListSection({ id, listId, name, startingItems, filters, members, tagsAvailable, hasTimeTracking, hasDueDates, isAutoOrdered, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], filters: Filters, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+  // TODO: Update to use hashmap: don't iterate over every value when finding the right one to modify
   const [items, _setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
     const newItem: Item = structuredClone(item);
     newItem.visualIndex = i;
@@ -157,14 +159,14 @@ export default function ListSection({ id, listId, name, startingItems, members, 
               {
                 isAutoOrdered
                   ? (
-                    items.sort(sortItems).map(item => (
+                    items.filter(item => checkItemFilter(item, filters)).sort(sortItems).map(item => (
                       <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={setPaused.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
                     ))
                   )
                   : (
                     <Reorder.Group axis='y' values={items} onReorder={items => setItems(items.sort(sortItemsByCompleted))}>
                       {
-                        items.map(item => (
+                        items.filter(item => checkItemFilter(item, filters)).map(item => (
                           <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={setPaused.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
                         ))
                       }
@@ -177,4 +179,70 @@ export default function ListSection({ id, listId, name, startingItems, members, 
       </AnimatePresence>
     </div>
   )
+}
+
+function checkItemFilter(item: ListItemModel, filters: Filters): boolean {
+  for(const key in filters)
+    if(!compareFilter(item, key, filters[key]))
+      return false;
+  
+  return true;
+}
+
+function compareFilter(item: ListItemModel, key: string, value: any): boolean {
+  if(value == undefined)
+    return false;
+  
+  switch (key) {
+    case 'name':
+      return value == item.name;
+    
+    case 'priority':
+      return value && value.has(item.priority);
+
+    case 'tag':
+      return value && item.tags
+        .map(curr => value.has(curr.name))
+        .reduce((prev: boolean, curr: boolean) => prev || curr);
+
+    case 'user':
+      return item.assignees
+        .map(curr => value.has(curr.user.username))
+        .reduce((prev: boolean, curr: boolean) => prev || curr);
+
+    case 'status':
+      return value && value.has(item.status);
+
+    case 'completedBefore':
+      return !!item.dateCompleted && value.getTime() > item.dateCompleted.getTime();
+    case 'completedOn':
+      return !!item.dateCompleted && value.getTime() == item.dateCompleted.getTime();
+    case 'completedAfter':
+      return !!item.dateCompleted && value.getTime() < item.dateCompleted.getTime();
+
+    case 'dueBefore':
+      return !!item.dateDue && value.getTime() > item.dateDue.getTime();
+    case 'dueOn':
+      return !!item.dateDue && value.getTime() == item.dateDue.getTime();
+    case 'dueAfter':
+      return !!item.dateDue && value.getTime() < item.dateDue.getTime();
+
+    case 'expectedTimeBelow':
+      return !!item.expectedMs && item.expectedMs < value;
+    case 'expectedTimeAt':
+      return !!item.expectedMs && item.expectedMs == value;
+    case 'expectedTimeAbove':
+      return !!item.expectedMs && item.expectedMs > value;
+    
+    
+    case 'elapsedTimeBelow':
+      return item.elapsedMs < value;
+    case 'elapsedTimeAt':
+      return item.elapsedMs == value;
+    case 'elapsedTimeAbove':
+      return item.elapsedMs > value;
+    
+    default:
+      throw Error('Invalid option '+key);
+  }
 }

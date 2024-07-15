@@ -14,7 +14,7 @@ export interface InputOption {
 export interface InputAction {
   type: 'Add' | 'Update' | 'Remove' | 'Clear',
   label: string,
-  value: string,
+  value: any,
   callback: (value: Filters) => any
 }
 

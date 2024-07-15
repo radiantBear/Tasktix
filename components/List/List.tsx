@@ -4,13 +4,16 @@ import ListSection from './ListSection';
 import AddListSection from '@/components/AddListSection';
 import { addSnackbar } from '@/components/Snackbar';
 import { api } from '@/lib/api';
-import { default as ListModel } from "@/lib/model/list";
-import { default as ListSectionModel } from "@/lib/model/listSection";
+import { default as ListModel } from '@/lib/model/list';
+import { default as ListSectionModel } from '@/lib/model/listSection';
+import ListItem from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
 import Color from '@/lib/model/color';
 import { useState } from 'react';
 import SearchBar from '@/components/SearchBar';
-import { InputOption, InputOptionGroup } from '@/components/SearchBar/types';
+import { Filters, InputOption, InputOptionGroup } from '@/components/SearchBar/types';
+import { Button } from '@nextui-org/react';
+import { Motherboard, Sliders2 } from 'react-bootstrap-icons';
 
 export default function List({ startingList, startingTagsAvailable }: { startingList: string, startingTagsAvailable: string }) {
   const builtList: ListModel = JSON.parse(startingList);
@@ -25,8 +28,9 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   
   const [list, setList] = useState<ListModel>(builtList);
   const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(JSON.parse(startingTagsAvailable));
+  const [filters, setFilters] = useState<Filters>([]);
 
-  const filterOptions = getFilterOptions(builtList, tagsAvailable);
+  const filterOptions = getFilterOptions(builtList, tagsAvailable);  
 
   function addNewTag(name: string, color: Color) {
     return new Promise((resolve, reject) => {
@@ -71,10 +75,22 @@ export default function List({ startingList, startingTagsAvailable }: { starting
   
   return (
     <>
-      <span className='flex gap-2 items-center'>
-          <SearchBar inputOptions={inputOptions} />
-        </span>
-      {list.sections.map(section => <ListSection key={section.id} id={section.id} listId={list.id} name={section.name} members={list.members} startingItems={section.items} tagsAvailable={tagsAvailable} hasTimeTracking={list.hasTimeTracking} hasDueDates={list.hasDueDates} isAutoOrdered={list.isAutoOrdered} deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} />)}
+      <span className='flex gap-4 items-center'>
+        <SearchBar inputOptions={filterOptions} onValueChange={setFilters} />
+      </span>
+
+      {
+        list.sections.map(section => 
+            <ListSection 
+              key={section.id} id={section.id} listId={list.id} name={section.name}
+              members={list.members} startingItems={section.items} tagsAvailable={tagsAvailable}
+              hasTimeTracking={list.hasTimeTracking} hasDueDates={list.hasDueDates} isAutoOrdered={list.isAutoOrdered}
+              filters={filters}
+              deleteSection={deleteListSection.bind(null, section.id)} addNewTag={addNewTag} 
+            />
+          )
+      }
+
       <AddListSection listId={list.id} addListSection={addListSection} />
     </>
   );
@@ -97,7 +113,7 @@ function getFilterOptions(list: ListModel, tagsAvailable: Tag[]): InputOptionGro
   if(list.hasTimeTracking)
     generalOptions.push({
       type: 'Select',
-      label: 'state',
+      label: 'status',
       selectOptions: [{name: 'Unstarted'}, {name: 'In Progress'}, {name: 'Paused'}, {name: 'Completed'}]
     });
 
