@@ -39,11 +39,16 @@ export default function List({ startingList, startingTagsAvailable }: { starting
         return { name: member.user.username, color: member.user.color }
       })
     });
+  if(builtList.hasTimeTracking)
+    generalOptions.push({
+      type: 'Select',
+      label: 'state',
+      selectOptions: [{name: 'Unstarted'}, {name: 'In Progress'}, {name: 'Paused'}, {name: 'Completed'}]
+    });
 
   const inputOptions: InputOptionGroup[] = [
     { label: 'General', options: generalOptions },
     { label: 'Completed', options: [
-      { type: 'Toggle', label: 'completed' },
       { type: 'Date', label: 'completedBefore' },
       { type: 'Date', label: 'completedOn' },
       { type: 'Date', label: 'completedAfter' },
