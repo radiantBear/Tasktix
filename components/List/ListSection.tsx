@@ -29,6 +29,7 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
 
   const [isCollapsed, setIsCollapsed] = useState(!items.reduce((prev, curr) => prev || curr.status != 'Completed', false));
 
+  // TODO: Update to just use this fn instead of 3? Ie optional param 3 `date`
   function setStatus(id: string, status: ListItemModel['status']) {
     const newItems = structuredClone(items);
     for(const item of newItems)
@@ -214,18 +215,18 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
       return value && value.has(item.status);
 
     case 'completedBefore':
-      return !!item.dateCompleted && value.getTime() > item.dateCompleted.getTime();
+      return !!item.dateCompleted && value && value.getTime() > item.dateCompleted.getTime();
     case 'completedOn':
-      return !!item.dateCompleted && value.getTime() == item.dateCompleted.getTime();
+      return !!item.dateCompleted && value && value.getTime() == item.dateCompleted.getTime();
     case 'completedAfter':
-      return !!item.dateCompleted && value.getTime() < item.dateCompleted.getTime();
+      return !!item.dateCompleted && value && value.getTime() < item.dateCompleted.getTime();
 
     case 'dueBefore':
-      return !!item.dateDue && value.getTime() > item.dateDue.getTime();
+      return !!item.dateDue && value && value.getTime() > item.dateDue.getTime();
     case 'dueOn':
-      return !!item.dateDue && value.getTime() == item.dateDue.getTime();
+      return !!item.dateDue && value && value.getTime() == item.dateDue.getTime();
     case 'dueAfter':
-      return !!item.dateDue && value.getTime() < item.dateDue.getTime();
+      return !!item.dateDue && value && value.getTime() < item.dateDue.getTime();
 
     case 'expectedTimeBelow':
       return !!item.expectedMs && item.expectedMs < value;
