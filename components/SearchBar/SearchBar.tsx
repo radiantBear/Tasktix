@@ -21,7 +21,7 @@ export default function SearchBar({ inputOptions, onValueChange }: { inputOption
     if (!option)
       return;
 
-    inputFields.push(<InputElement inputOption={option} value={filters[key]} dispatchFilters={dispatchFilters} onValueChange={onValueChange} />)
+    inputFields.push(<InputElement inputOption={option} value={filters} dispatchFilters={dispatchFilters} onValueChange={onValueChange} />)
   }
 
   function addUsedOption(option: Key) {
