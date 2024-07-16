@@ -19,13 +19,11 @@ interface Item extends ListItemModel {
 
 export default function ListSection({ id, listId, name, startingItems, filters, members, tagsAvailable, hasTimeTracking, hasDueDates, isAutoOrdered, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], filters: Filters, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
   // TODO: Update to use hashmap: don't iterate over every value when finding the right one to modify
-  const [items, _setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
+  const [items, setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
     const newItem: Item = structuredClone(item);
     newItem.visualIndex = i;
     return newItem;
   }));
-  const setItems: Dispatch<SetStateAction<ListItemModel[]>>
-    = newItems => {console.log(newItems); _setItems(newItems)}
 
   const [isCollapsed, setIsCollapsed] = useState(!items.reduce((prev, curr) => prev || curr.status != 'Completed', false));
 

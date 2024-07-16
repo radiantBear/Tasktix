@@ -203,7 +203,6 @@ export async function updateListItem(item: ListItem): Promise<boolean> {
     WHERE \`i_id\` = :id;
   `;
   
-  console.log(item)
   const result = await execute(sql, { ...item });
 
   if(!result)

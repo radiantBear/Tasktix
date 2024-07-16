@@ -44,7 +44,6 @@ export async function POST(request: Request) {
 
   const listItem = new ListItem(name, { priority, expectedMs, sectionIndex, dateDue: dueDate });
 
-  console.log(listItem)
   const result = await createListItem(sectionId, listItem);
 
   if(!result)
