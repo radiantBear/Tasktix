@@ -28,7 +28,7 @@ export default function SearchBar({ inputOptions, onValueChange }: { inputOption
     const newOptions = structuredClone(usedOptions);
     newOptions.add(option.toString());
     setUsedOptions(newOptions);
-    dispatchFilters({ type: 'Add', label: option.toString(), value: '', callback: onValueChange });
+    dispatchFilters({ type: 'Add', label: option.toString(), value: undefined, callback: onValueChange });
   }
 
   function clearUsedOptions() {
