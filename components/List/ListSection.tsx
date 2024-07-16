@@ -66,6 +66,7 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
     const newItems = structuredClone(items);
     newItems.push(item);
     setItems(newItems);
+    setIsCollapsed(false);
   }
 
   function reorderItem(item: ListItemModel, lastVisualIndex: number) {
