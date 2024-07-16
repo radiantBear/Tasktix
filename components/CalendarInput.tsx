@@ -20,8 +20,8 @@ export default function CalendarInput({ defaultValue, color = 'default', value, 
     const newDate = new Date(currentRange.getTime());
     newDate.setDate(date);
     
-    if(value)
-      onValueChange && onValueChange(newDate);
+    if(onValueChange)
+      onValueChange(newDate);
     else
       setDate(newDate);
   }

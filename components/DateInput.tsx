@@ -16,8 +16,8 @@ export default function DateInput({ autoFocus, label, placeholder, defaultValue,
   }, [value]);
 
   function handleInput(value: Date) {
-    if(value)
-      onValueChange && onValueChange(value);
+    if(onValueChange)
+      onValueChange(value);
     else
       setDate(value);
     setIsOpen(false);
