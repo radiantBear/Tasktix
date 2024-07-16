@@ -144,13 +144,14 @@ export default function StaticListItem(
     complete: () => {
       // Store time before starting POST request to ensure it's accurate
       const dateCompleted = new Date();
-      const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
+      const newElapsed = timer.current ? elapsedLive + (Date.now() - lastTime.current.getTime()) : 0;
       
       api.patch(`/item/${_item.id}`, { status: 'Completed', dateCompleted })
         .then(() => {
           _stopRunning();
           // Ensure time is accurate since user stopped time before POST request
-          setElapsedLive(newElapsed);
+          if(newElapsed)
+            setElapsedLive(newElapsed);
           
           // Update the internal state
           const newItem = structuredClone(_item);
