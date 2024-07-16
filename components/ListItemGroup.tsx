@@ -23,23 +23,11 @@ export default function ListItemGroup({ startingItems, startingTags, members, al
   const [tags, setTags] = useState<{[id: string]: Tag[]}>(JSON.parse(startingTags));
   const parsedMembers: {[id: string]: ListMember[]} = JSON.parse(members);
 
-  function setStatus(index: number, status: ListItemModel['status']) {
+  function setStatus(index: number, status: ListItemModel['status'], dateCompleted?: ListItemModel['dateCompleted']) {
     const newItems = structuredClone(items);
     newItems[index].status = status;
-    setItems(newItems);
-  }
-
-  function setPaused(index: number) {
-    const newItems = structuredClone(items);
-    newItems[index].status = 'Paused';
-    newItems[index].dateCompleted = null;
-    setItems(newItems);
-  }
-
-  function setCompleted(index: number, date: ListItemModel['dateCompleted']) {
-    const newItems = structuredClone(items);
-    newItems[index].status = 'Completed';
-    newItems[index].dateCompleted = date;
+    if(dateCompleted)
+      newItems[index].dateCompleted = dateCompleted;
     setItems(newItems);
   }
   
@@ -91,7 +79,7 @@ export default function ListItemGroup({ startingItems, startingTags, members, al
       {
         items && items.length
           ? items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-            <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={setPaused.bind(null, idx)} setCompleted={setCompleted.bind(null, idx)} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
+            <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={() => setStatus(idx, 'Paused', null)} setCompleted={setStatus.bind(null, idx, 'Completed')} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
           )
           : <div className='h-16 flex items-center justify-center bg-content2'>{alternate}</div>
       }
