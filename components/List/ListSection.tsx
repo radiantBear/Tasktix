@@ -27,31 +27,13 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
 
   const [isCollapsed, setIsCollapsed] = useState(!items.reduce((prev, curr) => prev || curr.status != 'Completed', false));
 
-  // TODO: Update to just use this fn instead of 3? Ie optional param 3 `date`
-  function setStatus(id: string, status: ListItemModel['status']) {
+  function setStatus(id: string, status: ListItemModel['status'], dateCompleted?: ListItemModel['dateCompleted']) {
     const newItems = structuredClone(items);
     for(const item of newItems)
-      if(item.id == id)
+      if(item.id == id) {
         item.status = status;
-    setItems(newItems);
-  }
-
-  function setPaused(id: string) {
-    const newItems = structuredClone(items);
-    for(const item of newItems)
-      if(item.id == id) {
-        item.status = 'Paused';
-        item.dateCompleted = null;
-      }
-    setItems(newItems);
-  }
-
-  function setCompleted(id: string, date: ListItemModel['dateCompleted']) {
-    const newItems = structuredClone(items);
-    for(const item of newItems)
-      if(item.id == id) {
-        item.status = 'Completed'
-        item.dateCompleted = date;
+        if(dateCompleted !== undefined)
+          item.dateCompleted = dateCompleted;
       }
     setItems(newItems);
   }
@@ -159,14 +141,14 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
                 isAutoOrdered
                   ? (
                     items.filter(item => checkItemFilter(item, filters)).sort(sortItems).map(item => (
-                      <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={setPaused.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
+                      <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={() => setStatus(item.id, 'Paused')} setCompleted={setStatus.bind(null, item.id, 'Completed')} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
                     ))
                   )
                   : (
                     <Reorder.Group axis='y' values={items} onReorder={items => setItems(items.sort(sortItemsByCompleted))}>
                       {
                         items.filter(item => checkItemFilter(item, filters)).map(item => (
-                          <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={setPaused.bind(null, item.id)} setCompleted={setCompleted.bind(null, item.id)} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
+                          <ListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={() => setStatus(item.id, 'Paused')} setCompleted={setStatus.bind(null, item.id, 'Completed')} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} reorder={reorderItem.bind(null, item, item.visualIndex || 0)} />
                         ))
                       }
                     </Reorder.Group>

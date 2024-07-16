@@ -26,7 +26,7 @@ export default function ListItemGroup({ startingItems, startingTags, members, al
   function setStatus(index: number, status: ListItemModel['status'], dateCompleted?: ListItemModel['dateCompleted']) {
     const newItems = structuredClone(items);
     newItems[index].status = status;
-    if(dateCompleted)
+    if(dateCompleted !== undefined)
       newItems[index].dateCompleted = dateCompleted;
     setItems(newItems);
   }
