@@ -333,7 +333,7 @@ export default function StaticListItem(
         <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
             _item.status == 'Completed' 
-              ? <span className={`text-sm line-through text-foreground/50 ${hasDueDates || 'mt-2'}`}>{_item.name}</span>
+              ? <span className='text-sm line-through text-foreground/50'>{_item.name}</span>
               : (
                   <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
                     <Name name={_item.name} updateName={set.name} className='shrink' />
@@ -342,13 +342,14 @@ export default function StaticListItem(
           }
 
           {
-            hasDueDates 
-              ? (
-                _item.status == 'Completed'
-                  ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>
-                  : (<DateInput color={(_item.dateDue && _item.dateDue < today) ? 'danger' : 'secondary'} displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
+            _item.status == 'Completed'
+              ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>  
+              : (
+                hasDueDates 
+                  ? (<DateInput color={(_item.dateDue && _item.dateDue < today) ? 'danger' : 'secondary'} displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
+                  : <></>
               )
-              : <></>
+              
           }
         </div>
 
