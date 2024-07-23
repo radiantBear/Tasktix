@@ -77,7 +77,7 @@ export default function ListItemGroup({ startingLists, startingItems, startingTa
   }
 
   return (
-    <div className='rounded-md w-100 overflow-hidden border-2 border-content3 box-border shadow-lg shadow-content2'>
+    <div className='rounded-md w-100 border-2 border-content3 box-border shadow-lg shadow-content2'>
       {
         items && items.length
           ? items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
