@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Checkbox } from '@nextui-org/react';
+import { Checkbox, Chip } from '@nextui-org/react';
 import { DragControls } from 'framer-motion';
-import { GripVertical } from 'react-bootstrap-icons';
+import { CardChecklist, GripVertical } from 'react-bootstrap-icons';
 import DateInput from '../DateInput';
 import { addSnackbar } from '../Snackbar';
 import ExpectedInput from './ExpectedInput';
@@ -18,9 +18,13 @@ import Color from '@/lib/model/color';
 import ListItemModel from '@/lib/model/listItem';
 import ListMember from '@/lib/model/listMember';
 import Tag from '@/lib/model/tag';
+import List from '@/lib/model/list';
+import { getBackgroundColor, getTextColor } from '@/lib/color';
+import Link from 'next/link';
 
 interface StaticListItemParams { 
   item: ListItemModel,
+  list?: List
   members: ListMember[],
   tagsAvailable: Tag[],
   hasTimeTracking: boolean,
@@ -54,7 +58,8 @@ interface SetItem {
 export default function StaticListItem(
   {
     item: item, 
-    members, 
+    list,
+    members,
     tagsAvailable, 
     hasTimeTracking, 
     hasDueDates, 
@@ -346,6 +351,8 @@ export default function StaticListItem(
               : <></>
           }
         </div>
+
+        { list && <Link href={`/list/${list.id}`}><Chip startContent={<CardChecklist className='mx-1' />} variant='flat' size='sm' className={`p-2 ${getBackgroundColor(list.color)}/20 ${getTextColor(list.color)}`}>{list.name}</Chip></Link> }
 
         <Priority isComplete={_item.status == 'Completed'} priority={_item.priority} className='hidden md:flex' setPriority={set.priority} />
 

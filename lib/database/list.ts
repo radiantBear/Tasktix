@@ -1,6 +1,7 @@
 'use server';
 
-import ListMember, { extractListMemberFromRow } from '../model/listMember';
+import Color from '@/lib/model/color';
+import ListMember, { extractListMemberFromRow } from '@/lib/model/listMember';
 import { extractTagFromRow } from '../model/tag';
 import { execute, query } from './db_connect';
 import { DB_Tag } from './listItem';
@@ -20,6 +21,7 @@ export interface DB_ListMember extends DB_User {
 
 export interface DB_List extends DB_ListMember, DB_ListSection {
   l_id: string;
+  l_color: Color;
   l_name: string;
   l_hasTimeTracking: boolean;
   l_hasDueDates: boolean;
@@ -30,9 +32,10 @@ export async function createList(list: List): Promise<boolean> {
   const sql = `
     INSERT INTO \`lists\`(
       \`l_id\`,
-      \`l_name\`
+      \`l_name\`,
+      \`l_color\`
     )
-    VALUES (:id, :name);
+    VALUES (:id, :name, :color);
   `;
   
   const result = await execute(sql, list);
@@ -240,6 +243,7 @@ export async function updateList(list: List): Promise<boolean> {
     UPDATE \`lists\` 
     SET
       \`l_name\` = :name,
+      \`l_color\` = :color,
       \`l_hasTimeTracking\` = :hasTimeTracking,
       \`l_hasDueDates\` = :hasDueDates,
       \`l_isAutoOrdered\` = :isAutoOrdered

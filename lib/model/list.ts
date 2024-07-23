@@ -3,22 +3,25 @@ import { generateId } from '@/lib/generateId';
 import { DB_List } from '@/lib/database/list';
 import { mergeListItems } from './listItem';
 import ListSection, { extractListSectionFromRow } from './listSection';
+import Color from './color';
 
 export default class List {
   id: string;
   name: string;
+  color: Color;
   hasTimeTracking: boolean;
   hasDueDates: boolean;
   isAutoOrdered: boolean;
   members: ListMember[];
   sections: ListSection[];
 
-  constructor(name: string, members: ListMember[], sections: ListSection[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, id?: string) {
+  constructor(name: string, color: Color, members: ListMember[], sections: ListSection[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, id?: string) {
     if(!id)
       id = generateId();
 
     this.id = id;
     this.name = name;
+    this.color = color;
     this.hasTimeTracking = hasTimeTracking;
     this.hasDueDates = hasDueDates;
     this.isAutoOrdered = isAutoOrdered;
@@ -38,7 +41,7 @@ export function extractListFromRow(row: DB_List): List {
       ? [extractListSectionFromRow(row)]
       : [];
 
-  const list = new List(row.l_name, listMember, listSection, row.l_hasTimeTracking, row.l_hasDueDates, row.l_isAutoOrdered, row.l_id);
+  const list = new List(row.l_name, row.l_color, listMember, listSection, row.l_hasTimeTracking, row.l_hasDueDates, row.l_isAutoOrdered, row.l_id);
   list.id = row.l_id;
 
   return list;

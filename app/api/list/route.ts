@@ -1,4 +1,5 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
+import { randomColor } from '@/lib/color';
 import { createList } from '@/lib/database/list';
 import List from '@/lib/model/list';
 import ListMember from '@/lib/model/listMember';
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     return ClientError.BadRequest('Invalid list name');
   
   const listMember = new ListMember(session, true, true, true, true);
-  const list = new List(name, [listMember], [], true, true, true);
+  const list = new List(name, randomColor(), [listMember], [], true, true, true);
 
   const result = await createList(list);
 

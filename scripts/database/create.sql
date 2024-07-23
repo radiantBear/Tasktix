@@ -19,6 +19,7 @@ CREATE TABLE `sessions` (
 CREATE TABLE `lists` (
   `l_id` char(16) NOT NULL PRIMARY KEY,
   `l_name` varchar(64) NOT NULL,
+  `l_color` ENUM ('Pink','Red','Orange','Amber','Yellow','Lime','Green','Emerald','Cyan','Blue','Violet') NOT NULL,
   `l_description` text NULL DEFAULT NULL,
   `l_hasTimeTracking` boolean NOT NULL DEFAULT TRUE,
   `l_hasDueDates` boolean NOT NULL DEFAULT TRUE,

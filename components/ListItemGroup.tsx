@@ -8,8 +8,10 @@ import ListItemModel from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
 import ListMember from '@/lib/model/listMember';
 import Color from '@/lib/model/color';
+import List from '@/lib/model/list';
 
-export default function ListItemGroup({ startingItems, startingTags, members, alternate }: { startingItems: string, startingTags: string, members: string, alternate: string }) {
+export default function ListItemGroup({ startingLists, startingItems, startingTags, members, alternate }: { startingLists: string, startingItems: string, startingTags: string, members: string, alternate: string }) {
+  const builtLists: List[] = JSON.parse(startingLists) || [];
   const builtItems: ListItemModel[] = JSON.parse(startingItems) || [];
   
   for(const item of builtItems) {
@@ -79,7 +81,7 @@ export default function ListItemGroup({ startingItems, startingTags, members, al
       {
         items && items.length
           ? items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-            <StaticListItem key={item.id} item={item} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={() => setStatus(idx, 'Paused', null)} setCompleted={setStatus.bind(null, idx, 'Completed')} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
+            <StaticListItem key={item.id} item={item} list={builtLists.find(list => list.id == item.listId)} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={() => setStatus(idx, 'Paused', null)} setCompleted={setStatus.bind(null, idx, 'Completed')} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
           )
           : <div className='h-16 flex items-center justify-center bg-content2'>{alternate}</div>
       }
