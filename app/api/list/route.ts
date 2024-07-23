@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return ClientError.BadRequest('Invalid list name');
   if(!color)
     return ClientError.BadRequest('List color is required');
-  if(!validateColor(name))
+  if(!validateColor(color))
     return ClientError.BadRequest('Invalid list color');
   
   const listMember = new ListMember(session, true, true, true, true);

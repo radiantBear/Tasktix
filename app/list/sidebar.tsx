@@ -21,7 +21,7 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
     api.post('/list', { name, color })
       .then(res => {
         const id = res.content?.split('/').at(-1);
-        router.push(`/user${res.content}`);
+        router.push(`${res.content}`);
         
         const newLists = structuredClone(lists);
         newLists.push(new List(name, color, [], [], true, true, true, id));
