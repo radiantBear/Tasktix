@@ -9,6 +9,7 @@ import { addSnackbar } from "@/components/Snackbar";
 import { setTimeout } from "timers";
 import { validateListName } from "@/lib/validate";
 import List from "@/lib/model/list";
+import { randomColor } from "@/lib/color";
 
 export default function Sidebar({ startingLists }: { startingLists: string }) {
   const [lists, setLists] = useState<List[]>(JSON.parse(startingLists));
@@ -16,13 +17,14 @@ export default function Sidebar({ startingLists }: { startingLists: string }) {
   const router = useRouter();
 
   function finalizeNew(name: string) {
-    api.post('/list', { name })
+    const color = randomColor();
+    api.post('/list', { name, color })
       .then(res => {
         const id = res.content?.split('/').at(-1);
         router.push(`/user${res.content}`);
         
         const newLists = structuredClone(lists);
-        newLists.push(new List(name, [], [], true, true, true, id));
+        newLists.push(new List(name, color, [], [], true, true, true, id));
         setLists(newLists);
       })
       .catch(err => addSnackbar(err.message, 'error'));
