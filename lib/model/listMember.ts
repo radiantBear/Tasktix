@@ -19,5 +19,5 @@ export default class ListMember {
 
 export function extractListMemberFromRow(row: DB_ListMember): ListMember {
   const user = extractUserFromRow(row);
-  return new ListMember(user, row.la_canAdd, row.la_canRemove, row.la_canComplete, row.la_canRemove);
+  return new ListMember(user, row.lm_canAdd, row.lm_canRemove, row.lm_canComplete, row.lm_canRemove);
 }
