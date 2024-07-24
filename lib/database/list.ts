@@ -75,7 +75,7 @@ export async function getListById(id: string): Promise<List|false> {
       LEFT JOIN \`tags\` ON \`tags\`.\`t_id\` = \`itemTags\`.\`it_t_id\`
       LEFT JOIN \`itemAssignees\` ON \`itemAssignees\`.\`ia_i_id\` = \`items\`.\`i_id\`
     WHERE \`l_id\` = :id
-    ORDER BY \`listSections\`.\`ls_name\` ASC;
+    ORDER BY \`listSections\`.\`ls_name\` ASC, \`items\`.\`i_id\` ASC;
   `;
 
   const result = await query<DB_List>(sql, { id });
@@ -100,7 +100,7 @@ export async function getListBySectionId(id: string): Promise<List|false> {
       SELECT \`listSections\`.\`ls_l_id\` FROM \`listSections\`
       WHERE \`listSections\`.\`ls_id\` = :id
     )
-    ORDER BY \`listSections\`.\`ls_name\` ASC;
+    ORDER BY \`listSections\`.\`ls_name\` ASC, \`items\`.\`i_id\` ASC;
   `;
 
   const result = await query<DB_List>(sql, { id });

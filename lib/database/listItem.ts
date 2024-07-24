@@ -133,7 +133,7 @@ export async function getListItemsByUser(userId: string): Promise<ListItem[]|fal
       INNER JOIN \`lists\` ON \`lists\`.\`l_id\` = \`listSections\`.\`ls_l_id\`
       INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`listSections\`.\`ls_l_id\`
     WHERE \`listMembers\`.\`lm_u_id\` = :userId
-    ORDER BY \`tags\`.\`t_name\` ASC;
+    ORDER BY \`items\`.\`i_id\` ASC, \`tags\`.\`t_name\` ASC;
   `;
 
   const result = await query<DB_ListItem>(sql, { userId });
