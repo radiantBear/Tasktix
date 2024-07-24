@@ -141,7 +141,7 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
               {
                 isAutoOrdered
                   ? (
-                    items.filter(item => checkItemFilter(item, filters)).sort(sortItems).map(item => (
+                    items.filter(item => checkItemFilter(item, filters)).sort(sortItems.bind(null, hasTimeTracking, hasDueDates)).map(item => (
                       <StaticListItem key={item.id} item={item} members={members} tagsAvailable={tagsAvailable} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} setStatus={setStatus.bind(null, item.id)} setPaused={() => setStatus(item.id, 'Paused')} setCompleted={setStatus.bind(null, item.id, 'Completed')} updateDueDate={updateDueDate.bind(null, item.id)} updatePriority={updatePriority.bind(null, item.id)} updateExpectedMs={updateExpectedMs.bind(null, item.id)} deleteItem={deleteItem.bind(null, item.id)} addNewTag={addNewTag} />
                     ))
                   )

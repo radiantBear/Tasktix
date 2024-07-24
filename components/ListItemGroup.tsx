@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { StaticListItem } from '@/components/ListItem';
-import { sortItemsByCompleted } from '@/lib/sortItems'; 
+import { sortItems } from '@/lib/sortItems'; 
 import { api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
@@ -80,7 +80,7 @@ export default function ListItemGroup({ startingLists, startingItems, startingTa
     <div className='rounded-md w-100 border-2 border-content3 box-border shadow-lg shadow-content2'>
       {
         items && items.length
-          ? items.sort(sortItemsByCompleted).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
+          ? items.sort(sortItems.bind(null, false, false)).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
             <StaticListItem key={item.id} item={item} list={builtLists.find(list => list.id == item.listId)} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={false} hasTimeTracking={false} setStatus={setStatus.bind(null, idx)} setPaused={() => setStatus(idx, 'Paused', null)} setCompleted={setStatus.bind(null, idx, 'Completed')} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
           )
           : <div className='h-16 flex items-center justify-center bg-content2'>{alternate}</div>
