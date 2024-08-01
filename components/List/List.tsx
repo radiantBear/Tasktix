@@ -35,7 +35,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
       api.post(`/list/${list.id}/tag`, { name, color })
         .then(res => {
           const id = res.content?.split('/').at(-1) || '';
-          const newTags = structuredClone(tagsAvailable);
+          const newTags = structuredClone(tagsAvailable || []);
           newTags.push(new Tag(name, color, id));
           setTagsAvailable(newTags);
 
