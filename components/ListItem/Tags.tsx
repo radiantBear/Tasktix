@@ -37,13 +37,13 @@ export default function Tags({ tags, isComplete, tagsAvailable, className, addNe
           <Card tabIndex={isComplete ? 1 : 0} className={`px-4 basis-1/6 grow shrink flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer bg-transparent ${isComplete ? 'opacity-50 cursor-default' : 'hover:bg-foreground/10 focus:z-10 focus:outline-2 focus:outline-focus focus:outline-offset-2'} ${className}`}>
             <TagsIcon className='shrink-0' />
             <span className='ml-2 flex flex-row items-center justify-start overflow-hidden flex-nowrap'>
-              {tags.map(tag => <Chip key={tag.id} variant='dot' size='sm' classNames={{dot: getBackgroundColor(tag.color), base: 'border-0', content: getTextColor(tag.color)}}>{tag.name}</Chip>)}
+              {tags.sort((a, b) => a.name > b.name ? 1 : -1).map(tag => <Chip key={tag.id} variant='dot' size='sm' classNames={{dot: getBackgroundColor(tag.color), base: 'border-0', content: getTextColor(tag.color)}}>{tag.name}</Chip>)}
             </span>
           </Card>
         </PopoverTrigger>
         <PopoverContent>
           {
-            tags.map(tag => (
+            tags.sort((a, b) => a.name > b.name ? 1 : -1).map(tag => (
               <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
                 {tag.name}
                 <Button onPress={unlinkTag.bind(null, tag.id)} variant='flat' color='danger' isIconOnly className='rounded-lg w-8 h-8 min-w-8 min-h-8'><X /></Button>
@@ -52,7 +52,7 @@ export default function Tags({ tags, isComplete, tagsAvailable, className, addNe
           }
           {
             tagsAvailable
-              ? tagsAvailable.map(tag => {
+              ? tagsAvailable.sort((a, b) => a.name > b.name ? 1 : -1).map(tag => {
                 if(!tags.some(usedTag => usedTag.id == tag.id))
                   return (
                     <div key={tag.id} className={`${getTextColor(tag.color)} flex justify-between items-center w-full p-1.5`}>
