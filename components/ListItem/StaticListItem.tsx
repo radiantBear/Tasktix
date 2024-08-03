@@ -330,7 +330,7 @@ export default function StaticListItem(
         <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
             _item.status == 'Completed' 
-              ? <span className='text-sm line-through text-foreground/50'>{_item.name}</span>
+              ? <span className='text-sm line-through text-foreground/50 text-nowrap overflow-hidden'>{_item.name}</span>
               : (
                   <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
                     <Name name={_item.name} updateName={set.name} className='shrink' />
