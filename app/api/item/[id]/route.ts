@@ -31,8 +31,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     item.expectedMs = requestBody.expectedMs;
   if(requestBody.elapsedMs !== undefined)
     item.elapsedMs = requestBody.elapsedMs;
-  if(requestBody.startTime !== undefined)
-    item.dateStarted = requestBody.startTime ? new Date(requestBody.startTime) : null;
+  if(requestBody.dateStarted !== undefined)
+    item.dateStarted = requestBody.dateStarted ? new Date(requestBody.dateStarted) : null;
   if(requestBody.dateCompleted !== undefined)
     item.dateCompleted = requestBody.dateCompleted ? new Date(requestBody.dateCompleted) : null;
 

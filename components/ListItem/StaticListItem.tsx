@@ -151,7 +151,7 @@ export default function StaticListItem(
       const dateCompleted = new Date();
       const newElapsed = timer.current ? elapsedLive + (Date.now() - lastTime.current.getTime()) : 0;
       
-      api.patch(`/item/${_item.id}`, { status: 'Completed', dateCompleted })
+      api.patch(`/item/${_item.id}`, { status: 'Completed', dateCompleted, dateStarted: null, elapsedMs: newElapsed })
         .then(() => {
           _stopRunning();
           // Ensure time is accurate since user stopped time before POST request
@@ -186,7 +186,7 @@ export default function StaticListItem(
 
     startedRunning: () => {
       const startedDate = new Date();
-      api.patch(`/item/${_item.id}`, { startTime: startedDate, status: 'In Progress' })
+      api.patch(`/item/${_item.id}`, { dateStarted: startedDate, status: 'In Progress' })
         .then(() => {
           // Update the timer
           lastTime.current = startedDate;
@@ -206,7 +206,7 @@ export default function StaticListItem(
   
     pausedRunning: () => {
       const newElapsed = elapsedLive + (Date.now() - lastTime.current.getTime());
-      api.patch(`/item/${_item.id}`, { startTime: null, elapsedMs: newElapsed, status: 'Paused' })
+      api.patch(`/item/${_item.id}`, { dateStarted: null, elapsedMs: newElapsed, status: 'Paused' })
         .then(() => {
           _stopRunning();
 
@@ -226,7 +226,7 @@ export default function StaticListItem(
 
     resetTime: () => {
       const status = _item.status == 'Completed' ? 'Completed' : 'Unstarted'
-      api.patch(`/item/${_item.id}`, { startTime: null, status, elapsedMs: 0 })
+      api.patch(`/item/${_item.id}`, { dateStarted: null, status, elapsedMs: 0 })
         .then(() => {
           _stopRunning();
 
@@ -310,10 +310,7 @@ export default function StaticListItem(
   }, []);
 
   function _stopRunning() {
-    if(timer.current) {
-      clearTimeout(timer.current);
-      timer.current = undefined;
-    }
+    if(timer.current) { clearTimeout(timer.current); timer.current = undefined; }
   }
 
   return (
