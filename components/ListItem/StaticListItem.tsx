@@ -314,20 +314,19 @@ export default function StaticListItem(
   }
 
   return (
-    <div className={`p-4 bg-content1 flex gap-4 items-center justify-between w-full flex-wrap ${reorderControls || 'border-b-1 border-content3 last:border-b-0'}`}>
-      <span className='flex gap-4 items-center justify-start grow'>
+    <div className={`p-4 bg-content1 flex gap-4 items-center justify-between w-full ${reorderControls || 'border-b-1 border-content3 last:border-b-0'}`}>
+      {
+        reorderControls 
+          ? <div onPointerDown={e => {e.preventDefault(); if(_item.status != 'Completed') reorderControls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
+              <GripVertical />
+            </div>
+          : <></>
+      }
 
-        {
-          reorderControls 
-            ? <div onPointerDown={e => {e.preventDefault(); if(_item.status != 'Completed') reorderControls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
-                <GripVertical />
-              </div>
-            : <></>
-        }
+      <Checkbox tabIndex={0} isSelected={_item.status == 'Completed'} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} className='-mr-3' />
 
-        <Checkbox tabIndex={0} isSelected={_item.status == 'Completed'} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} className='-mr-3' />
-
-        <div className='flex grow-0 shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
+      <span className='flex gap-4 items-center justify-start grow flex-wrap'>
+        <div className='flex grow shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
           {
             _item.status == 'Completed' 
               ? <span className='text-sm line-through text-foreground/50 text-nowrap overflow-hidden'>{_item.name}</span>
@@ -352,7 +351,7 @@ export default function StaticListItem(
 
         { list && <Link href={`/list/${list.id}`}><Chip startContent={<CardChecklist className='mx-1' />} variant='flat' size='sm' className={`p-2 ${getBackgroundColor(list.color)}/20 ${getTextColor(list.color)}`}>{list.name}</Chip></Link> }
 
-        <Priority isComplete={_item.status == 'Completed'} priority={_item.priority} className='hidden md:flex' setPriority={set.priority} />
+        <Priority isComplete={_item.status == 'Completed'} priority={_item.priority} setPriority={set.priority} />
 
         <Tags tags={tags} tagsAvailable={tagsAvailable} isComplete={_item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='hidden lg:flex' />
         
@@ -361,25 +360,25 @@ export default function StaticListItem(
             ? <Users itemId={_item.id} assignees={_item.assignees} members={members} isComplete={_item.status == 'Completed'} />
             : <></>
         }
-      </span>
 
-      <span className='flex gap-4 items-center justify-end grow-0 shrink-0'>
-        {
-          hasTimeTracking
-            ? (
-              <span className='hidden xl:flex gap-4'>
-                <span className={`flex gap-4 ${_item.status == 'Completed' ? 'opacity-50' : ''}`}>
-                  <ExpectedInput ms={_item.expectedMs} disabled={_item.status == 'Completed'} updateMs={set.expectedMs} />
-                  <span className='border-r-1 border-content3'></span>
-                  <ElapsedInput ms={elapsedLive} disabled={_item.status == 'Completed'} resetTime={set.resetTime} />
+        <span className='flex gap-4 items-center justify-end grow md:grow-0 shrink-0 justify-self-end'>
+          {
+            hasTimeTracking
+              ? (
+                <span className='hidden xl:flex gap-4'>
+                  <span className={`flex gap-4 ${_item.status == 'Completed' ? 'opacity-50' : ''}`}>
+                    <ExpectedInput ms={_item.expectedMs} disabled={_item.status == 'Completed'} updateMs={set.expectedMs} />
+                    <span className='border-r-1 border-content3'></span>
+                    <ElapsedInput ms={elapsedLive} disabled={_item.status == 'Completed'} resetTime={set.resetTime} />
+                  </span>
+                  <TimeButton status={_item.status} startRunning={set.startedRunning} pauseRunning={set.pausedRunning} />
                 </span>
-                <TimeButton status={_item.status} startRunning={set.startedRunning} pauseRunning={set.pausedRunning} />
-              </span>
-            )
-            : <></>
-        }
+              )
+              : <></>
+          }
 
-        <More item={_item} tags={tags} tagsAvailable={tagsAvailable} members={members} hasDueDates={hasDueDates} hasTimeTracking={hasTimeTracking} elapsedLive={elapsedLive} set={set} addNewTag={addNewTag} />
+          <More item={_item} tags={tags} tagsAvailable={tagsAvailable} members={members} hasDueDates={hasDueDates} hasTimeTracking={hasTimeTracking} elapsedLive={elapsedLive} set={set} addNewTag={addNewTag} />
+        </span>
       </span>
     </div>
   );
