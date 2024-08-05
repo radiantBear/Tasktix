@@ -1,5 +1,5 @@
 import { api } from '@/lib/api';
-import { Button, Input, Select, SelectItem, Selection } from '@nextui-org/react';
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Selection, useDisclosure } from '@nextui-org/react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';
 import { addSnackbar } from '@/components/Snackbar';
@@ -13,14 +13,15 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
   const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
   startingInputValues.dueDate.setHours(0, 0, 0, 0);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSliderOpen, setIsSliderOpen] = useState(false);
+  const {isOpen: isModalOpen, onOpen: onModalOpen, onOpenChange: onModalOpenChange} = useDisclosure();
   const [values, setValues] = useState<{name: string, dueDate?: Date, priority: Selection, duration?: number}>(startingInputValues);
   const focusInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if(isOpen)
+    if(isSliderOpen)
       focusInput.current?.focus();
-  }, [isOpen]);
+  }, [isSliderOpen]);
 
   function setName(name: string): void {
     setValues({name, dueDate: values.dueDate, priority: new Set(values.priority), duration: values.duration});
@@ -53,81 +54,168 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
         const item = new ListItem(values.name, { priority, expectedMs: newItem.duration, sectionIndex: nextIndex, dateDue: newItem.dueDate, id });
         addItem(item);
 
-        setIsOpen(false);
+        setIsSliderOpen(false);
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
   return (
-    <span className='flex justify-between items-center overflow-y-visible'>
-      <span className='overflow-x-clip'>
-        <form onSubmit={createItem} className={`hidden lg:flex gap-4 pr-4 transition-transform${isOpen ? '' : ' translate-x-full'}`}>
-          <Input 
-            label='Name'
-            placeholder='Add item...' 
-            value={values.name}
-            onValueChange={setName}
-            ref={input => focusInput.current = input }
-            variant='underlined' 
-            size='sm' 
-            tabIndex={isOpen ? 0 : 1} 
-            className='w-44 -mt-2' 
-            classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
-          />
-          {
-            hasDueDates
-              ? (
-                <DateInput2 
-                  label='Due' 
-                  value={values.dueDate}
-                  onValueChange={setDueDate}
-                  variant='underlined' 
-                  color='primary'
-                  size='sm'
-                  tabIndex={isOpen ? 0 : 1} 
-                  className='w-24 -mt-4'
-                  classNames={{label: '-pb-1', inputWrapper: 'border-foreground/50'}}
-                />
-              )
-              : <></>
-          }
-          <Select
-            variant='underlined' 
-            labelPlacement='outside' 
-            size='sm' 
-            className={'w-28 -mt-4'}
-            label={<span className='ml-2 text-foreground'>Priority</span>}
-            classNames={{trigger: `${(values.priority == 'all' || values.priority.has('High')) ? 'border-danger' : values.priority.has('Medium') ? 'border-warning' : 'border-success'}`, mainWrapper: '-mt-6'}}
-            placeholder='Select...' 
-            tabIndex={isOpen ? 0 : 1} 
-            selectedKeys={values.priority}
-            onSelectionChange={setPriority}
-            color={`${(values.priority == 'all' || values.priority.has('High')) ? 'danger' : values.priority.has('Medium') ? 'warning' : values.priority.has('Low') ? 'success' : 'default'}`}
-          >
-            <SelectItem key='High' value='High' color='danger'>High</SelectItem>
-            <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
-            <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
-          </Select>
-          {
-            hasTimeTracking
-              ? (
-                <TimeInput 
-                  label='Time'
-                  value={values.duration}
-                  onValueChange={setExpectedDuration}
-                  variant='underlined' 
-                  size='sm'
-                  tabIndex={isOpen ? 0 : 1} 
-                  className='w-12 -mt-2'
-                  classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
-                />
-              )
-              : <></>
-          }
-          <Button type='submit' tabIndex={isOpen ? 0 : 1} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
-        </form>
+    <span>
+      <span className='hidden lg:flex justify-between items-center overflow-y-visible'>
+        <span className='overflow-x-clip'>
+          <form onSubmit={createItem} className={`flex gap-4 pr-4 transition-transform${isSliderOpen ? '' : ' translate-x-full'}`}>
+            <Input 
+              label='Name'
+              placeholder='Add item...' 
+              value={values.name}
+              onValueChange={setName}
+              ref={input => focusInput.current = input }
+              variant='underlined' 
+              size='sm' 
+              tabIndex={isSliderOpen ? 0 : 1} 
+              className='w-44 -mt-2' 
+              classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
+            />
+            {
+              hasDueDates
+                ? (
+                  <DateInput2 
+                    label='Due' 
+                    value={values.dueDate}
+                    onValueChange={setDueDate}
+                    variant='underlined' 
+                    color='primary'
+                    size='sm'
+                    tabIndex={isSliderOpen ? 0 : 1} 
+                    className='w-24 -mt-4'
+                    classNames={{label: '-pb-1', inputWrapper: 'border-foreground/50'}}
+                  />
+                )
+                : <></>
+            }
+            <Select
+              variant='underlined' 
+              labelPlacement='outside' 
+              size='sm' 
+              className={'w-28 -mt-4'}
+              label={<span className='ml-2 text-foreground'>Priority</span>}
+              classNames={{trigger: `${(values.priority == 'all' || values.priority.has('High')) ? 'border-danger' : values.priority.has('Medium') ? 'border-warning' : 'border-success'}`, mainWrapper: '-mt-6'}}
+              placeholder='Select...' 
+              tabIndex={isSliderOpen ? 0 : 1} 
+              selectedKeys={values.priority}
+              onSelectionChange={setPriority}
+              color={`${(values.priority == 'all' || values.priority.has('High')) ? 'danger' : values.priority.has('Medium') ? 'warning' : values.priority.has('Low') ? 'success' : 'default'}`}
+            >
+              <SelectItem key='High' value='High' color='danger'>High</SelectItem>
+              <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
+              <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
+            </Select>
+            {
+              hasTimeTracking
+                ? (
+                  <TimeInput 
+                    label='Time'
+                    value={values.duration}
+                    onValueChange={setExpectedDuration}
+                    variant='underlined' 
+                    size='sm'
+                    tabIndex={isSliderOpen ? 0 : 1} 
+                    className='w-12 -mt-2'
+                    classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
+                  />
+                )
+                : <></>
+            }
+            <Button type='submit' tabIndex={isSliderOpen ? 0 : 1} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
+          </form>
+        </span>
+        <Button tabIndex={0} variant='ghost' isIconOnly onPress={() => setIsSliderOpen(!isSliderOpen)} color={isSliderOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isSliderOpen ? ' -rotate-45' : ''}`}/></Button>
       </span>
-      <Button tabIndex={0} variant='ghost' isIconOnly onPress={() => setIsOpen(!isOpen)} color={isOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isOpen ? ' -rotate-45' : ''}`}/></Button>
+      <span className='flex lg:hidden'>
+        <Button tabIndex={0} variant='ghost' isIconOnly onPress={onModalOpen} color='primary'><Plus size={'1.5em'}/></Button>
+        <Modal isOpen={isModalOpen} onOpenChange={onModalOpenChange}>
+          <ModalContent>
+            {
+              onClose => (
+                <>
+                  <ModalHeader className='justify-center'>Add Item</ModalHeader>
+                    <form onSubmit={createItem}>
+                      <ModalBody className={`flex flex-row justify-center gap-4`}>
+                        <Input 
+                          label='Name'
+                          placeholder='Add item...' 
+                          value={values.name}
+                          onValueChange={setName}
+                          autoFocus
+                          variant='underlined' 
+                          size='sm' 
+                          className='w-44 -mt-2' 
+                          classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
+                        />
+                        {
+                          hasDueDates
+                            ? (
+                              <DateInput2 
+                                label='Due' 
+                                value={values.dueDate}
+                                onValueChange={setDueDate}
+                                variant='underlined' 
+                                color='primary'
+                                size='sm'
+                                className='w-24 -mt-4'
+                                classNames={{label: '-pb-1', inputWrapper: 'border-foreground/50'}}
+                              />
+                            )
+                            : <></>
+                        }
+                        <Select
+                          variant='underlined' 
+                          labelPlacement='outside' 
+                          size='sm' 
+                          className={'w-28 -mt-4'}
+                          label={<span className='ml-2 text-foreground'>Priority</span>}
+                          classNames={{trigger: `${(values.priority == 'all' || values.priority.has('High')) ? 'border-danger' : values.priority.has('Medium') ? 'border-warning' : 'border-success'}`, mainWrapper: '-mt-6'}}
+                          placeholder='Select...' 
+                          selectedKeys={values.priority}
+                          onSelectionChange={setPriority}
+                          color={`${(values.priority == 'all' || values.priority.has('High')) ? 'danger' : values.priority.has('Medium') ? 'warning' : values.priority.has('Low') ? 'success' : 'default'}`}
+                        >
+                          <SelectItem key='High' value='High' color='danger'>High</SelectItem>
+                          <SelectItem key='Medium' value='Medium' color='warning'>Medium</SelectItem>
+                          <SelectItem key='Low' value='Low' color='success'>Low</SelectItem>
+                        </Select>
+                        {
+                          hasTimeTracking
+                            ? (
+                              <TimeInput 
+                                label='Time'
+                                value={values.duration}
+                                onValueChange={setExpectedDuration}
+                                variant='underlined' 
+                                size='sm'
+                                autoFocus={false} 
+                                className='w-12 -mt-2'
+                                classNames={{label: 'pb-1', inputWrapper: 'border-foreground/50'}}
+                              />
+                            )
+                            : <></>
+                        }
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button color="danger" variant="light" onPress={onClose}>
+                          Cancel
+                        </Button>
+                        <Button type='submit' color="primary" onPress={onClose}>
+                          Add
+                        </Button>
+                      </ModalFooter>
+                    </form>
+                </>
+              )
+            }
+          </ModalContent>
+        </Modal>
+      </span>
     </span>
   );
 }
