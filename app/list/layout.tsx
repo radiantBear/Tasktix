@@ -1,7 +1,7 @@
-import { authorize } from "@/lib/security/authorize";
-import Sidebar from "./sidebar";
-import { getListsByUser } from "@/lib/database/list";
-import { getUser } from "@/lib/session";
+import { authorize } from '@/lib/security/authorize';
+import LayoutClient from './layoutClient';
+import { getListsByUser } from '@/lib/database/list';
+import { getUser } from '@/lib/session';
 
 export default async function UserLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   await authorize();
@@ -14,9 +14,8 @@ export default async function UserLayout({ children }: Readonly<{ children: Reac
   const lists = await getListsByUser(user.id) || [];
 
   return (
-    <div className='flex h-1/4 grow'>
-      <Sidebar startingLists={JSON.stringify(lists)} />
+    <LayoutClient startingLists={JSON.stringify(lists)}>
       {children}
-    </div>
+    </LayoutClient>
   );
 }

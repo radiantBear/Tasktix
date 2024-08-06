@@ -1,12 +1,14 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
-import { useState } from "react";
+import { useContext } from "react";
 import { CalendarMinus, Sliders2, StopwatchFill, TrashFill, SortDown } from "react-bootstrap-icons";
 import { addSnackbar } from "../Snackbar";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { ListContext } from "../Sidebar";
 
 export function ListSettings({ listId, hasTimeTracking, isAutoOrdered, hasDueDates, setHasTimeTracking, setHasDueDates, setIsAutoOrdered }: { listId: string, hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any }) {
   const router = useRouter();
+  const dispatchEvent = useContext(ListContext);
 
   function updateHasTimeTracking() {
     api.patch(`/list/${listId}`, { hasTimeTracking: !hasTimeTracking })
@@ -33,6 +35,7 @@ export function ListSettings({ listId, hasTimeTracking, isAutoOrdered, hasDueDat
     api.delete(`/list/${listId}`)
       .then(res => {
         addSnackbar(res.message, 'success');
+        dispatchEvent({ type: 'remove', id: listId })
         router.replace('/list');
       })
       .catch(err => addSnackbar(err.message, 'error'));

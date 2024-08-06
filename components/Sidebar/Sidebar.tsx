@@ -1,31 +1,33 @@
 'use client';
 
-import { ReactNode, useState } from "react";
-import { Button, Input, Link } from "@nextui-org/react";
-import { Check, Plus } from "react-bootstrap-icons";
+import { ReactNode, useContext, useState } from 'react';
+import { Button, Input, Link } from '@nextui-org/react';
+import { Check, Plus } from 'react-bootstrap-icons';
 import { usePathname, useRouter } from 'next/navigation';
-import { api } from "@/lib/api";
-import { addSnackbar } from "@/components/Snackbar";
-import { setTimeout } from "timers";
-import { validateListName } from "@/lib/validate";
-import List from "@/lib/model/list";
-import { randomColor } from "@/lib/color";
+import { api } from '@/lib/api';
+import { addSnackbar } from '@/components/Snackbar';
+import { setTimeout } from 'timers';
+import { validateListName } from '@/lib/validate';
+import List from '@/lib/model/list';
+import { randomColor } from '@/lib/color';
+import { ListContext } from './listContext';
 
-export default function Sidebar({ startingLists }: { startingLists: string }) {
-  const [lists, setLists] = useState<List[]>(JSON.parse(startingLists));
+export default function Sidebar({ lists }: { lists: List[] }) {
   const [addingList, setAddingList] = useState(false);
   const router = useRouter();
+  const dispatchEvent = useContext(ListContext);
 
   function finalizeNew(name: string) {
     const color = randomColor();
     api.post('/list', { name, color })
       .then(res => {
         const id = res.content?.split('/').at(-1);
+        if (!id) {
+          addSnackbar('No list ID returned', 'error');
+          return;
+        }
         router.push(`${res.content}`);
-        
-        const newLists = structuredClone(lists);
-        newLists.push(new List(name, color, [], [], true, true, true, id));
-        setLists(newLists);
+        dispatchEvent({ type: 'add', id, name, color })
       })
       .catch(err => addSnackbar(err.message, 'error'));
   }
