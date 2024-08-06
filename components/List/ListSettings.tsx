@@ -1,6 +1,7 @@
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Switch, useDisclosure } from "@nextui-org/react";
 import { useContext } from "react";
-import { CalendarMinus, Sliders2, StopwatchFill, TrashFill, SortDown } from "react-bootstrap-icons";
+import { TrashFill, GearWideConnected } from "react-bootstrap-icons";
+import { CalendarMinus, Sliders2, StopwatchFill, SortDown } from "react-bootstrap-icons";
 import { addSnackbar } from "../Snackbar";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -9,6 +10,7 @@ import { ListContext } from "../Sidebar";
 export function ListSettings({ listId, hasTimeTracking, isAutoOrdered, hasDueDates, setHasTimeTracking, setHasDueDates, setIsAutoOrdered }: { listId: string, hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any }) {
   const router = useRouter();
   const dispatchEvent = useContext(ListContext);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   function updateHasTimeTracking() {
     api.patch(`/list/${listId}`, { hasTimeTracking: !hasTimeTracking })
@@ -42,18 +44,23 @@ export function ListSettings({ listId, hasTimeTracking, isAutoOrdered, hasDueDat
   }
   
   return (
-    <Dropdown>
-      <DropdownTrigger>
-      <Button variant='ghost' size='lg' isIconOnly className='bg-content1 shadow-lg shadow-content2'>
-        <Sliders2 aria-label='Settings' size={20} />
+    <>
+      <Button onPress={onOpen} variant='ghost' size='lg' isIconOnly className='bg-content1 shadow-lg shadow-content2'>
+        <GearWideConnected aria-label='Settings' size={20} />
       </Button>
-      </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownItem onPress={updateHasTimeTracking} key='toggleTime' startContent={<StopwatchFill />}>{hasTimeTracking ? 'Disable' : 'Enable'} time tracking</DropdownItem>
-        <DropdownItem onPress={updateHasDueDates} startContent={<CalendarMinus />}>{hasDueDates ? 'Disable' : 'Enable'} due dates</DropdownItem>
-        <DropdownItem onPress={updateIsAutoOrdered} startContent={<SortDown />}>{isAutoOrdered ? 'Disable' : 'Enable'} auto ordering</DropdownItem>
-        <DropdownItem onPress={deleteList} startContent={<TrashFill />} className='text-danger' color='danger'>Delete list</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          <ModalHeader className="justify-center">List Settings</ModalHeader>
+          <ModalBody>
+            <Switch isSelected={hasTimeTracking} onValueChange={updateHasTimeTracking} size='sm'>Track completion time</Switch>
+            <Switch isSelected={hasDueDates} onValueChange={updateHasDueDates} size='sm'>Track due dates</Switch>
+            <Switch isSelected={isAutoOrdered} onValueChange={updateIsAutoOrdered} size='sm'>Auto-order list items</Switch>
+          </ModalBody>
+          <ModalFooter>
+          <Button onPress={deleteList} startContent={<TrashFill />} variant='ghost' color='danger'>Delete list</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
