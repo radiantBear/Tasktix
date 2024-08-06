@@ -7,6 +7,9 @@ import { ReactElement } from 'react';
 
 export default function InputElement({ inputOption, value, dispatchFilters, onValueChange }: { inputOption: InputOption, value: Filters, dispatchFilters: (action: InputAction) => any, onValueChange: (value: Filters) => any } ): ReactElement {
   function handleInput(newValue: number|string|boolean|Selection|Date) {
+    if(newValue instanceof Date)
+      newValue.setHours(23, 59, 59, 0);
+    
     dispatchFilters({ 
       type: 'Update',
       label: inputOption.label,

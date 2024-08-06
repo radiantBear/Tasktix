@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { ListItem, StaticListItem } from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
@@ -196,10 +196,21 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
       return value && value.has(item.status);
 
     case 'completedBefore':
+      if(value)
+        value.setHours(0, 0, 0, 0);
       return !!item.dateCompleted && value && value.getTime() > item.dateCompleted.getTime();
     case 'completedOn':
-      return !!item.dateCompleted && value && value.getTime() == item.dateCompleted.getTime();
+      const start = structuredClone(value);
+      const end = structuredClone(value);
+      if(start) {
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0)
+        end.setDate(value.getDate() + 1);
+      }
+      return !!item.dateCompleted && value && start.getTime() <= item.dateCompleted.getTime() && end.getTime() > item.dateCompleted.getTime();
     case 'completedAfter':
+      if(value)
+        value.setHours(23, 59, 59, 999);
       return !!item.dateCompleted && value && value.getTime() < item.dateCompleted.getTime();
 
     case 'dueBefore':

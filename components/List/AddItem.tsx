@@ -11,7 +11,6 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
   const zeroMin = new Date();
   zeroMin.setTime(0);
   const startingInputValues = {name: '', dueDate: new Date(), priority: new Set(['Low']), duration: 0};
-  startingInputValues.dueDate.setHours(0, 0, 0, 0);
 
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const {isOpen: isModalOpen, onOpen: onModalOpen, onOpenChange: onModalOpenChange} = useDisclosure();
@@ -40,6 +39,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
     e.preventDefault();
     const priority = (values.priority != 'all' && values.priority.keys().next().value) || 'Low';
 
+    values.dueDate?.setHours(23, 59, 59, 0);
     const newItem = { ...values, sectionId, priority, sectionIndex: nextIndex };
     if(!hasTimeTracking)
       delete newItem.duration;
