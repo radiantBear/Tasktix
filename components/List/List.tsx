@@ -77,6 +77,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
         <SearchBar inputOptions={filterOptions} onValueChange={setFilters} />
         <ListSettings 
           listId={list.id} 
+          tagsAvailable={tagsAvailable} setTagsAvailable={setTagsAvailable} addNewTag={addNewTag}
           hasTimeTracking={list.hasTimeTracking} isAutoOrdered={list.isAutoOrdered} hasDueDates={list.hasDueDates} 
           setHasTimeTracking={ (value: boolean) => {const newList = structuredClone(list); newList.hasTimeTracking = value; setList(newList)} }
           setIsAutoOrdered={ (value: boolean) => {const newList = structuredClone(list); newList.isAutoOrdered = value; setList(newList)} }

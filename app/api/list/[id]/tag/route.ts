@@ -1,6 +1,6 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
 import { getIsListAssignee } from '@/lib/database/list';
-import { createTag } from '@/lib/database/listItem';
+import { createTag } from '@/lib/database/list';
 import Tag from '@/lib/model/tag';
 import { getUser } from '@/lib/session';
 import { validateColor } from '@/lib/validate';

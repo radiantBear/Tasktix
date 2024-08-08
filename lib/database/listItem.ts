@@ -81,30 +81,6 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
   return true;
 }
 
-export async function createTag(listId: string, tag: Tag): Promise<boolean> {
-  const sql = `
-    INSERT INTO \`tags\`(
-      \`t_id\`,
-      \`t_name\`,
-      \`t_color\`,
-      \`t_l_id\`
-    )
-    VALUES (
-      :id,
-      :name,
-      :color,
-      :listId
-    );
-  `;
-  
-  const result = await execute(sql, { listId, ...tag });
-  
-  if(!result)
-    return false;
-  
-  return true;
-}
-
 export async function getListItemById(id: string): Promise<ListItem|false> {
   const sql = `
     SELECT * FROM \`items\`

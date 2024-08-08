@@ -64,6 +64,30 @@ export async function createList(list: List): Promise<boolean> {
   return true;
 }
 
+export async function createTag(listId: string, tag: Tag): Promise<boolean> {
+  const sql = `
+    INSERT INTO \`tags\`(
+      \`t_id\`,
+      \`t_name\`,
+      \`t_color\`,
+      \`t_l_id\`
+    )
+    VALUES (
+      :id,
+      :name,
+      :color,
+      :listId
+    );
+  `;
+  
+  const result = await execute(sql, { listId, ...tag });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
 export async function getListById(id: string): Promise<List|false> {
   const sql = `
     SELECT * FROM \`lists\`
@@ -125,31 +149,6 @@ export async function getListsByUser(id: string): Promise<List[]|false> {
     return false;
 
   return mergeLists(result.map(extractListFromRow));
-}
-
-export async function getTagsByUser(userId: string) : Promise<{[id: string]: Tag[]}|false> {
-  const sql = `
-    SELECT * FROM \`lists\`
-      LEFT JOIN \`tags\` ON \`tags\`.\`t_l_id\` = \`lists\`.\`l_id\`
-      INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
-    WHERE \`listMembers\`.\`lm_u_id\` = :userId
-    ORDER BY \`lists\`.\`l_id\` ASC, \`tags\`.\`t_name\` ASC;
-  `;
-
-  const result = await query<DB_List>(sql, { userId });
-
-  if(!result)
-    return false;
-
-  const returnVal: {[id: string]: Tag[]} = {};
-  for(const row of result) {
-    if(!returnVal[row.l_id])
-      returnVal[row.l_id] = [extractTagFromRow(row)]
-    else
-      returnVal[row.l_id].push(extractTagFromRow(row));
-  }
-
-  return returnVal;
 }
 
 export async function getListMembersByUser(userId: string) : Promise<{[id: string]: ListMember[]}|false> {
@@ -223,6 +222,45 @@ export async function getIsListAssigneeByItem(userId: string, itemId: string): P
   return !!(result && result.length);
 }
 
+export async function getTagById(id: string) : Promise<Tag|false> {
+  const sql = `
+    SELECT * FROM \`tags\`
+    WHERE \`tags\`.\`t_id\` = :id;
+  `;
+
+  const result = await query<DB_Tag>(sql, { id });
+
+  if(!result)
+    return false;
+
+  return extractTagFromRow(result[0]);
+}
+
+export async function getTagsByUser(userId: string) : Promise<{[id: string]: Tag[]}|false> {
+  const sql = `
+    SELECT * FROM \`lists\`
+      LEFT JOIN \`tags\` ON \`tags\`.\`t_l_id\` = \`lists\`.\`l_id\`
+      INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+    WHERE \`listMembers\`.\`lm_u_id\` = :userId
+    ORDER BY \`lists\`.\`l_id\` ASC, \`tags\`.\`t_name\` ASC;
+  `;
+
+  const result = await query<DB_List>(sql, { userId });
+
+  if(!result)
+    return false;
+
+  const returnVal: {[id: string]: Tag[]} = {};
+  for(const row of result) {
+    if(!returnVal[row.l_id])
+      returnVal[row.l_id] = [extractTagFromRow(row)]
+    else
+      returnVal[row.l_id].push(extractTagFromRow(row));
+  }
+
+  return returnVal;
+}
+
 export async function getTagsByListId(id: string): Promise<Tag[]|false> {
   const sql = `
     SELECT * FROM \`tags\`
@@ -257,10 +295,41 @@ export async function updateList(list: List): Promise<boolean> {
   return true;
 }
 
+export async function updateTag(listId: string, tag: Tag): Promise<boolean> {
+  const sql = `
+    UPDATE \`tags\`
+    SET
+      \`t_name\` = :name,
+      \`t_color\` = :color,
+      \`t_l_id\` = :listId
+    WHERE \`t_id\` = :id;
+  `;
+  
+  const result = await execute(sql, { listId, ...tag });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
 export async function deleteList(id: string): Promise<boolean> {
   const sql = `
   DELETE FROM \`lists\`
   WHERE \`l_id\` = :id;
+  `;
+  
+  const result = await execute(sql, { id });
+  if(!result)
+    return false;
+  
+  return true;
+}
+
+export async function deleteTag(id: string): Promise<boolean> {
+  const sql = `
+  DELETE FROM \`tags\`
+  WHERE \`t_id\` = :id;
   `;
   
   const result = await execute(sql, { id });

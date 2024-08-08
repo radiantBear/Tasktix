@@ -50,7 +50,7 @@ interface SetItem {
   startedRunning: () => void,
   pausedRunning: () => void,
   resetTime: () => void,
-  linkedTag: (id: string, name?: string, color?: Color) => void,
+  linkedTag: (id: string) => void,
   unlinkedTag: (id: string) => void,
   deleted: () => void
 }
@@ -244,21 +244,17 @@ export default function StaticListItem(
         .catch(err => addSnackbar(err.message, 'error'));
     },
 
-    linkedTag: (id: string, name?: string, color?: Color) => {
+    linkedTag: (id: string) => {
       api.post(`/item/${_item.id}/tag/${id}`, {})
       .then(() => {
         // Update the internal state
         const newTags = structuredClone(tags);
 
-        if(!name || !color){
-          const tag = tagsAvailable?.find(tag => tag.id == id);
-          if(!tag)
-            throw Error('Could not find tag with id '+id);
+        const tag = tagsAvailable?.find(tag => tag.id == id);
+        if(!tag)
+          throw Error('Could not find tag with id '+id);
 
-          newTags.push(new Tag(tag.name, tag.color, id));
-        }
-        else
-          newTags.push(new Tag(name, color, id));
+        newTags.push(new Tag(tag.name, tag.color, id));
         
         setTags(newTags);
       })
@@ -353,7 +349,7 @@ export default function StaticListItem(
 
         <Priority isComplete={_item.status == 'Completed'} priority={_item.priority} setPriority={set.priority} />
 
-        <Tags tags={tags} tagsAvailable={tagsAvailable} isComplete={_item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='hidden lg:flex' />
+        <Tags tags={tagsAvailable.filter(tag => tags.find(t => tag.id == t.id))} tagsAvailable={tagsAvailable} isComplete={_item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='hidden lg:flex' />
         
         {
           members.length > 1
