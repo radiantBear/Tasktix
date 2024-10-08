@@ -56,7 +56,7 @@ export default function SignUp() {
         api.post('/session', inputs)
         .then(() => {
           setLoggedIn();
-          router.replace('/user');
+          router.replace('/list');
         })
         .catch(err => {
           addSnackbar(err.message, 'error');
