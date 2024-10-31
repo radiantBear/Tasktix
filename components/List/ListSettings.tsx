@@ -1,5 +1,5 @@
 import { Button, Modal, ModalBody, ModalContent, ModalHeader, Spacer, Switch, Tab, Tabs, useDisclosure } from '@nextui-org/react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { TrashFill, GearWideConnected } from 'react-bootstrap-icons';
 import { addSnackbar } from '../Snackbar';
 import { api } from '@/lib/api';
@@ -11,7 +11,7 @@ import Color from '@/lib/model/color';
 import Name from '@/components/Name';
 import TagInput from '../TagInput';
 
-export function ListSettings({ listId, tagsAvailable, hasTimeTracking, isAutoOrdered, hasDueDates, setTagsAvailable, setHasTimeTracking, setHasDueDates, setIsAutoOrdered, addNewTag }: { listId: string, tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setTagsAvailable: (value: Tag[]) => any, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any, addNewTag: (name: string, color: Color) => any }) {
+export function ListSettings({ listId, listName, listColor, tagsAvailable, hasTimeTracking, isAutoOrdered, hasDueDates, setListName, setListColor, setTagsAvailable, setHasTimeTracking, setHasDueDates, setIsAutoOrdered, addNewTag }: { listId: string, listName: string, listColor: Color, tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setListName: (name: string) => any, setListColor: (color: Color) => any, setTagsAvailable: (value: Tag[]) => any, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any, addNewTag: (name: string, color: Color) => any }) {
   const router = useRouter();
   const dispatchEvent = useContext(ListContext);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -31,6 +31,21 @@ export function ListSettings({ listId, tagsAvailable, hasTimeTracking, isAutoOrd
   function updateIsAutoOrdered() {
     api.patch(`/list/${listId}`, { isAutoOrdered: !isAutoOrdered })
       .then(() => setIsAutoOrdered(!isAutoOrdered))
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
+  function updateName(name: string) {
+    api.patch(`/list/${listId}`, { name })
+      .then(() => setListName(name))
+      .catch(err => addSnackbar(err.message, 'error'));
+  }
+
+  function updateColor(color: Color|null) {
+    if (color === null)
+      return;
+
+    api.patch(`/list/${listId}`, { color })
+      .then(() => setListColor(color))
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
@@ -86,7 +101,11 @@ export function ListSettings({ listId, tagsAvailable, hasTimeTracking, isAutoOrd
           <ModalBody className='overflow-clip'>
             <Tabs aria-label='Options' variant='underlined'>
               <Tab title='General' className='flex flex-col gap-4 grow justify-between'>
-                <span className='flex flex-col gap-4 overflow-y-scroll'>
+                <span className='flex flex-col gap-4 overflow-y-auto'>
+                  <span className='flex gap-4 mb-2'>
+                    <Name name={listName} updateName={updateName} showUnderline classNames={{ input: 'text-md' }} />
+                    <ColorPicker value={listColor} onValueChange={updateColor} />
+                  </span>
                   <Switch isSelected={hasTimeTracking} onValueChange={updateHasTimeTracking} size='sm'>Track completion time</Switch>
                   <Switch isSelected={hasDueDates} onValueChange={updateHasDueDates} size='sm'>Track due dates</Switch>
                   <Switch isSelected={isAutoOrdered} onValueChange={updateIsAutoOrdered} size='sm'>Auto-order list items</Switch>

@@ -76,9 +76,11 @@ export default function List({ startingList, startingTagsAvailable }: { starting
       <span className='flex gap-4 items-center'>
         <SearchBar inputOptions={filterOptions} onValueChange={setFilters} />
         <ListSettings 
-          listId={list.id} 
+          listId={list.id} listName={list.name} listColor={list.color}
           tagsAvailable={tagsAvailable} setTagsAvailable={setTagsAvailable} addNewTag={addNewTag}
           hasTimeTracking={list.hasTimeTracking} isAutoOrdered={list.isAutoOrdered} hasDueDates={list.hasDueDates} 
+          setListName={ (value: string) => {const newList = structuredClone(list); newList.name = value; setList(newList); window.location.reload()} }
+          setListColor={ (value: Color) => {const newList = structuredClone(list); newList.color = value; setList(newList)} }
           setHasTimeTracking={ (value: boolean) => {const newList = structuredClone(list); newList.hasTimeTracking = value; setList(newList)} }
           setIsAutoOrdered={ (value: boolean) => {const newList = structuredClone(list); newList.isAutoOrdered = value; setList(newList)} }
           setHasDueDates={ (value: boolean) => {const newList = structuredClone(list); newList.hasDueDates = value; setList(newList)} }

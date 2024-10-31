@@ -26,6 +26,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     list.hasDueDates = requestBody.hasDueDates;
   if(requestBody.isAutoOrdered != undefined)
     list.isAutoOrdered = requestBody.isAutoOrdered;
+  if(requestBody.color != undefined)
+    list.color = requestBody.color;
 
   const result = await updateList(list);
 
