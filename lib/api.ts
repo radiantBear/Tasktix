@@ -56,6 +56,8 @@ function request(resource: string, method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE', 
         content: parsedResult.content
       }
 
+      if(serverResponse.code == 403)
+        window.location.href = '/signIn';
       if(serverResponse.code >= 400)
         reject(serverResponse);
       
