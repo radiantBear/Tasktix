@@ -129,7 +129,7 @@ export default function AddItem({ sectionId, hasTimeTracking, hasDueDates, nextI
             <Button type='submit' tabIndex={isSliderOpen ? 0 : 1} variant='ghost' isIconOnly color='primary'><Check size={'1.25em'} /></Button>
           </form>
         </span>
-        <Button tabIndex={0} variant='ghost' isIconOnly onPress={() => setIsSliderOpen(!isSliderOpen)} color={isSliderOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isSliderOpen ? ' -rotate-45' : ''}`}/></Button>
+        <Button tabIndex={0} variant='ghost' isIconOnly onPress={() => { setIsSliderOpen(!isSliderOpen); if (isSliderOpen) setValues(startingInputValues); }} color={isSliderOpen ? 'danger' : 'primary'}><Plus size={'1.5em'} className={`transition-transform ${isSliderOpen ? ' -rotate-45' : ''}`}/></Button>
       </span>
       <span className='flex lg:hidden'>
         <Button tabIndex={0} variant='ghost' isIconOnly onPress={onModalOpen} color='primary'><Plus size={'1.5em'}/></Button>
