@@ -4,7 +4,6 @@ import { Key, ReactElement, useReducer, useState } from 'react';
 import searchReducer from './searchReducer';
 import InputElement from './InputElement';
 import { Autocomplete, AutocompleteItem, AutocompleteSection } from '@nextui-org/react';
-import Insert from './Insert';
 import { getIcon } from './getIcon';
 
 export default function SearchBar({ inputOptions, onValueChange }: { inputOptions: InputOptionGroup[], onValueChange: (value: Filters) => any }) {
@@ -66,7 +65,6 @@ export default function SearchBar({ inputOptions, onValueChange }: { inputOption
         
         <Autocomplete
           startContent={<span className='flex gap-3'>{inputFields}</span>}
-          endContent={<Insert onSelect={addUsedOption} inputOptions={remainingOptions} />}
           variant='underlined'
           placeholder={usedOptions.size ? '' : 'Filter...'}
           className='grow'
