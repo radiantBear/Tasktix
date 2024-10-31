@@ -81,29 +81,32 @@ export function ListSettings({ listId, tagsAvailable, hasTimeTracking, isAutoOrd
         <GearWideConnected aria-label='Settings' size={20} />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
+        <ModalContent className='h-1/2'>
           <ModalHeader className='justify-center pb-0'>List Settings</ModalHeader>
-          <ModalBody>
+          <ModalBody className='overflow-clip'>
             <Tabs aria-label='Options' variant='underlined'>
-              <Tab title='General' className='flex flex-col gap-4'>
-                <Switch isSelected={hasTimeTracking} onValueChange={updateHasTimeTracking} size='sm'>Track completion time</Switch>
-                <Switch isSelected={hasDueDates} onValueChange={updateHasDueDates} size='sm'>Track due dates</Switch>
-                <Switch isSelected={isAutoOrdered} onValueChange={updateIsAutoOrdered} size='sm'>Auto-order list items</Switch>
+              <Tab title='General' className='flex flex-col gap-4 grow justify-between'>
+                <span className='flex flex-col gap-4 overflow-y-scroll'>
+                  <Switch isSelected={hasTimeTracking} onValueChange={updateHasTimeTracking} size='sm'>Track completion time</Switch>
+                  <Switch isSelected={hasDueDates} onValueChange={updateHasDueDates} size='sm'>Track due dates</Switch>
+                  <Switch isSelected={isAutoOrdered} onValueChange={updateIsAutoOrdered} size='sm'>Auto-order list items</Switch>
+                </span>
                 <span className='flex justify-end'>
                   <Button onPress={deleteList} startContent={<TrashFill />} variant='ghost' color='danger'>Delete list</Button>
                 </span>
               </Tab>
-              <Tab title='Tags' className='flex flex-col gap-4'>
-                {
-                  tagsAvailable.map(tag => (
-                    <span className='flex gap-2 items-center' key={tag.id}>
-                      <Name name={tag.name} updateName={updateTagName.bind(null, tag)} showUnderline />
-                      <ColorPicker value={tag.color} onValueChange={updateTagColor.bind(null, tag)} />
-                      <Button onPress={deleteTag.bind(null, tag.id)} size='sm' variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
-                    </span>
-                  ))
-                }
-                <Spacer x={0} />
+              <Tab title='Tags' className='flex flex-col gap-6 grow shrink justify-between overflow-clip'>
+                <span className='flex flex-col gap-4 shrink overflow-y-auto'>
+                  {
+                    tagsAvailable.map(tag => (
+                      <span className='flex gap-2 items-center' key={tag.id}>
+                        <Name name={tag.name} updateName={updateTagName.bind(null, tag)} showUnderline />
+                        <ColorPicker value={tag.color} onValueChange={updateTagColor.bind(null, tag)} />
+                        <Button onPress={deleteTag.bind(null, tag.id)} size='sm' variant='ghost' color='danger' isIconOnly><TrashFill /></Button>
+                      </span>
+                    ))
+                  }
+                </span>
                 <TagInput addNewTag={addNewTag} />
               </Tab>
             </Tabs>
