@@ -65,6 +65,9 @@ export function ListSettings({ listId, tagsAvailable, hasTimeTracking, isAutoOrd
   }
 
   function deleteTag(id: string) {
+    if (!confirm('This tag will be deleted from all items that currently have it. Are you sure you want to delete the tag?'))
+      return;
+    
     api.delete(`/list/${listId}/tag/${id}`)
       .then(() => {
         setTagsAvailable(tagsAvailable.filter(tag => tag.id != id));
