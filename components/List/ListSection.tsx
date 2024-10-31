@@ -123,7 +123,7 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
           <AddItem sectionId={id} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} nextIndex={items.length} addItem={addItem} />
           <Dropdown placement='bottom'>
             <DropdownTrigger>
-              <Button variant='light' isIconOnly className='border-2 border-content4'><ThreeDots /></Button>
+              <Button variant='light' isIconOnly className='border-2 border-content4 hover:!bg-content4'><ThreeDots /></Button>
             </DropdownTrigger>
             <DropdownMenu onAction={ key => { if (key == 'delete') deleteSection() }}>
               <DropdownItem key='delete' startContent={<TrashFill />} color='danger' className='text-danger'>Delete</DropdownItem>
