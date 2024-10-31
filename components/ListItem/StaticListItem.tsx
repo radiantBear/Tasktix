@@ -311,42 +311,45 @@ export default function StaticListItem(
 
   return (
     <div className={`p-4 bg-content1 flex gap-4 items-center justify-between w-full ${reorderControls || 'border-b-1 border-content3 last:border-b-0'}`}>
-      {
-        reorderControls 
-          ? <div onPointerDown={e => {e.preventDefault(); if(_item.status != 'Completed') reorderControls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
-              <GripVertical />
-            </div>
-          : <></>
-      }
+      <span className='flex gap-4 items-center justify-between w-2/5'>
+        {
+          reorderControls 
+            ? <div onPointerDown={e => {e.preventDefault(); if(_item.status != 'Completed') reorderControls.start(e)}} className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}>
+                <GripVertical />
+              </div>
+            : <></>
+        }
 
-      <Checkbox tabIndex={0} isSelected={_item.status == 'Completed'} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} className='-mr-3' />
+        <Checkbox tabIndex={0} isSelected={_item.status == 'Completed'} onChange={e => { e.target.checked ? set.complete() : set.incomplete(); }} className='-mr-3' />
 
-      <span className='flex gap-4 items-center justify-start grow flex-wrap'>
-        <div className='flex grow shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
-          {
-            _item.status == 'Completed' 
-              ? <span className='text-sm line-through text-foreground/50 text-nowrap overflow-hidden'>{_item.name}</span>
-              : (
-                  <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
-                    <Name name={_item.name} updateName={set.name} className='shrink' />
-                  </span>
+        <span className='flex gap-4 items-center justify-start grow flex-wrap'>
+          <div className='flex grow shrink-0 flex-col w-64 gap-0 -mt-3 -mb-1'>
+            {
+              _item.status == 'Completed' 
+                ? <span className='text-sm line-through text-foreground/50 text-nowrap overflow-hidden'>{_item.name}</span>
+                : (
+                    <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
+                      <Name name={_item.name} updateName={set.name} className='shrink' />
+                    </span>
+                  )
+            }
+
+            {
+              _item.status == 'Completed'
+                ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>  
+                : (
+                  hasDueDates 
+                    ? (<DateInput color={(_item.dateDue && _item.dateDue < today) ? 'danger' : 'secondary'} displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
+                    : <></>
                 )
-          }
+                
+            }
+          </div>
 
-          {
-            _item.status == 'Completed'
-              ? <span className='text-xs text-secondary/75 relative top-3'>{_item.dateCompleted ? 'Completed ' + formatDate(_item.dateCompleted) : 'Due ' + (_item.dateDue ? formatDate(_item.dateDue) : '')}</span>  
-              : (
-                hasDueDates 
-                  ? (<DateInput color={(_item.dateDue && _item.dateDue < today) ? 'danger' : 'secondary'} displayContent={_item.dateDue ? `Due ${formatDate(_item.dateDue)}` : 'Set due date'} value={_item.dateDue || new Date()} onValueChange={set.dueDate} className='h-fit' />)
-                  : <></>
-              )
-              
-          }
-        </div>
-
-        { list && <Link href={`/list/${list.id}`}><Chip startContent={<CardChecklist className='mx-1' />} variant='flat' size='sm' className={`p-2 ${getBackgroundColor(list.color)}/20 ${getTextColor(list.color)}`}>{list.name}</Chip></Link> }
-
+          { list && <Link href={`/list/${list.id}`}><Chip startContent={<CardChecklist className='mx-1' />} variant='flat' size='sm' className={`p-2 ${getBackgroundColor(list.color)}/20 ${getTextColor(list.color)}`}>{list.name}</Chip></Link> }
+        </span>
+      </span>
+      <span className='flex gap-4 items-center justify-between w-3/5'>
         <Priority isComplete={_item.status == 'Completed'} priority={_item.priority} setPriority={set.priority} />
 
         <Tags tags={tagsAvailable.filter(tag => tags.find(t => tag.id == t.id))} tagsAvailable={tagsAvailable} isComplete={_item.status == 'Completed'} addNewTag={addNewTag} linkTag={set.linkedTag} unlinkTag={set.unlinkedTag} className='hidden lg:flex' />
