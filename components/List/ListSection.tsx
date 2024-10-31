@@ -3,8 +3,8 @@ import { ListItem, StaticListItem } from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
 import Color from '@/lib/model/color';
-import { ChevronContract, ChevronExpand, TrashFill } from 'react-bootstrap-icons';
-import { Button } from '@nextui-org/react';
+import { ChevronContract, ChevronExpand, ThreeDots, TrashFill } from 'react-bootstrap-icons';
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
 import { sortItems, sortItemsByCompleted, sortItemsByIndex } from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
@@ -120,7 +120,14 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
         </span>
         <span className='flex gap-4'>
           <AddItem sectionId={id} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} nextIndex={items.length} addItem={addItem} />
-          <Button tabIndex={0} onPress={deleteSection} isIconOnly variant='ghost' color='danger'><TrashFill /></Button>
+          <Dropdown placement='bottom'>
+            <DropdownTrigger>
+              <Button variant='light' isIconOnly className='border-2 border-content4'><ThreeDots /></Button>
+            </DropdownTrigger>
+            <DropdownMenu onAction={ key => { if (key == 'delete') deleteSection() }}>
+              <DropdownItem key='delete' startContent={<TrashFill />} color='danger' className='text-danger'>Delete</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </span>
       </div>
       <AnimatePresence initial={isCollapsed}>
