@@ -12,6 +12,7 @@ import { AnimatePresence, motion, Reorder } from 'framer-motion';
 import { api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { Filters } from '../SearchBar/types';
+import Name from '../Name';
 
 interface Item extends ListItemModel {
   visualIndex?: number;
@@ -112,11 +113,11 @@ export default function ListSection({ id, listId, name, startingItems, filters, 
   return (
     <div className='rounded-md w-100 overflow-hidden border-2 border-content3 box-border shrink-0 shadow-lg shadow-content2'>
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
-        <span className='min-w-fit shrink-0'>
+        <span className='min-w-fit shrink-0 flex'>
           <Button onPress={() => setIsCollapsed(!isCollapsed)} isIconOnly className='hover:bg-foreground/10 -ml-2 mr-2'>
             {isCollapsed ? <ChevronExpand /> : <ChevronContract />}
           </Button>
-          {name}
+          <Name name={name} updateName={() => null} className='mt-0.5' classNames={{ input: 'text-md' }} />
         </span>
         <span className='flex gap-4'>
           <AddItem sectionId={id} hasTimeTracking={hasTimeTracking} hasDueDates={hasDueDates} nextIndex={items.length} addItem={addItem} />

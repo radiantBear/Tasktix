@@ -28,6 +28,21 @@ export async function createListSection(listId: string, listSection: ListSection
   return true;
 }
 
+export async function updateListSection(id: string, name: string): Promise<boolean> {
+  const sql = `
+    UPDATE \`listSections\`
+    SET \`ls_name\` = name
+    WHERE \`ls_id\` = :id;
+  `;
+  
+  const result = await execute(sql, { id, name });
+  
+  if(!result)
+    return false;
+  
+  return true;
+}
+
 export async function deleteListSection(id: string): Promise<boolean> {
   const sql = `
     DELETE FROM \`listSections\`

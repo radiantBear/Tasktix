@@ -1,7 +1,7 @@
 import { Button, Checkbox, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@nextui-org/react';
 import { ThreeDots, TrashFill } from 'react-bootstrap-icons';
 import DateInput2 from '../DateInput2';
-import Name from './Name';
+import Name from '../Name';
 import Priority from './Priority';
 import Tags from './Tags';
 import Users from './Users';

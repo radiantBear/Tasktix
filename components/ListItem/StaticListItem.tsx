@@ -7,7 +7,7 @@ import { addSnackbar } from '../Snackbar';
 import ExpectedInput from './ExpectedInput';
 import ElapsedInput from './ElapsedInput';
 import More from './More';
-import Name from './Name';
+import Name from '../Name';
 import Priority from './Priority';
 import Tags from './Tags';
 import TimeButton from './TimeButton';

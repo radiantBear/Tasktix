@@ -8,7 +8,7 @@ import { ListContext } from '../Sidebar';
 import Tag from '@/lib/model/tag';
 import ColorPicker from '../ColorPicker';
 import Color from '@/lib/model/color';
-import Name from '@/components/ListItem/Name';
+import Name from '@/components/Name';
 import TagInput from '../TagInput';
 
 export function ListSettings({ listId, tagsAvailable, hasTimeTracking, isAutoOrdered, hasDueDates, setTagsAvailable, setHasTimeTracking, setHasDueDates, setIsAutoOrdered, addNewTag }: { listId: string, tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setTagsAvailable: (value: Tag[]) => any, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any, addNewTag: (name: string, color: Color) => any }) {
