@@ -4,7 +4,7 @@ import { createUser, getUserByUsername, getUserByEmail } from '@/lib/database/us
 import User from '@/lib/model/user';
 import { hash } from '@/lib/security/hash';
 
-export const dynamic = 'force-dynamic'; // defaults to auto
+export const dynamic = 'force-dynamic' as const; // defaults to auto
 
 /**
  * Create a new user with `username`, `email`, and `password`

@@ -9,7 +9,7 @@ import { getUser } from '@/lib/session';
 export const metadata: Metadata = {
   title: 'Tasktix',
   description: 'For all your to-do needs!',
-};
+} as const;
 
 export default async function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return (

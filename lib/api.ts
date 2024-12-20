@@ -19,7 +19,7 @@ export const api = {
   delete(resource: string) {
     return request(resource, 'DELETE');
   }
-};
+} as const;
 
 export interface ServerResponse {
   code: number;
