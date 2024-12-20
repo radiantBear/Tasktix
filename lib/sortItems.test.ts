@@ -2,6 +2,15 @@ import { sortItems, sortItemsByCompleted, sortItemsByIndex } from "./sortItems";
 import ListItem from '@/lib/model/listItem';
 
 
+beforeAll(() => {
+  jest.useFakeTimers();
+});
+
+afterAll(() => {
+  jest.useRealTimers();
+});
+
+
 describe('sortItemsByCompleted', () => {
   test('Incomplete items are sorted before completed items', () => {
     const data: ListItem[] = [
