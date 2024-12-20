@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ListItem, StaticListItem } from '@/components/ListItem';
 import AddItem from '@/components/List/AddItem';
 import ListItemModel from '@/lib/model/listItem';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import { ChevronContract, ChevronExpand, ThreeDots, TrashFill } from 'react-bootstrap-icons';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import Tag from '@/lib/model/tag';
@@ -18,7 +18,7 @@ interface Item extends ListItemModel {
   visualIndex?: number;
 }
 
-export default function ListSection({ id, listId, name, startingItems, filters, members, tagsAvailable, hasTimeTracking, hasDueDates, isAutoOrdered, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], filters: Filters, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, deleteSection: () => any, addNewTag: (name: string, color: Color) => any }) {
+export default function ListSection({ id, listId, name, startingItems, filters, members, tagsAvailable, hasTimeTracking, hasDueDates, isAutoOrdered, deleteSection, addNewTag }: { id: string, listId: string, name: string, startingItems: ListItemModel[], filters: Filters, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, deleteSection: () => any, addNewTag: (name: string, color: NamedColor) => any }) {
   // TODO: Update to use hashmap: don't iterate over every value when finding the right one to modify
   const [items, setItems] = useState<Item[]>(startingItems.sort(sortItemsByIndex).sort(sortItemsByCompleted).map((item, i) => {
     const newItem: Item = structuredClone(item);

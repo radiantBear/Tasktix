@@ -3,19 +3,19 @@ import { generateId } from '@/lib/generateId';
 import { DB_List } from '@/lib/database/list';
 import { mergeListItems } from './listItem';
 import ListSection, { extractListSectionFromRow } from './listSection';
-import Color from './color';
+import { NamedColor } from './color';
 
 export default class List {
   id: string;
   name: string;
-  color: Color;
+  color: NamedColor;
   hasTimeTracking: boolean;
   hasDueDates: boolean;
   isAutoOrdered: boolean;
   members: ListMember[];
   sections: ListSection[];
 
-  constructor(name: string, color: Color, members: ListMember[], sections: ListSection[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, id?: string) {
+  constructor(name: string, color: NamedColor, members: ListMember[], sections: ListSection[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, id?: string) {
     if(!id)
       id = generateId();
 

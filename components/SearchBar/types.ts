@@ -1,4 +1,4 @@
-import Color from '@/lib/model/color';
+import { Color } from '@/lib/model/color';
 
 export interface InputOptionGroup {
   label: string,

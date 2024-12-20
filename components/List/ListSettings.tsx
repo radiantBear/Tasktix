@@ -7,11 +7,11 @@ import { useRouter } from 'next/navigation';
 import { ListContext } from '../Sidebar';
 import Tag from '@/lib/model/tag';
 import ColorPicker from '../ColorPicker';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import Name from '@/components/Name';
 import TagInput from '../TagInput';
 
-export function ListSettings({ listId, listName, listColor, tagsAvailable, hasTimeTracking, isAutoOrdered, hasDueDates, setListName, setListColor, setTagsAvailable, setHasTimeTracking, setHasDueDates, setIsAutoOrdered, addNewTag }: { listId: string, listName: string, listColor: Color, tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setListName: (name: string) => any, setListColor: (color: Color) => any, setTagsAvailable: (value: Tag[]) => any, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any, addNewTag: (name: string, color: Color) => any }) {
+export function ListSettings({ listId, listName, listColor, tagsAvailable, hasTimeTracking, isAutoOrdered, hasDueDates, setListName, setListColor, setTagsAvailable, setHasTimeTracking, setHasDueDates, setIsAutoOrdered, addNewTag }: { listId: string, listName: string, listColor: NamedColor, tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, isAutoOrdered: boolean, setListName: (name: string) => any, setListColor: (color: NamedColor) => any, setTagsAvailable: (value: Tag[]) => any, setHasTimeTracking: (value: boolean) => any, setHasDueDates: (value: boolean) => any, setIsAutoOrdered: (value: boolean) => any, addNewTag: (name: string, color: NamedColor) => any }) {
   const router = useRouter();
   const dispatchEvent = useContext(ListContext);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -40,7 +40,7 @@ export function ListSettings({ listId, listName, listColor, tagsAvailable, hasTi
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  function updateColor(color: Color|null) {
+  function updateColor(color: NamedColor|null) {
     if (color === null)
       return;
 
@@ -70,7 +70,7 @@ export function ListSettings({ listId, listName, listColor, tagsAvailable, hasTi
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  function updateTagColor(tag: Tag, color: Color | null) {
+  function updateTagColor(tag: Tag, color: NamedColor | null) {
     if(color)
       api.patch(`/list/${listId}/tag/${tag.id}`, { ...tag, color })
       .then(() => {

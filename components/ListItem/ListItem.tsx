@@ -1,11 +1,11 @@
 import ListItemModel from '@/lib/model/listItem';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import ListMember from '@/lib/model/listMember';
 import { Reorder, useDragControls } from 'framer-motion';
 import StaticListItem from './StaticListItem';
 
-export default function ListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, setStatus, setPaused, setCompleted, updateDueDate, updatePriority, updateExpectedMs, deleteItem, addNewTag, reorder }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, setStatus: (status: ListItemModel['status']) => any, setPaused: () => any, setCompleted: (date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updatePriority: (priority: ListItemModel['priority']) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: Color) => any, reorder: () => any }) {  
+export default function ListItem({ item, members, tagsAvailable, hasTimeTracking, hasDueDates, setStatus, setPaused, setCompleted, updateDueDate, updatePriority, updateExpectedMs, deleteItem, addNewTag, reorder }: { item: ListItemModel, members: ListMember[], tagsAvailable: Tag[], hasTimeTracking: boolean, hasDueDates: boolean, setStatus: (status: ListItemModel['status']) => any, setPaused: () => any, setCompleted: (date: ListItemModel['dateCompleted']) => any, updateDueDate: (date: Date) => any, updatePriority: (priority: ListItemModel['priority']) => any, updateExpectedMs: (ms: number) => any, deleteItem: () => any, addNewTag: (name: string, color: NamedColor) => any, reorder: () => any }) {  
   const controls = useDragControls();
 
   return (

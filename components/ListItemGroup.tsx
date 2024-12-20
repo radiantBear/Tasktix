@@ -7,7 +7,7 @@ import { api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
 import ListMember from '@/lib/model/listMember';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import List from '@/lib/model/list';
 
 export default function ListItemGroup({ startingLists, startingItems, startingTags, members, alternate }: { startingLists: string, startingItems: string, startingTags: string, members: string, alternate: string }) {
@@ -57,7 +57,7 @@ export default function ListItemGroup({ startingLists, startingItems, startingTa
     setItems(newItems);
   }
 
-  function addNewTag(listId: string|undefined, name: string, color: Color) {
+  function addNewTag(listId: string|undefined, name: string, color: NamedColor) {
     if(!listId)
       return new Promise((_, reject) => reject('No list ID'));
 

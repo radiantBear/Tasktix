@@ -1,4 +1,4 @@
-import Color from '@/lib/model/color';
+import { Color, NamedColor, namedColors } from '@/lib/model/color';
 
 export function getTextColor(color: Color): string {
   switch(color) {
@@ -66,22 +66,8 @@ export function getBackgroundColor(color: Color): string {
   }
 }
 
-export function randomColor(): Color {
-  const colors: Color[] = [
-    'Pink',
-    'Red',
-    'Orange',
-    'Amber',
-    'Yellow',
-    'Lime',
-    'Green',
-    'Emerald',
-    'Cyan',
-    'Blue',
-    'Violet'
-  ];
+export function randomNamedColor(): NamedColor {
+  const index = Math.floor(Math.random() * namedColors.length);
 
-  const index = Math.floor(Math.random() * colors.length);
-
-  return colors[index];
+  return namedColors[index];
 }

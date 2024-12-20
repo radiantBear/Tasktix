@@ -1,13 +1,13 @@
 import { DB_Tag } from '../database/listItem';
 import { generateId } from '../generateId';
-import Color from './color';
+import { NamedColor } from './color';
 
 export default class Tag {
   id: string;
   name: string;
-  color: Color;
+  color: NamedColor;
 
-  constructor(name: string, color: Color, id?: string) {
+  constructor(name: string, color: NamedColor, id?: string) {
     if(!id)
       id = generateId();
 

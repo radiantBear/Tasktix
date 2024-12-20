@@ -1,5 +1,4 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
-import { randomColor } from '@/lib/color';
 import { createList } from '@/lib/database/list';
 import List from '@/lib/model/list';
 import ListMember from '@/lib/model/listMember';

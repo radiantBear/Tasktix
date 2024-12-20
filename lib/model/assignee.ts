@@ -1,5 +1,4 @@
 import User, { extractUserFromRow } from './user';
-import Color from './color';
 import { DB_Assignee } from '../database/listItem';
 
 export default class Assignee {

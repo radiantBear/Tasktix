@@ -1,14 +1,13 @@
 import { FormEvent, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
 import { Button, Input } from '@nextui-org/react';
-import Tag from '@/lib/model/tag';
 import ColorPicker from './ColorPicker';
 import { addSnackbar } from './Snackbar';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 
-export default function TagInput({ className, classNames, addNewTag, linkTag }: { className?: string, classNames?: {name: string}, addNewTag: (name: string, color: Color) => any, linkTag?: (id: string) => any }) {
+export default function TagInput({ className, classNames, addNewTag, linkTag }: { className?: string, classNames?: {name: string}, addNewTag: (name: string, color: NamedColor) => any, linkTag?: (id: string) => any }) {
   const [newTagName, setNewTagName] = useState('');
-  const [newTagColor, setNewTagColor] = useState<Color|null>(null);
+  const [newTagColor, setNewTagColor] = useState<NamedColor|null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

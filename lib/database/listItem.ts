@@ -3,14 +3,14 @@
 import { DB_User } from './user';
 import { execute, query } from './db_connect';
 import ListItem, { Priority, Status, extractListItemFromRow, mergeListItems } from '@/lib/model/listItem';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import { RowDataPacket } from 'mysql2';
 
 export interface DB_Tag extends RowDataPacket {
   t_id: string;
   t_name: string;
-  t_color: Color;
+  t_color: NamedColor;
   t_i_id: string;
 }
 

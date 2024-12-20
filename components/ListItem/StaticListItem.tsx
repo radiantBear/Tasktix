@@ -14,7 +14,7 @@ import TimeButton from './TimeButton';
 import Users from './Users';
 import { api } from '@/lib/api';
 import { formatDate } from '@/lib/date';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import ListItemModel from '@/lib/model/listItem';
 import ListMember from '@/lib/model/listMember';
 import Tag from '@/lib/model/tag';
@@ -37,7 +37,7 @@ interface StaticListItemParams {
   setPaused: () => any,
   setCompleted: (date: ListItemModel['dateCompleted']) => any,
   updateExpectedMs: (ms: number) => any,
-  addNewTag: (name: string, color: Color) => any 
+  addNewTag: (name: string, color: NamedColor) => any 
 }
 
 interface SetItem {

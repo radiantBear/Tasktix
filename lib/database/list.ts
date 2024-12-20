@@ -1,6 +1,6 @@
 'use server';
 
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import ListMember, { extractListMemberFromRow } from '@/lib/model/listMember';
 import { extractTagFromRow } from '../model/tag';
 import { execute, query } from './db_connect';
@@ -21,7 +21,7 @@ export interface DB_ListMember extends DB_User {
 
 export interface DB_List extends DB_ListMember, DB_ListSection {
   l_id: string;
-  l_color: Color;
+  l_color: NamedColor;
   l_name: string;
   l_hasTimeTracking: boolean;
   l_hasDueDates: boolean;

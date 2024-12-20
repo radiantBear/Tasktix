@@ -9,7 +9,7 @@ import { addSnackbar } from '@/components/Snackbar';
 import { setTimeout } from 'timers';
 import { validateListName } from '@/lib/validate';
 import List from '@/lib/model/list';
-import { randomColor } from '@/lib/color';
+import { randomNamedColor } from '@/lib/color';
 import { ListContext } from './listContext';
 
 export default function Sidebar({ lists }: { lists: List[] }) {
@@ -18,7 +18,7 @@ export default function Sidebar({ lists }: { lists: List[] }) {
   const dispatchEvent = useContext(ListContext);
 
   function finalizeNew(name: string) {
-    const color = randomColor();
+    const color = randomNamedColor();
     api.post('/list', { name, color })
       .then(res => {
         const id = res.content?.split('/').at(-1);

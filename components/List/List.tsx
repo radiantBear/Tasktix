@@ -7,7 +7,7 @@ import { api } from '@/lib/api';
 import { default as ListModel } from '@/lib/model/list';
 import { default as ListSectionModel } from '@/lib/model/listSection';
 import Tag from '@/lib/model/tag';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import { useState } from 'react';
 import SearchBar from '@/components/SearchBar';
 import { Filters, InputOption, InputOptionGroup } from '@/components/SearchBar/types';
@@ -30,7 +30,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
 
   const filterOptions = getFilterOptions(list, tagsAvailable);  
 
-  function addNewTag(name: string, color: Color) {
+  function addNewTag(name: string, color: NamedColor) {
     return new Promise((resolve, reject) => {
       api.post(`/list/${list.id}/tag`, { name, color })
         .then(res => {
@@ -80,7 +80,7 @@ export default function List({ startingList, startingTagsAvailable }: { starting
           tagsAvailable={tagsAvailable} setTagsAvailable={setTagsAvailable} addNewTag={addNewTag}
           hasTimeTracking={list.hasTimeTracking} isAutoOrdered={list.isAutoOrdered} hasDueDates={list.hasDueDates} 
           setListName={ (value: string) => {const newList = structuredClone(list); newList.name = value; setList(newList); window.location.reload()} }
-          setListColor={ (value: Color) => {const newList = structuredClone(list); newList.color = value; setList(newList)} }
+          setListColor={ (value: NamedColor) => {const newList = structuredClone(list); newList.color = value; setList(newList)} }
           setHasTimeTracking={ (value: boolean) => {const newList = structuredClone(list); newList.hasTimeTracking = value; setList(newList)} }
           setIsAutoOrdered={ (value: boolean) => {const newList = structuredClone(list); newList.isAutoOrdered = value; setList(newList)} }
           setHasDueDates={ (value: boolean) => {const newList = structuredClone(list); newList.hasDueDates = value; setList(newList)} }

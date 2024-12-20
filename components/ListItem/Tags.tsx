@@ -5,10 +5,10 @@ import TagModel from '@/lib/model/tag';
 import { Button, Chip, Card, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import { useState } from 'react';
 import { X, Plus, Tags as TagsIcon } from 'react-bootstrap-icons';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import TagInput from '../TagInput';
 
-export default function Tags({ tags, isComplete, tagsAvailable, className, addNewTag, linkTag, unlinkTag }: { tags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], className?: string, addNewTag: (name: string, color: Color) => any, linkTag: (id: string) => any, unlinkTag: (id: string) => any }) {
+export default function Tags({ tags, isComplete, tagsAvailable, className, addNewTag, linkTag, unlinkTag }: { tags: TagModel[], isComplete: boolean, tagsAvailable?: TagModel[], className?: string, addNewTag: (name: string, color: NamedColor) => any, linkTag: (id: string) => any, unlinkTag: (id: string) => any }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   return (

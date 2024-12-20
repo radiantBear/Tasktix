@@ -8,7 +8,7 @@ import Users from './Users';
 import ExpectedInput from './ExpectedInput';
 import ElapsedInput from './ElapsedInput';
 import TimeButton from './TimeButton';
-import Color from '@/lib/model/color';
+import { NamedColor } from '@/lib/model/color';
 import ListItem from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
 import ListMember from '@/lib/model/listMember';
@@ -23,12 +23,12 @@ interface SetItem {
   startedRunning: () => void,
   pausedRunning: () => void,
   resetTime: () => void,
-  linkedTag: (id: string, name?: string, color?: Color) => void,
+  linkedTag: (id: string, name?: string, color?: NamedColor) => void,
   unlinkedTag: (id: string) => void,
   deleted: () => void
 }
 
-export default function More({ item, tags, tagsAvailable, members, hasDueDates, hasTimeTracking, elapsedLive, set, addNewTag }: { item: ListItem, tags: Tag[], tagsAvailable: Tag[], members: ListMember[], hasDueDates: boolean, hasTimeTracking: boolean, elapsedLive: number, set: SetItem, addNewTag: (name: string, color: Color) => any }) {
+export default function More({ item, tags, tagsAvailable, members, hasDueDates, hasTimeTracking, elapsedLive, set, addNewTag }: { item: ListItem, tags: Tag[], tagsAvailable: Tag[], members: ListMember[], hasDueDates: boolean, hasTimeTracking: boolean, elapsedLive: number, set: SetItem, addNewTag: (name: string, color: NamedColor) => any }) {
   const isComplete = item.status == 'Completed';
   
   const {isOpen, onOpen, onOpenChange} = useDisclosure();

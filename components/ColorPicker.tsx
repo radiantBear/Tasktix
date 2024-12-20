@@ -1,29 +1,15 @@
 'use client';
 
 import { getBackgroundColor } from "@/lib/color";
-import Color from "@/lib/model/color";
+import { namedColors, NamedColor } from "@/lib/model/color";
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { useState } from "react";
 import { PaletteFill, X } from "react-bootstrap-icons";
 
-export default function ColorPicker({ value, onValueChange, className }: { value: Color|null, onValueChange: (color: Color|null) => any, className?: string }) {
+export default function ColorPicker({ value, onValueChange, className }: { value: NamedColor|null, onValueChange: (color: NamedColor|null) => any, className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const options: Color[] = [
-    'Violet',
-    'Pink',
-    'Red',
-    'Orange',
-    'Amber',
-    'Yellow',
-    'Lime',
-    'Green',
-    'Emerald',
-    'Cyan',
-    'Blue',
-  ];
-
-  function pickColor(color: Color|null) {
+  function pickColor(color: NamedColor|null) {
     onValueChange(color);
     setIsOpen(false);
   }
@@ -35,7 +21,7 @@ export default function ColorPicker({ value, onValueChange, className }: { value
       </PopoverTrigger>
       <PopoverContent className='grid grid-cols-3 gap-1'>
         {
-          options.map(color => (
+          namedColors.map(color => (
             <Button onPress={pickColor.bind(null, color)} key={color} isIconOnly className={`rounded-md w-6 h-6 min-w-6 min-h-6 ${getBackgroundColor(color)}`} aria-label={color} />
           ))
         }
