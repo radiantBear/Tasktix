@@ -1,3 +1,5 @@
+import { namedColorSet } from "./model/color";
+
 interface PasswordResult {
     valid: boolean;
     color: 'success' | 'warning' | 'danger' | 'default';
@@ -40,17 +42,6 @@ export function validateListItemName(name: string): [boolean, string] {
 }
 
 export function validateColor(color: string): boolean {
-    return [
-        'Pink', 
-        'Red', 
-        'Orange', 
-        'Amber', 
-        'Yellow', 
-        'Lime', 
-        'Green', 
-        'Emerald', 
-        'Cyan', 
-        'Blue', 
-        'Violet'
-    ].includes(color);
+    // @ts-ignore: `.has()` can take any string and will return whether it is a named color
+    return namedColorSet.has(color);
 }
