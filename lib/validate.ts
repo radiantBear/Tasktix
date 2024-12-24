@@ -1,6 +1,7 @@
 interface PasswordResult {
     valid: boolean;
     color: 'success' | 'warning' | 'danger' | 'default';
+    // TODO: rename `strength` to `message`
     strength: string;
 }
 
@@ -27,21 +28,15 @@ export function validatePassword(password: string): PasswordResult {
 }
 
 export function validateListName(name: string): [boolean, string] {
-    name = name.substring(0, 64);
-    
-    return [name == name, name];
+    return [ name.length <= 64, name.substring(0, 64) ];
 }
 
-export function validateListSectionName(name: string): [boolean, string] {
-    name = name.substring(0, 64);
-    
-    return [name == name, name];
+export function validateListSectionName(name: string): [boolean, string] {    
+    return [ name.length <= 64, name.substring(0, 64) ];
 }
 
 export function validateListItemName(name: string): [boolean, string] {
-    name = name.substring(0, 128);
-    
-    return [name == name, name];
+    return [ name.length <= 128, name.substring(0, 128)];
 }
 
 export function validateColor(color: string): boolean {

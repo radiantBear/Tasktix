@@ -203,10 +203,38 @@ describe('validateListItemName', () => {
 
 describe('validateColor', () => {
   test('Accepts named colors', () => {
-    for (const color of namedColors) {
-      const result = validateColor(color);
-      expect(result).toBe(true);
-    }
+    let result = validateColor('Pink');
+    expect(result).toBe(true);
+
+    result = validateColor('Red');
+    expect(result).toBe(true);
+
+    result = validateColor('Orange');
+    expect(result).toBe(true);
+
+    result = validateColor('Amber');
+    expect(result).toBe(true);
+
+    result = validateColor('Yellow');
+    expect(result).toBe(true);
+
+    result = validateColor('Lime');
+    expect(result).toBe(true);
+
+    result = validateColor('Green');
+    expect(result).toBe(true);
+
+    result = validateColor('Emerald');
+    expect(result).toBe(true);
+
+    result = validateColor('Cyan');
+    expect(result).toBe(true);
+
+    result = validateColor('Blue');
+    expect(result).toBe(true);
+
+    result = validateColor('Violet');
+    expect(result).toBe(true);
   });
 
   test('Rejects semantic colors', () => {
