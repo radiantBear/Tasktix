@@ -238,10 +238,14 @@ describe('validateColor', () => {
   });
 
   test('Rejects semantic colors', () => {
-    for (const color of semanticColors) {
-      const result = validateColor(color);
-      expect(result).toBe(false);
-    }
+    let result = validateColor('success');
+    expect(result).toBe(false);
+
+    result = validateColor('warning');
+    expect(result).toBe(false);
+    
+    result = validateColor('danger');
+    expect(result).toBe(false);
   });
 
   test('Rejects unknown colors', () => {
