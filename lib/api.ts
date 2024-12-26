@@ -1,18 +1,24 @@
+export interface ServerResponse {
+  code: number;
+  message: string;
+  content: string|undefined;
+}
+
 export default {
   get(resource: string) {
     return request(resource, 'GET');
   },
 
   post(resource: string, data: object, encodingType: string = 'application/json') {
-    return request(resource, 'POST', JSON.stringify(data), encodingType);
+    return request(resource, 'POST', data, encodingType);
   },
 
   put(resource: string, data: object, encodingType: string = 'application/json') {
-    return request(resource, 'PUT', JSON.stringify(data), encodingType);
+    return request(resource, 'PUT', data, encodingType);
   },
 
   patch(resource: string, data: string|object, encodingType: string = 'application/json') {
-    return request(resource, 'PATCH', JSON.stringify(data), encodingType);
+    return request(resource, 'PATCH', data, encodingType);
       
   },
 
@@ -20,12 +26,6 @@ export default {
     return request(resource, 'DELETE');
   }
 } as const;
-
-export interface ServerResponse {
-  code: number;
-  message: string;
-  content: string|undefined;
-}
 
 function request(resource: string, method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE', data: string|object|undefined = undefined, encodingType: string|undefined = undefined): Promise<ServerResponse> {
   return new Promise(async function(resolve, reject) {
