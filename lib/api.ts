@@ -1,4 +1,4 @@
-export const api = {
+export default {
   get(resource: string) {
     return request(resource, 'GET');
   },

@@ -7,7 +7,7 @@ import { addSnackbar } from '@/components/Snackbar';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { setLoggedIn } from '@/app/body';
 
 export default function SignUp() {

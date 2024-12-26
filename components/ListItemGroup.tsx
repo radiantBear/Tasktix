@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { StaticListItem } from '@/components/ListItem';
 import { sortItems } from '@/lib/sortItems'; 
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
 import ListMember from '@/lib/model/listMember';

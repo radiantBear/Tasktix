@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { PeopleFill, Plus, X } from 'react-bootstrap-icons';
 import { getBackgroundColor, getTextColor } from '@/lib/color';
 import ListMember from '@/lib/model/listMember';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 
 export default function Users({ itemId, assignees, members, isComplete, className }: { itemId: string, assignees: Assignee[], members: ListMember[], isComplete: boolean, className?: string }) {

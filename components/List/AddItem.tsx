@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Selection, useDisclosure } from '@nextui-org/react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Plus } from 'react-bootstrap-icons';

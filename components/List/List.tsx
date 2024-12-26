@@ -3,7 +3,7 @@
 import ListSection from './ListSection';
 import AddListSection from '@/components/AddListSection';
 import { addSnackbar } from '@/components/Snackbar';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { default as ListModel } from '@/lib/model/list';
 import { default as ListSectionModel } from '@/lib/model/listSection';
 import Tag from '@/lib/model/tag';

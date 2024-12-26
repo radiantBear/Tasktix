@@ -9,7 +9,7 @@ import Tag from '@/lib/model/tag';
 import { sortItems, sortItemsByCompleted, sortItemsByIndex } from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
 import { AnimatePresence, motion, Reorder } from 'framer-motion';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { addSnackbar } from '../Snackbar';
 import { Filters } from '../SearchBar/types';
 import Name from '../Name';

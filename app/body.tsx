@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
 import Snackbar from '@/components/Snackbar';

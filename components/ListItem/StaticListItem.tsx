@@ -12,7 +12,7 @@ import Priority from './Priority';
 import Tags from './Tags';
 import TimeButton from './TimeButton';
 import Users from './Users';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { formatDate } from '@/lib/date';
 import { NamedColor } from '@/lib/model/color';
 import ListItemModel from '@/lib/model/listItem';

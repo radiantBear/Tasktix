@@ -4,7 +4,7 @@ import { ReactNode, useContext, useState } from 'react';
 import { Button, Input, Link } from '@nextui-org/react';
 import { Check, Plus } from 'react-bootstrap-icons';
 import { usePathname, useRouter } from 'next/navigation';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { addSnackbar } from '@/components/Snackbar';
 import { setTimeout } from 'timers';
 import { validateListName } from '@/lib/validate';

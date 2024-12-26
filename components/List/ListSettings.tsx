@@ -2,7 +2,7 @@ import { Button, Modal, ModalBody, ModalContent, ModalHeader, Spacer, Switch, Ta
 import { useContext, useState } from 'react';
 import { TrashFill, GearWideConnected } from 'react-bootstrap-icons';
 import { addSnackbar } from '../Snackbar';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { ListContext } from '../Sidebar';
 import Tag from '@/lib/model/tag';

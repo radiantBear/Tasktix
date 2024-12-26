@@ -4,7 +4,7 @@ import Message, { InputMessage } from '@/components/InputMessage';
 import { Button, Input } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
 import { addSnackbar } from '@/components/Snackbar';
-import { api } from '@/lib/api';
+import { default as api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { setLoggedIn } from '@/app/body';
 
