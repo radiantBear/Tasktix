@@ -30,10 +30,10 @@ export default {
 function request(resource: string, method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE', data: string|object|undefined = undefined, encodingType: string|undefined = undefined): Promise<ServerResponse> {
   return new Promise(async function(resolve, reject) {
     try {
-      let body: string;
+      let body: string|undefined;
       if(typeof data === 'string')
         body = data;
-      else if(typeof data === 'object') {
+      else if(data !== undefined) {
         if(encodingType === 'application/json')
           body = JSON.stringify(data);
         else
@@ -41,8 +41,8 @@ function request(resource: string, method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE', 
       }
 
       const options: any = {
-        method: method,
-        body: data
+        method,
+        body
       }
       if(encodingType)
         options.headers = { 'Content-Type': encodingType };

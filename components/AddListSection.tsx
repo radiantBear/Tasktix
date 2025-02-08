@@ -1,6 +1,6 @@
 'use client';
 
-import { api } from "@/lib/api";
+import api from "@/lib/api";
 import { Button, Input } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { addSnackbar } from "./Snackbar";
