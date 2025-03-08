@@ -17,9 +17,7 @@ jest.mock('next/headers', () => ({
 
 
 beforeEach(() => {
-  (createSession as jest.Mock).mockReset();
-  (deleteSession as jest.Mock).mockReset();
-  (getUserBySessionId as jest.Mock).mockReset();
+  jest.resetAllMocks();
   (cookies as jest.Mock).mockReturnValue({
     get: jest.fn(),
     set: jest.fn(),
