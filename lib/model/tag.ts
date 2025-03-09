@@ -1,4 +1,3 @@
-import { DB_Tag } from '../database/listItem';
 import { generateId } from '../generateId';
 import { NamedColor } from './color';
 
@@ -14,8 +13,4 @@ export default class Tag {
     this.name = name;
     this.color = color;
   }
-}
-
-export function extractTagFromRow(row: DB_Tag): Tag {
-  return new Tag(row.t_name, row.t_color, row.t_id);
 }

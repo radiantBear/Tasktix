@@ -1,5 +1,4 @@
 import { randomNamedColor } from '../color';
-import { DB_User } from '../database/user';
 import { generateId } from '../generateId';
 import { NamedColor } from './color';
 
@@ -32,20 +31,4 @@ export default class User {
     this.dateCreated = dateCreated;
     this.dateSignedIn = dateSignedIn;
   }
-}
-
-export function extractUserFromRow(row: DB_User): User {
-  const user = new User(
-    row.u_username,
-    row.u_email,
-    row.u_password,
-    new Date(row.u_dateCreated),
-    new Date(row.u_dateSignedIn),
-    {
-      id: row.u_id,
-      color: row.u_color
-    }
-  );
-
-  return user;
 }

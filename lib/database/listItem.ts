@@ -1,16 +1,16 @@
 'use server';
 
-import { DB_User } from './user';
+import { DB_User, extractUserFromRow } from './user';
 import { execute, query } from './db_connect';
 import ListItem, {
   Priority,
   Status,
-  extractListItemFromRow,
   mergeListItems
 } from '@/lib/model/listItem';
 import { NamedColor } from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import { RowDataPacket } from 'mysql2';
+import Assignee from '@/lib/model/assignee';
 
 export interface DB_Tag extends RowDataPacket {
   t_id: string;
@@ -40,6 +40,41 @@ export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_dateDue: Date | null;
   i_dateStarted: Date | null;
   i_dateCompleted: Date | null;
+}
+
+export function extractTagFromRow(row: DB_Tag): Tag {
+  return new Tag(row.t_name, row.t_color, row.t_id);
+}
+
+export function extractAssigneeFromRow(row: DB_Assignee): Assignee {
+  const user = extractUserFromRow(row);
+  return new Assignee(user, row.ia_role);
+}
+
+export function extractListItemFromRow(row: DB_ListItem): ListItem {
+  const assignees = row.ia_role ? [extractAssigneeFromRow(row)] : [];
+
+  const tags = row.t_id ? [extractTagFromRow(row)] : [];
+
+  const listItem = new ListItem(row.i_name, {
+    id: row.i_id,
+    status: row.i_status,
+    priority: row.i_priority,
+    isUnclear: row.i_isUnclear,
+    expectedMs: row.i_expectedMs,
+    elapsedMs: row.i_elapsedMs,
+    sectionIndex: row.i_sectionIndex,
+    dateCreated: new Date(row.i_dateCreated),
+    dateDue: row.i_dateDue ? new Date(row.i_dateDue) : null,
+    dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,
+    dateCompleted: row.i_dateCompleted ? new Date(row.i_dateCompleted) : null,
+    assignees,
+    tags,
+    listId: row.l_id,
+    sectionId: row.ls_id
+  });
+
+  return listItem;
 }
 
 export async function createListItem(

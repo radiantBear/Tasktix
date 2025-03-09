@@ -10,6 +10,14 @@ interface DB_Session extends RowDataPacket {
   s_dateExpire: Date;
 }
 
+export function extractSessionFromRow(row: DB_Session): Session {
+  const session = new Session(row.s_id);
+  session.userId = row.s_u_id;
+  session.dateExpire = new Date(row.s_dateExpire);
+
+  return session;
+}
+
 export async function createSession(session: Session): Promise<boolean> {
   const sql = `
     INSERT INTO \`sessions\`(
@@ -51,12 +59,4 @@ export async function deleteSession(id: string): Promise<boolean> {
   if (!result) return false;
 
   return true;
-}
-
-function extractSessionFromRow(row: DB_Session): Session {
-  const session = new Session(row.s_id);
-  session.userId = row.s_u_id;
-  session.dateExpire = new Date(row.s_dateExpire);
-
-  return session;
 }

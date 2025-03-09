@@ -1,7 +1,6 @@
-import Assignee, { extractAssigneeFromRow } from './assignee';
+import Assignee from './assignee';
 import { generateId } from '@/lib/generateId';
-import { DB_ListItem } from '@/lib/database/listItem';
-import Tag, { extractTagFromRow } from './tag';
+import Tag from './tag';
 
 export type Status = 'Unstarted' | 'In Progress' | 'Paused' | 'Completed';
 export type Priority = 'Low' | 'Medium' | 'High';
@@ -79,32 +78,6 @@ export default class ListItem {
     this.listId = listId;
     this.sectionId = sectionId;
   }
-}
-
-export function extractListItemFromRow(row: DB_ListItem): ListItem {
-  const assignees = row.ia_role ? [extractAssigneeFromRow(row)] : [];
-
-  const tags = row.t_id ? [extractTagFromRow(row)] : [];
-
-  const listItem = new ListItem(row.i_name, {
-    id: row.i_id,
-    status: row.i_status,
-    priority: row.i_priority,
-    isUnclear: row.i_isUnclear,
-    expectedMs: row.i_expectedMs,
-    elapsedMs: row.i_elapsedMs,
-    sectionIndex: row.i_sectionIndex,
-    dateCreated: new Date(row.i_dateCreated),
-    dateDue: row.i_dateDue ? new Date(row.i_dateDue) : null,
-    dateStarted: row.i_dateStarted ? new Date(row.i_dateStarted) : null,
-    dateCompleted: row.i_dateCompleted ? new Date(row.i_dateCompleted) : null,
-    assignees,
-    tags,
-    listId: row.l_id,
-    sectionId: row.ls_id
-  });
-
-  return listItem;
 }
 
 export function mergeListItems(original: ListItem[]): ListItem[] {

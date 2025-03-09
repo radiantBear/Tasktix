@@ -1,5 +1,4 @@
-import { DB_ListMember } from '../database/list';
-import User, { extractUserFromRow } from './user';
+import User from './user';
 
 export default class ListMember {
   user: User;
@@ -21,15 +20,4 @@ export default class ListMember {
     this.canComplete = canComplete;
     this.canAssign = canAssign;
   }
-}
-
-export function extractListMemberFromRow(row: DB_ListMember): ListMember {
-  const user = extractUserFromRow(row);
-  return new ListMember(
-    user,
-    row.lm_canAdd,
-    row.lm_canRemove,
-    row.lm_canComplete,
-    row.lm_canRemove
-  );
 }

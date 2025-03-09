@@ -1,6 +1,5 @@
-import { DB_ListSection } from '../database/listSection';
 import { generateId } from '../generateId';
-import ListItem, { extractListItemFromRow } from './listItem';
+import ListItem from './listItem';
 
 export default class ListSection {
   id: string;
@@ -14,10 +13,4 @@ export default class ListSection {
     this.name = name;
     this.items = items;
   }
-}
-
-export function extractListSectionFromRow(row: DB_ListSection): ListSection {
-  const listItem = row.i_id ? [extractListItemFromRow(row)] : [];
-
-  return new ListSection(row.ls_name, listItem, row.ls_id);
 }

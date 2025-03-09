@@ -1,4 +1,4 @@
-import { generateId } from '../generateId';
+import { generateId } from '@/lib/generateId';
 
 export default class Session {
   id: string;

@@ -1,8 +1,7 @@
-import ListMember, { extractListMemberFromRow } from './listMember';
 import { generateId } from '@/lib/generateId';
-import { DB_List } from '@/lib/database/list';
+import ListMember from './listMember';
 import { mergeListItems } from './listItem';
-import ListSection, { extractListSectionFromRow } from './listSection';
+import ListSection from './listSection';
 import { NamedColor } from './color';
 
 export default class List {
@@ -36,26 +35,6 @@ export default class List {
     this.members = members;
     this.sections = sections;
   }
-}
-
-export function extractListFromRow(row: DB_List): List {
-  const listMember = row.lm_u_id ? [extractListMemberFromRow(row)] : [];
-
-  const listSection = row.ls_name ? [extractListSectionFromRow(row)] : [];
-
-  const list = new List(
-    row.l_name,
-    row.l_color,
-    listMember,
-    listSection,
-    row.l_hasTimeTracking,
-    row.l_hasDueDates,
-    row.l_isAutoOrdered,
-    row.l_id
-  );
-  list.id = row.l_id;
-
-  return list;
 }
 
 export function mergeLists(original: List[]): List[] {
