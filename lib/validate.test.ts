@@ -1,5 +1,4 @@
 import { validateColor, validateEmail, validateListItemName, validateListName, validateListSectionName, validatePassword, validateUsername } from "./validate";
-import { namedColors, semanticColors } from "./model/color";
 
 describe('validateUsername', () => {
   test('Usernames with letters are valid', () => {
