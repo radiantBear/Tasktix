@@ -8,6 +8,15 @@ import {
   parseTime
 } from './date';
 
+beforeAll(() => {
+  jest.useFakeTimers();
+  jest.setSystemTime(new Date('2023-01-01 00:00:00'));
+});
+
+afterAll(() => {
+  jest.useRealTimers();
+});
+
 describe('getDateDiff', () => {
   test('Returns positive difference when a is later than b', () => {
     const a = new Date('2023-01-02');
@@ -113,7 +122,6 @@ describe('formatDate', () => {
   });
 
   test('Returns weekday for future dates within this week when pretty printing', () => {
-    jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-01 00:00:00')); // A Sunday
 
     const wednesday = new Date(2023, 0, 4);
@@ -121,24 +129,18 @@ describe('formatDate', () => {
 
     expect(formatDate(wednesday)).toBe('Wednesday');
     expect(formatDate(saturday)).toBe('Saturday');
-
-    jest.useRealTimers();
   });
 
   test('Returns weekday for future dates within three days, even if a different week, when pretty printing', () => {
-    jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-05 00:00:00')); // A Thursday
 
     const sunday = new Date();
     sunday.setDate(sunday.getDate() + 3);
 
     expect(formatDate(sunday)).toBe('Sunday');
-
-    jest.useRealTimers();
   });
 
   test('Returns formatted date string for past dates within this week when pretty printing', () => {
-    jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-06 00:00:00')); // A Friday
 
     const sunday = new Date(2023, 0, 1);
@@ -146,20 +148,15 @@ describe('formatDate', () => {
 
     expect(formatDate(sunday)).toBe('01/01/2023');
     expect(formatDate(thursday)).toBe('01/04/2023');
-
-    jest.useRealTimers();
   });
 
   test('Returns formatted date string for future dates more than three days out, if a different week, when pretty printing', () => {
-    jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-05 00:00:00')); // A Thursday
 
     const sunday = new Date();
     sunday.setDate(sunday.getDate() + 4);
 
     expect(formatDate(sunday)).toBe('01/09/2023');
-
-    jest.useRealTimers();
   });
 
   test('Returns formatted date string when not pretty printing', () => {
