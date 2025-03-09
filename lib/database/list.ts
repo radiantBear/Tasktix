@@ -1,62 +1,12 @@
 'use server';
 
-import { NamedColor } from '@/lib/model/color';
 import ListMember from '@/lib/model/listMember';
-import { execute, query } from './db_connect';
-import { DB_Tag, extractTagFromRow } from './listItem';
-import { DB_ListSection, extractListSectionFromRow } from './listSection';
-import { DB_User, extractUserFromRow } from './user';
 import List, { mergeLists } from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
-
-export interface DB_ListMember extends DB_User {
-  lm_l_id: string;
-  lm_u_id: string;
-  lm_canAdd: boolean;
-  lm_canRemove: boolean;
-  lm_canComplete: boolean;
-  lm_canAssign: boolean;
-}
-
-export interface DB_List extends DB_ListMember, DB_ListSection {
-  l_id: string;
-  l_color: NamedColor;
-  l_name: string;
-  l_hasTimeTracking: boolean;
-  l_hasDueDates: boolean;
-  l_isAutoOrdered: boolean;
-}
-
-export function extractListMemberFromRow(row: DB_ListMember): ListMember {
-  const user = extractUserFromRow(row);
-  return new ListMember(
-    user,
-    row.lm_canAdd,
-    row.lm_canRemove,
-    row.lm_canComplete,
-    row.lm_canRemove
-  );
-}
-
-export function extractListFromRow(row: DB_List): List {
-  const listMember = row.lm_u_id ? [extractListMemberFromRow(row)] : [];
-
-  const listSection = row.ls_name ? [extractListSectionFromRow(row)] : [];
-
-  const list = new List(
-    row.l_name,
-    row.l_color,
-    listMember,
-    listSection,
-    row.l_hasTimeTracking,
-    row.l_hasDueDates,
-    row.l_isAutoOrdered,
-    row.l_id
-  );
-  list.id = row.l_id;
-
-  return list;
-}
+import { execute, query } from './db_connect';
+import { DB_List, extractListFromRow } from './model/list';
+import { extractListMemberFromRow } from './model/listMember';
+import { DB_Tag, extractTagFromRow } from './model/tag';
 
 export async function createList(list: List): Promise<boolean> {
   const sql = `

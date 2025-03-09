@@ -1,22 +1,8 @@
 'use server';
 
 import Session from '@/lib/model/session';
-import { RowDataPacket } from 'mysql2/promise';
 import { execute, query } from './db_connect';
-
-interface DB_Session extends RowDataPacket {
-  s_id: string;
-  s_u_id: string;
-  s_dateExpire: Date;
-}
-
-export function extractSessionFromRow(row: DB_Session): Session {
-  const session = new Session(row.s_id);
-  session.userId = row.s_u_id;
-  session.dateExpire = new Date(row.s_dateExpire);
-
-  return session;
-}
+import { DB_Session, extractSessionFromRow } from './model/session';
 
 export async function createSession(session: Session): Promise<boolean> {
   const sql = `
