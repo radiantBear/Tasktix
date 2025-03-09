@@ -1,4 +1,4 @@
-import Success from './Success';
+import * as Success from './Success';
 
 describe('OK', () => {
   test('Returns a response with status 200 and provided headers and JSON-encoded body representing the message and content fields', async () => {

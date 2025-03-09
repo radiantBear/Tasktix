@@ -1,4 +1,4 @@
-import ServerError from './ServerError';
+import * as ServerError from './ServerError';
 
 describe('Internal', () => {
   test('Returns a response with status 500 and provided headers and JSON-encoded body representing the message and content fields', async () => {
