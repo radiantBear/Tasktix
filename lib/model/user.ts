@@ -1,7 +1,7 @@
-import { randomNamedColor } from "../color";
-import { DB_User } from "../database/user";
-import { generateId } from "../generateId";
-import { NamedColor } from "./color";
+import { randomNamedColor } from '../color';
+import { DB_User } from '../database/user';
+import { generateId } from '../generateId';
+import { NamedColor } from './color';
 
 export default class User {
   id: string;
@@ -12,12 +12,17 @@ export default class User {
   dateCreated: Date;
   dateSignedIn: Date;
 
-  constructor(username: string, email: string, password: string, dateCreated: Date, dateSignedIn: Date, { id, color }: { id?: string, color?: NamedColor }) {
-    if(!id)
-      id = generateId();
+  constructor(
+    username: string,
+    email: string,
+    password: string,
+    dateCreated: Date,
+    dateSignedIn: Date,
+    { id, color }: { id?: string; color?: NamedColor }
+  ) {
+    if (!id) id = generateId();
 
-    if(!color)
-      color = randomNamedColor();
+    if (!color) color = randomNamedColor();
 
     this.id = id;
     this.username = username;

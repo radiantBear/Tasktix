@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { StaticListItem } from '@/components/ListItem';
-import { sortItems } from '@/lib/sortItems'; 
+import { sortItems } from '@/lib/sortItems';
 import { default as api } from '@/lib/api';
 import ListItemModel from '@/lib/model/listItem';
 import Tag from '@/lib/model/tag';
@@ -10,29 +10,49 @@ import ListMember from '@/lib/model/listMember';
 import { NamedColor } from '@/lib/model/color';
 import List from '@/lib/model/list';
 
-export default function ListItemGroup({ startingLists, startingItems, startingTags, members, alternate }: { startingLists: string, startingItems: string, startingTags: string, members: string, alternate: string }) {
+export default function ListItemGroup({
+  startingLists,
+  startingItems,
+  startingTags,
+  members,
+  alternate
+}: {
+  startingLists: string;
+  startingItems: string;
+  startingTags: string;
+  members: string;
+  alternate: string;
+}) {
   const builtLists: List[] = JSON.parse(startingLists) || [];
   const builtItems: ListItemModel[] = JSON.parse(startingItems) || [];
-  
-  for(const item of builtItems) {
+
+  for (const item of builtItems) {
     item.dateCreated = new Date(item.dateCreated);
     item.dateDue = item.dateDue ? new Date(item.dateDue) : null;
     item.dateStarted = item.dateStarted ? new Date(item.dateStarted) : null;
-    item.dateCompleted = item.dateCompleted ? new Date(item.dateCompleted) : null;
+    item.dateCompleted = item.dateCompleted
+      ? new Date(item.dateCompleted)
+      : null;
   }
-  
-  const [items, setItems] = useState<ListItemModel[]>(builtItems);
-  const [tags, setTags] = useState<{[id: string]: Tag[]}>(JSON.parse(startingTags));
-  const parsedMembers: {[id: string]: ListMember[]} = JSON.parse(members);
 
-  function setStatus(index: number, status: ListItemModel['status'], dateCompleted?: ListItemModel['dateCompleted']) {
+  const [items, setItems] = useState<ListItemModel[]>(builtItems);
+  const [tags, setTags] = useState<{ [id: string]: Tag[] }>(
+    JSON.parse(startingTags)
+  );
+  const parsedMembers: { [id: string]: ListMember[] } = JSON.parse(members);
+
+  function setStatus(
+    index: number,
+    status: ListItemModel['status'],
+    dateCompleted?: ListItemModel['dateCompleted']
+  ) {
     const newItems = structuredClone(items);
     newItems[index].status = status;
-    if(dateCompleted !== undefined)
+    if (dateCompleted !== undefined)
       newItems[index].dateCompleted = dateCompleted;
     setItems(newItems);
   }
-  
+
   function updateExpectedMs(index: number, ms: number) {
     const newItems = structuredClone(items);
     newItems[index].expectedMs = ms;
@@ -57,12 +77,16 @@ export default function ListItemGroup({ startingLists, startingItems, startingTa
     setItems(newItems);
   }
 
-  function addNewTag(listId: string|undefined, name: string, color: NamedColor) {
-    if(!listId)
-      return new Promise((_, reject) => reject('No list ID'));
+  function addNewTag(
+    listId: string | undefined,
+    name: string,
+    color: NamedColor
+  ) {
+    if (!listId) return new Promise((_, reject) => reject('No list ID'));
 
     return new Promise((resolve, reject) => {
-      api.post(`/list/${listId}/tag`, { name, color })
+      api
+        .post(`/list/${listId}/tag`, { name, color })
         .then(res => {
           const id = res.content?.split('/').at(-1) || '';
 
@@ -78,13 +102,40 @@ export default function ListItemGroup({ startingLists, startingItems, startingTa
 
   return (
     <div className='rounded-md w-100 border-2 border-content3 box-border shadow-lg shadow-content2'>
-      {
-        items && items.length
-          ? items.sort(sortItems.bind(null, false, false)).filter((item, idx) => item.status != 'Completed' && idx < 10).map((item, idx) => 
-            <StaticListItem key={item.id} item={item} list={builtLists.find(list => list.id == item.listId)} tagsAvailable={item.listId ? tags[item.listId] : []} members={item.listId ? parsedMembers[item.listId] : []} hasDueDates={builtLists.find(list => list.id == item.listId)?.hasDueDates || false} hasTimeTracking={builtLists.find(list => list.id == item.listId)?.hasTimeTracking || false} setStatus={setStatus.bind(null, idx)} setPaused={() => setStatus(idx, 'Paused', null)} setCompleted={setStatus.bind(null, idx, 'Completed')} updateDueDate={updateDueDate.bind(null, idx)} updatePriority={updatePriority.bind(null, idx)} updateExpectedMs={updateExpectedMs.bind(null, idx)} deleteItem={deleteItem.bind(null, idx)} addNewTag={addNewTag.bind(null, item.listId)} />
-          )
-          : <div className='h-16 flex items-center justify-center bg-content2'>{alternate}</div>
-      }
+      {items && items.length ? (
+        items
+          .sort(sortItems.bind(null, false, false))
+          .filter((item, idx) => item.status != 'Completed' && idx < 10)
+          .map((item, idx) => (
+            <StaticListItem
+              key={item.id}
+              item={item}
+              list={builtLists.find(list => list.id == item.listId)}
+              tagsAvailable={item.listId ? tags[item.listId] : []}
+              members={item.listId ? parsedMembers[item.listId] : []}
+              hasDueDates={
+                builtLists.find(list => list.id == item.listId)?.hasDueDates ||
+                false
+              }
+              hasTimeTracking={
+                builtLists.find(list => list.id == item.listId)
+                  ?.hasTimeTracking || false
+              }
+              setStatus={setStatus.bind(null, idx)}
+              setPaused={() => setStatus(idx, 'Paused', null)}
+              setCompleted={setStatus.bind(null, idx, 'Completed')}
+              updateDueDate={updateDueDate.bind(null, idx)}
+              updatePriority={updatePriority.bind(null, idx)}
+              updateExpectedMs={updateExpectedMs.bind(null, idx)}
+              deleteItem={deleteItem.bind(null, idx)}
+              addNewTag={addNewTag.bind(null, item.listId)}
+            />
+          ))
+      ) : (
+        <div className='h-16 flex items-center justify-center bg-content2'>
+          {alternate}
+        </div>
+      )}
     </div>
   );
 }

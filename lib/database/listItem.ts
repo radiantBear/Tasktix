@@ -2,7 +2,12 @@
 
 import { DB_User } from './user';
 import { execute, query } from './db_connect';
-import ListItem, { Priority, Status, extractListItemFromRow, mergeListItems } from '@/lib/model/listItem';
+import ListItem, {
+  Priority,
+  Status,
+  extractListItemFromRow,
+  mergeListItems
+} from '@/lib/model/listItem';
 import { NamedColor } from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import { RowDataPacket } from 'mysql2';
@@ -26,18 +31,21 @@ export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_status: Status;
   i_priority: Priority;
   i_isUnclear: boolean;
-  i_expectedMs: number|null;
+  i_expectedMs: number | null;
   i_elapsedMs: number;
   i_parentId: string;
   i_ls_id: string;
   i_sectionIndex: number;
   i_dateCreated: Date;
-  i_dateDue: Date|null;
-  i_dateStarted: Date|null;
-  i_dateCompleted: Date|null;
+  i_dateDue: Date | null;
+  i_dateStarted: Date | null;
+  i_dateCompleted: Date | null;
 }
 
-export async function createListItem(sectionId: string, listItem: ListItem): Promise<boolean> {
+export async function createListItem(
+  sectionId: string,
+  listItem: ListItem
+): Promise<boolean> {
   const sql = `
     INSERT INTO \`items\`(
       \`i_id\`,
@@ -72,16 +80,15 @@ export async function createListItem(sectionId: string, listItem: ListItem): Pro
       :dateCompleted
     );
   `;
-  
+
   const result = await execute(sql, { ...listItem, sectionId });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function getListItemById(id: string): Promise<ListItem|false> {
+export async function getListItemById(id: string): Promise<ListItem | false> {
   const sql = `
     SELECT * FROM \`items\`
       LEFT JOIN \`itemTags\` ON \`itemTags\`.\`it_i_id\` = \`items\`.\`i_id\`
@@ -93,13 +100,14 @@ export async function getListItemById(id: string): Promise<ListItem|false> {
 
   const result = await query<DB_ListItem>(sql, { id });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
   return mergeListItems(result.map(extractListItemFromRow))[0];
 }
 
-export async function getListItemsByUser(userId: string): Promise<ListItem[]|false> {
+export async function getListItemsByUser(
+  userId: string
+): Promise<ListItem[] | false> {
   const sql = `
     SELECT * FROM \`items\`
       LEFT JOIN \`itemTags\` ON \`itemTags\`.\`it_i_id\` = \`items\`.\`i_id\`
@@ -114,8 +122,7 @@ export async function getListItemsByUser(userId: string): Promise<ListItem[]|fal
 
   const result = await query<DB_ListItem>(sql, { userId });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
   return mergeListItems(result.map(extractListItemFromRow));
 }
@@ -131,16 +138,19 @@ export async function linkTag(itemId: string, tagId: string): Promise<boolean> {
       :tagId
     );
   `;
-  
+
   const result = await execute(sql, { itemId, tagId });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function linkAssignee(itemId: string, userId: string, role: string): Promise<boolean> {
+export async function linkAssignee(
+  itemId: string,
+  userId: string,
+  role: string
+): Promise<boolean> {
   const sql = `
     INSERT INTO \`itemAssignees\`(
       \`ia_i_id\`,
@@ -153,12 +163,11 @@ export async function linkAssignee(itemId: string, userId: string, role: string)
       :role
     );
   `;
-  
+
   const result = await execute(sql, { itemId, userId, role });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
@@ -178,39 +187,42 @@ export async function updateListItem(item: ListItem): Promise<boolean> {
       \`i_dateCompleted\` = :dateCompleted
     WHERE \`i_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { ...item });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
   return true;
 }
 
-export async function updateSectionIndices(sectionId: string, itemId: string, index: number, oldIndex: number): Promise<boolean> {
+export async function updateSectionIndices(
+  sectionId: string,
+  itemId: string,
+  index: number,
+  oldIndex: number
+): Promise<boolean> {
   const sql = `
     UPDATE \`items\`
     SET \`i_sectionIndex\` = CASE 
       WHEN i_id = :itemId 
         THEN :index
-        ELSE \`i_sectionIndex\` ${oldIndex > index? '+ 1' : '- 1'}
+        ELSE \`i_sectionIndex\` ${oldIndex > index ? '+ 1' : '- 1'}
       END
     WHERE i_ls_id = :sectionId
       AND i_sectionIndex >= :indexOne
       AND i_sectionIndex <= :indexTwo;
   `;
 
-  const result = await execute(sql, { 
+  const result = await execute(sql, {
     sectionId,
     itemId,
     index,
     indexOne: Math.min(oldIndex, index),
     indexTwo: Math.max(oldIndex, index)
   });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
@@ -219,41 +231,44 @@ export async function deleteListItem(id: string): Promise<boolean> {
     DELETE FROM \`items\`
     WHERE \`i_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { id });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function unlinkTag(itemId: string, tagId: string): Promise<boolean> {
+export async function unlinkTag(
+  itemId: string,
+  tagId: string
+): Promise<boolean> {
   const sql = `
     DELETE FROM \`itemTags\`
     WHERE \`it_i_id\` = :itemId
       AND \`it_t_id\` = :tagId;
   `;
-  
+
   const result = await execute(sql, { itemId, tagId });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function unlinkAssignee(itemId: string, userId: string): Promise<boolean> {
+export async function unlinkAssignee(
+  itemId: string,
+  userId: string
+): Promise<boolean> {
   const sql = `
     DELETE FROM \`itemAssignees\`
     WHERE \`ia_i_id\` = :itemId
       AND \`ia_u_id\` = :userId;
   `;
-  
+
   const result = await execute(sql, { itemId, userId });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }

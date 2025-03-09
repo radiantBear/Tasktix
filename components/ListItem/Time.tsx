@@ -1,6 +1,6 @@
-import { formatTime } from "@/lib/date";
+import { formatTime } from '@/lib/date';
 
-export default function Time({ label, ms }: { label: string, ms: number }) {
+export default function Time({ label, ms }: { label: string; ms: number }) {
   return (
     <span className='flex flex-col items-center'>
       <p className={'text-xs'}>{label}</p>

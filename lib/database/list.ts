@@ -37,13 +37,12 @@ export async function createList(list: List): Promise<boolean> {
     )
     VALUES (:id, :name, :color);
   `;
-  
-  const result = await execute(sql, list);
-  
-  if(!result)
-    return false;
 
-  for(const member of list.members) {
+  const result = await execute(sql, list);
+
+  if (!result) return false;
+
+  for (const member of list.members) {
     const sql = `
       INSERT INTO \`listMembers\`(
         \`lm_u_id\`,
@@ -56,11 +55,14 @@ export async function createList(list: List): Promise<boolean> {
       VALUES (:userId, :listId, :canAdd, :canRemove, :canComplete, :canAssign);
     `;
 
-    const result = await execute(sql, {...member, userId: member.user.id, listId: list.id});
-    if(!result)
-      return false;
+    const result = await execute(sql, {
+      ...member,
+      userId: member.user.id,
+      listId: list.id
+    });
+    if (!result) return false;
   }
-  
+
   return true;
 }
 
@@ -79,16 +81,15 @@ export async function createTag(listId: string, tag: Tag): Promise<boolean> {
       :listId
     );
   `;
-  
+
   const result = await execute(sql, { listId, ...tag });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function getListById(id: string): Promise<List|false> {
+export async function getListById(id: string): Promise<List | false> {
   const sql = `
     SELECT * FROM \`lists\`
       LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
@@ -104,13 +105,12 @@ export async function getListById(id: string): Promise<List|false> {
 
   const result = await query<DB_List>(sql, { id });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
   return mergeLists(result.map(extractListFromRow))[0];
 }
 
-export async function getListBySectionId(id: string): Promise<List|false> {
+export async function getListBySectionId(id: string): Promise<List | false> {
   const sql = `
     SELECT * FROM \`lists\`
       LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
@@ -129,29 +129,29 @@ export async function getListBySectionId(id: string): Promise<List|false> {
 
   const result = await query<DB_List>(sql, { id });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
   return mergeLists(result.map(extractListFromRow))[0];
 }
 
-export async function getListsByUser(id: string): Promise<List[]|false> {
+export async function getListsByUser(id: string): Promise<List[] | false> {
   const sql = `
     SELECT * FROM \`lists\`
     INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
     WHERE \`listMembers\`.\`lm_u_id\` = :id
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
-  
+
   const result = await query<DB_List>(sql, { id });
-  
-  if(!result)
-    return false;
+
+  if (!result) return false;
 
   return mergeLists(result.map(extractListFromRow));
 }
 
-export async function getListMembersByUser(userId: string) : Promise<{[id: string]: ListMember[]}|false> {
+export async function getListMembersByUser(
+  userId: string
+): Promise<{ [id: string]: ListMember[] } | false> {
   const sql = `
     SELECT * FROM \`lists\`
     WHERE \`lists\`.\`l_id\` IN (
@@ -163,21 +163,22 @@ export async function getListMembersByUser(userId: string) : Promise<{[id: strin
 
   const result = await query<DB_List>(sql, { userId });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
-  const returnVal: {[id: string]: ListMember[]} = {};
-  for(const row of result) {
-    if(!returnVal[row.l_id])
-      returnVal[row.l_id] = [extractListMemberFromRow(row)]
-    else
-      returnVal[row.l_id].push(extractListMemberFromRow(row));
+  const returnVal: { [id: string]: ListMember[] } = {};
+  for (const row of result) {
+    if (!returnVal[row.l_id])
+      returnVal[row.l_id] = [extractListMemberFromRow(row)];
+    else returnVal[row.l_id].push(extractListMemberFromRow(row));
   }
 
   return returnVal;
 }
 
-export async function getIsListAssignee(userId: string, listId: string): Promise<boolean> {
+export async function getIsListAssignee(
+  userId: string,
+  listId: string
+): Promise<boolean> {
   const sql = `
     SELECT * FROM \`lists\`
     INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
@@ -185,13 +186,16 @@ export async function getIsListAssignee(userId: string, listId: string): Promise
       AND \`lists\`.\`l_id\` = :listId
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
-  
+
   const result = await query<DB_List>(sql, { userId, listId });
-  
+
   return !!(result && result.length);
 }
 
-export async function getIsListAssigneeBySection(userId: string, sectionId: string): Promise<boolean> {
+export async function getIsListAssigneeBySection(
+  userId: string,
+  sectionId: string
+): Promise<boolean> {
   const sql = `
     SELECT * FROM \`lists\`
     INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
@@ -200,13 +204,16 @@ export async function getIsListAssigneeBySection(userId: string, sectionId: stri
       AND \`listSections\`.\`ls_id\` = :sectionId
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
-  
+
   const result = await query<DB_List>(sql, { userId, sectionId });
-  
+
   return !!(result && result.length);
 }
 
-export async function getIsListAssigneeByItem(userId: string, itemId: string): Promise<boolean> {
+export async function getIsListAssigneeByItem(
+  userId: string,
+  itemId: string
+): Promise<boolean> {
   const sql = `
     SELECT * FROM \`lists\`
     INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
@@ -216,13 +223,13 @@ export async function getIsListAssigneeByItem(userId: string, itemId: string): P
       AND \`items\`.\`i_id\` = :itemId
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
-  
+
   const result = await query<DB_List>(sql, { userId, itemId });
-  
+
   return !!(result && result.length);
 }
 
-export async function getTagById(id: string) : Promise<Tag|false> {
+export async function getTagById(id: string): Promise<Tag | false> {
   const sql = `
     SELECT * FROM \`tags\`
     WHERE \`tags\`.\`t_id\` = :id;
@@ -230,13 +237,14 @@ export async function getTagById(id: string) : Promise<Tag|false> {
 
   const result = await query<DB_Tag>(sql, { id });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
   return extractTagFromRow(result[0]);
 }
 
-export async function getTagsByUser(userId: string) : Promise<{[id: string]: Tag[]}|false> {
+export async function getTagsByUser(
+  userId: string
+): Promise<{ [id: string]: Tag[] } | false> {
   const sql = `
     SELECT * FROM \`lists\`
       LEFT JOIN \`tags\` ON \`tags\`.\`t_l_id\` = \`lists\`.\`l_id\`
@@ -247,31 +255,27 @@ export async function getTagsByUser(userId: string) : Promise<{[id: string]: Tag
 
   const result = await query<DB_List>(sql, { userId });
 
-  if(!result)
-    return false;
+  if (!result) return false;
 
-  const returnVal: {[id: string]: Tag[]} = {};
-  for(const row of result) {
-    if(!returnVal[row.l_id])
-      returnVal[row.l_id] = [extractTagFromRow(row)]
-    else
-      returnVal[row.l_id].push(extractTagFromRow(row));
+  const returnVal: { [id: string]: Tag[] } = {};
+  for (const row of result) {
+    if (!returnVal[row.l_id]) returnVal[row.l_id] = [extractTagFromRow(row)];
+    else returnVal[row.l_id].push(extractTagFromRow(row));
   }
 
   return returnVal;
 }
 
-export async function getTagsByListId(id: string): Promise<Tag[]|false> {
+export async function getTagsByListId(id: string): Promise<Tag[] | false> {
   const sql = `
     SELECT * FROM \`tags\`
     WHERE \`tags\`.\`t_l_id\` = :id
     ORDER BY \`tags\`.\`t_name\` ASC;
   `;
-  
+
   const result = await query<DB_Tag>(sql, { id });
-  
-  if(!result)
-    return false;
+
+  if (!result) return false;
 
   return result.map(extractTagFromRow);
 }
@@ -287,11 +291,10 @@ export async function updateList(list: List): Promise<boolean> {
       \`l_isAutoOrdered\` = :isAutoOrdered
     WHERE \`l_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { ...list });
-  if(!result)
-    return false;
-  
+  if (!result) return false;
+
   return true;
 }
 
@@ -304,12 +307,11 @@ export async function updateTag(listId: string, tag: Tag): Promise<boolean> {
       \`t_l_id\` = :listId
     WHERE \`t_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { listId, ...tag });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
@@ -318,11 +320,10 @@ export async function deleteList(id: string): Promise<boolean> {
   DELETE FROM \`lists\`
   WHERE \`l_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { id });
-  if(!result)
-    return false;
-  
+  if (!result) return false;
+
   return true;
 }
 
@@ -331,10 +332,9 @@ export async function deleteTag(id: string): Promise<boolean> {
   DELETE FROM \`tags\`
   WHERE \`t_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { id });
-  if(!result)
-    return false;
-  
+  if (!result) return false;
+
   return true;
 }

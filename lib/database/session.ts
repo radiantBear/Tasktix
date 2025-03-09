@@ -19,25 +19,23 @@ export async function createSession(session: Session): Promise<boolean> {
     )
     VALUES (:id, :userId, :dateExpire);
   `;
-  
+
   const result = await execute(sql, session);
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function getSessionById(id: string): Promise<Session|false> {
+export async function getSessionById(id: string): Promise<Session | false> {
   const sql = `
     SELECT * FROM \`sessions\`
     WHERE \`s_id\` = :id;
   `;
-  
+
   const result = await query<DB_Session>(sql, { id });
-  
-  if(!result)
-    return false;
+
+  if (!result) return false;
 
   return extractSessionFromRow(result[0]);
 }
@@ -47,15 +45,13 @@ export async function deleteSession(id: string): Promise<boolean> {
     DELETE FROM \`sessions\`
     WHERE \`s_id\` = :id;
   `;
-  
+
   const result = await execute(sql, { id });
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
-
 
 function extractSessionFromRow(row: DB_Session): Session {
   const session = new Session(row.s_id);

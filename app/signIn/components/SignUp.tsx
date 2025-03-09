@@ -1,8 +1,16 @@
 'use client';
 
-import { getUsernameMessage, getEmailMessage, getPasswordMessage } from '../messages';
+import {
+  getUsernameMessage,
+  getEmailMessage,
+  getPasswordMessage
+} from '../messages';
 import Message, { InputMessage } from '@/components/InputMessage';
-import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
+import {
+  validateUsername,
+  validateEmail,
+  validatePassword
+} from '@/lib/validate';
 import { addSnackbar } from '@/components/Snackbar';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -17,30 +25,42 @@ export default function SignUp() {
     password: InputMessage;
   }
 
-  const defaultMessage: InputMessage = {message: '', color: 'default'};
+  const defaultMessage: InputMessage = { message: '', color: 'default' };
 
-  const [inputs, setInputs] = useState({ email: '', username: '', password: '' });
-  const [inputMsgs, setInputMsgs] = useState<InputMessages>({ email: defaultMessage, username: defaultMessage, password: defaultMessage });
+  const [inputs, setInputs] = useState({
+    email: '',
+    username: '',
+    password: ''
+  });
+  const [inputMsgs, setInputMsgs] = useState<InputMessages>({
+    email: defaultMessage,
+    username: defaultMessage,
+    password: defaultMessage
+  });
   const router = useRouter();
 
   function handleUsernameInput(input: string) {
-    setInputs({...inputs, username: input})
-    setInputMsgs({...inputMsgs, username: getUsernameMessage(input)});
+    setInputs({ ...inputs, username: input });
+    setInputMsgs({ ...inputMsgs, username: getUsernameMessage(input) });
   }
-  
+
   function handleEmailInput(input: string) {
-    setInputs({...inputs, email: input});
-    setInputMsgs({...inputMsgs, email: getEmailMessage(input)});
+    setInputs({ ...inputs, email: input });
+    setInputMsgs({ ...inputMsgs, email: getEmailMessage(input) });
   }
-  
+
   function handlePasswordInput(input: string) {
-    setInputs({...inputs, password: input});
-    setInputMsgs({...inputMsgs, password: getPasswordMessage(input)});
+    setInputs({ ...inputs, password: input });
+    setInputMsgs({ ...inputMsgs, password: getPasswordMessage(input) });
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if(!validateUsername(inputs.username) || !validateEmail(inputs.email) || !validatePassword(inputs.password).valid) {
+    if (
+      !validateUsername(inputs.username) ||
+      !validateEmail(inputs.email) ||
+      !validatePassword(inputs.password).valid
+    ) {
       /* Ensure inputs that have never received input still get the appropriate error message */
       const messages = {
         username: getUsernameMessage(inputs.username),
@@ -51,26 +71,28 @@ export default function SignUp() {
       return;
     }
 
-    api.post('/user', inputs)
+    api
+      .post('/user', inputs)
       .then(() => {
-        api.post('/session', inputs)
-        .then(() => {
-          setLoggedIn();
-          router.replace('/list');
-        })
-        .catch(err => {
-          addSnackbar(err.message, 'error');
-        });
+        api
+          .post('/session', inputs)
+          .then(() => {
+            setLoggedIn();
+            router.replace('/list');
+          })
+          .catch(err => {
+            addSnackbar(err.message, 'error');
+          });
       })
       .catch(err => {
         addSnackbar(err.message, 'error');
       });
   }
 
-	return (
+  return (
     <form onSubmit={handleSubmit}>
-      <Input 
-        label='Username' 
+      <Input
+        label='Username'
         value={inputs.username}
         color={inputMsgs.username.color}
         description={<Message data={inputMsgs.username} />}
@@ -78,8 +100,8 @@ export default function SignUp() {
         type='text'
         variant='underlined'
       />
-      <Input 
-        label='Email' 
+      <Input
+        label='Email'
         value={inputs.email}
         color={inputMsgs.email.color}
         description={<Message data={inputMsgs.email} />}
@@ -87,18 +109,20 @@ export default function SignUp() {
         type='email'
         variant='underlined'
       />
-      <Input 
-        label='Password' 
+      <Input
+        label='Password'
         value={inputs.password}
         color={inputMsgs.password.color}
         description={<Message data={inputMsgs.password} />}
         onValueChange={handlePasswordInput}
-        type='password' 
+        type='password'
         variant='underlined'
       />
       <div className='flex justify-center mt-6'>
-        <Button type='submit' color='primary'>Sign Up</Button>
+        <Button type='submit' color='primary'>
+          Sign Up
+        </Button>
       </div>
     </form>
-	);
+  );
 }

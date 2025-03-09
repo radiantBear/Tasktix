@@ -27,12 +27,11 @@ export async function createUser(user: User): Promise<boolean> {
     )
     VALUES (:id, :username, :email, :password, :dateCreated, :dateSignedIn);
   `;
-  
+
   const result = await execute(sql, user);
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
@@ -46,77 +45,72 @@ export async function updateUser(user: User): Promise<boolean> {
       \`u_dateSignedIn\` = :dateSignedIn
     WHERE \`u_id\` = :id;
   `;
-  
+
   const result = await execute(sql, user);
-  
-  if(!result)
-    return false;
-  
+
+  if (!result) return false;
+
   return true;
 }
 
-export async function getUserById(id: string): Promise<User|false> {
+export async function getUserById(id: string): Promise<User | false> {
   const sql = `
     SELECT * FROM \`users\`
     WHERE \`u_id\` = :id;
   `;
-  
+
   const result = await query<DB_User>(sql, { id });
-  
-  if(!result)
-    return false;
+
+  if (!result) return false;
 
   return extractUserFromRow(result[0]);
 }
 
-export async function getUserByUsername(username: string): Promise<User|false> {
+export async function getUserByUsername(
+  username: string
+): Promise<User | false> {
   const sql = `
     SELECT * FROM \`users\`
     WHERE \`u_username\` = :username;
   `;
-  
+
   const result = await query<DB_User>(sql, { username });
-    
-  if(!result)
-    return false;
+
+  if (!result) return false;
 
   return extractUserFromRow(result[0]);
-  
 }
 
-export async function getUserByEmail(email: string): Promise<User|false> {
+export async function getUserByEmail(email: string): Promise<User | false> {
   const sql = `
     SELECT * FROM \`users\`
     WHERE \`u_email\` = :email;
   `;
-  
+
   const result = await query<DB_User>(sql, { email });
-  
-  if(!result)
-    return false;
+
+  if (!result) return false;
 
   return extractUserFromRow(result[0]);
 }
 
-export async function getUserBySessionId(id: string): Promise<User|false> {
+export async function getUserBySessionId(id: string): Promise<User | false> {
   interface DB_Session extends DB_User {
     s_id: string;
     s_dateExpire: Date;
   }
-  
+
   const sql = `
     SELECT * FROM \`users\`
       INNER JOIN \`sessions\` ON \`users\`.\`u_id\` = \`sessions\`.\`s_u_id\`
     WHERE \`s_id\` = :id;
   `;
-  
-  const result = await query<DB_Session>(sql, { id });
-  
-  if(!result)
-    return false;
 
-  if(result[0].s_dateExpire.getTime() < (new Date()).getTime())
-    return false;
+  const result = await query<DB_Session>(sql, { id });
+
+  if (!result) return false;
+
+  if (result[0].s_dateExpire.getTime() < new Date().getTime()) return false;
 
   return extractUserFromRow(result[0]);
 }

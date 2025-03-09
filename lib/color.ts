@@ -1,7 +1,7 @@
 import { Color, NamedColor, namedColors } from '@/lib/model/color';
 
 export function getTextColor(color: Color): string {
-  switch(color) {
+  switch (color) {
     case 'danger':
       return 'text-danger';
     case 'warning':
@@ -34,7 +34,7 @@ export function getTextColor(color: Color): string {
 }
 
 export function getBackgroundColor(color: Color): string {
-  switch(color) {
+  switch (color) {
     case 'danger':
       return 'bg-danger';
     case 'warning':

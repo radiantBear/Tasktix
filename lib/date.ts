@@ -19,37 +19,30 @@ export function formatDate(date: Date, pretty: boolean = true): string {
 
   const close: Intl.DateTimeFormatOptions = {
     weekday: 'long'
-  }
+  };
 
   const dayOffset = getDayOffset(date);
-  const isThisWeek = (dayOffset < 7) && (date.getDay() > (new Date()).getDay());
+  const isThisWeek = dayOffset < 7 && date.getDay() > new Date().getDay();
 
-  if(!pretty)
-    return date.toLocaleDateString('en-US', distant);
-  else if(dayOffset == 0)
-    return 'Today';
-  else if(dayOffset == 1)
-    return 'Tomorrow';
-  else if(dayOffset == -1)
-    return 'Yesterday';
-  else if(dayOffset > 0 && (dayOffset < 4 || isThisWeek))
+  if (!pretty) return date.toLocaleDateString('en-US', distant);
+  else if (dayOffset == 0) return 'Today';
+  else if (dayOffset == 1) return 'Tomorrow';
+  else if (dayOffset == -1) return 'Yesterday';
+  else if (dayOffset > 0 && (dayOffset < 4 || isThisWeek))
     return date.toLocaleDateString('en-US', close);
-  else
-    return date.toLocaleDateString('en-US', distant);
+  else return date.toLocaleDateString('en-US', distant);
 }
 
 export function formatTime(time: number): string {
   const hoursMs = Math.trunc(time / 3600000) * 3600000;
   const minsMs = Math.round((time - hoursMs) / 60000) * 60000;
-  
+
   let hours = (hoursMs / 3600000).toString();
   let minutes = (minsMs / 60000).toString();
 
-  if(hours.length < 2)
-    hours = '0'+hours;
+  if (hours.length < 2) hours = '0' + hours;
 
-  if(minutes.length < 2)
-    minutes = '0'+minutes;
+  if (minutes.length < 2) minutes = '0' + minutes;
 
   return `${hours}:${minutes}`;
 }
@@ -64,33 +57,31 @@ export function dateToInput(date: Date): string {
   let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();
 
-  if(month.length < 2)
-    month = '0' + month;
-  if(day.length < 2)
-    day = '0' + day;
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
 
   return `${year}-${month}-${day}`;
 }
 
 export function parseTime(time: string): number {
   const timeParts = time.split(':');
-  
+
   for (const part of timeParts) {
     if (!Number.isInteger(Number(part)))
       throw Error(`Invalid time to parse: ${time}`);
   }
 
-  if(timeParts.length == 3) {
+  if (timeParts.length == 3) {
     const [hours, minutes, seconds] = timeParts;
-    return ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000;
-  }
-  else if(timeParts.length == 2) {
+    return (
+      ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000
+    );
+  } else if (timeParts.length == 2) {
     const [hours, minutes] = timeParts;
-    return ((Number(hours) * 60 + Number(minutes)) * 60) * 1000;
-  }
-  else if(timeParts.length == 1) {
+    return (Number(hours) * 60 + Number(minutes)) * 60 * 1000;
+  } else if (timeParts.length == 1) {
     const [minutes] = timeParts;
-    return (Number(minutes) * 60) * 1000;
+    return Number(minutes) * 60 * 1000;
   }
 
   throw Error(`Invalid time to parse: ${time}`);

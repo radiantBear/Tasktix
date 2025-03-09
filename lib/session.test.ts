@@ -11,20 +11,18 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn(() => ({
     get: jest.fn(),
     set: jest.fn(),
-    delete: jest.fn(),
-  })),
+    delete: jest.fn()
+  }))
 }));
-
 
 beforeEach(() => {
   jest.resetAllMocks();
   (cookies as jest.Mock).mockReturnValue({
     get: jest.fn(),
     set: jest.fn(),
-    delete: jest.fn(),
+    delete: jest.fn()
   });
 });
-
 
 describe('setUser', () => {
   test('Creates a session, sets a cookie with the session ID, and returns the session ID', async () => {
@@ -34,21 +32,23 @@ describe('setUser', () => {
     (createSession as jest.Mock).mockResolvedValue(true);
 
     const result = await setUser(userId);
-    
+
     expect(createSession).toHaveBeenCalledTimes(1);
-    const createSessionCall: Session = (createSession as jest.Mock).mock.calls[0][0];
+    const createSessionCall: Session = (createSession as jest.Mock).mock
+      .calls[0][0];
     expect(createSessionCall.userId).toBe(userId);
     expect(createSessionCall.id).toEqual(expect.any(String));
     expect(createSessionCall.dateExpire).toEqual(expect.any(Date));
-    
+
     const sessionId = createSessionCall.id;
     expect(mockedCookies.set).toHaveBeenCalledTimes(1);
-    const mockedCookiesCall: [string, string, unknown] = mockedCookies.set.mock.calls[0];
+    const mockedCookiesCall: [string, string, unknown] =
+      mockedCookies.set.mock.calls[0];
     expect(mockedCookiesCall[0]).toBe('user');
     expect(mockedCookiesCall[1]).toBe(sessionId);
 
     expect(result).toBe(sessionId);
-    
+
     jest.resetModules();
   });
 
@@ -68,8 +68,12 @@ describe('getUser', () => {
   test('Returns the user tied to the current session if there is a valid session cookie', async () => {
     const mockSessionId = 'session123';
     const mockUser = new User(
-      'user', 'user@example.com', 'password!',
-      new Date(), new Date(), {}
+      'user',
+      'user@example.com',
+      'password!',
+      new Date(),
+      new Date(),
+      {}
     );
     const mockedCookies = (cookies as jest.Mock)();
 
@@ -109,7 +113,7 @@ describe('getUser', () => {
 
     expect(mockedCookies.get).toHaveBeenCalledTimes(1);
     expect(mockedCookies.get).toHaveBeenCalledWith('user');
-    
+
     expect(getUserBySessionId).not.toHaveBeenCalled();
   });
 
@@ -124,10 +128,10 @@ describe('getUser', () => {
 
     expect(mockedCookies.get).toHaveBeenCalledTimes(1);
     expect(mockedCookies.get).toHaveBeenCalledWith('user');
-    
+
     expect(getUserBySessionId).toHaveBeenCalledTimes(1);
     expect(getUserBySessionId).toHaveBeenCalledWith(mockSessionId);
-    
+
     expect(result).toBe(false);
   });
 });
@@ -144,12 +148,12 @@ describe('clearUser', () => {
 
     expect(mockedCookies.get).toHaveBeenCalledTimes(1);
     expect(mockedCookies.get).toHaveBeenCalledWith('user');
-    
+
     expect(deleteSession).toHaveBeenCalledTimes(1);
     expect(deleteSession).toHaveBeenCalledWith(mockSessionId);
 
     expect(mockedCookies.delete).toHaveBeenCalledWith('user');
-    
+
     expect(result).toBe(true);
   });
 
@@ -164,7 +168,7 @@ describe('clearUser', () => {
     expect(mockedCookies.get).toHaveBeenCalledWith('user');
 
     expect(deleteSession).not.toHaveBeenCalled();
-    
+
     expect(result).toBe(false);
   });
 
@@ -179,10 +183,10 @@ describe('clearUser', () => {
 
     expect(mockedCookies.get).toHaveBeenCalledTimes(1);
     expect(mockedCookies.get).toHaveBeenCalledWith('user');
-    
+
     expect(deleteSession).toHaveBeenCalledTimes(1);
     expect(deleteSession).toHaveBeenCalledWith(mockSessionId);
-    
+
     expect(mockedCookies.delete).not.toHaveBeenCalled();
 
     expect(result).toBe(false);

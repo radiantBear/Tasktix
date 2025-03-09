@@ -6,12 +6,15 @@ export default function listReducer(lists: List[], action: Action) {
     case 'add':
       if (!action.name || !action.color)
         throw Error('Missing required action parameters');
-      return [...lists, (new List(action.name, action.color, [], [], true, true, true, action.id))];
-    
+      return [
+        ...lists,
+        new List(action.name, action.color, [], [], true, true, true, action.id)
+      ];
+
     case 'remove':
       return lists.filter(list => list.id != action.id);
 
     default:
-      throw Error(`Unknown action ${action.type}`)
+      throw Error(`Unknown action ${action.type}`);
   }
 }

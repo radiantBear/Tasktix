@@ -14,23 +14,27 @@ export default function SignIn() {
     password: InputMessage;
   }
 
-  const defaultMessage: InputMessage = {message: '', color: 'default'};
+  const defaultMessage: InputMessage = { message: '', color: 'default' };
 
   const [inputs, setInputs] = useState({ username: '', password: '' });
-  const [inputMsgs, setInputMsgs] = useState<InputMessages>({ username: defaultMessage, password: defaultMessage });
+  const [inputMsgs, setInputMsgs] = useState<InputMessages>({
+    username: defaultMessage,
+    password: defaultMessage
+  });
   const router = useRouter();
 
   function handleUsernameInput(input: string) {
-    setInputs({...inputs, username: input})
-  }
-  
-  function handlePasswordInput(input: string) {
-    setInputs({...inputs, password: input});
+    setInputs({ ...inputs, username: input });
   }
 
-	function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handlePasswordInput(input: string) {
+    setInputs({ ...inputs, password: input });
+  }
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    api.post('/session', inputs)
+    api
+      .post('/session', inputs)
       .then(() => {
         setLoggedIn();
         router.replace('/list');
@@ -40,8 +44,8 @@ export default function SignIn() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Input 
-        label='Username' 
+      <Input
+        label='Username'
         value={inputs.username}
         color={inputMsgs.username.color}
         description={<Message data={inputMsgs.username} />}
@@ -49,18 +53,20 @@ export default function SignIn() {
         type='text'
         variant='underlined'
       />
-      <Input 
-        label='Password' 
+      <Input
+        label='Password'
         value={inputs.password}
         color={inputMsgs.password.color}
         description={<Message data={inputMsgs.password} />}
         onValueChange={handlePasswordInput}
-        type='password' 
+        type='password'
         variant='underlined'
       />
       <div className='flex justify-center mt-6'>
-        <Button type='submit' color='primary'>Sign In</Button>
+        <Button type='submit' color='primary'>
+          Sign In
+        </Button>
       </div>
     </form>
-	);
+  );
 }

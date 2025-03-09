@@ -1,5 +1,12 @@
-import { getDateDiff, getDayOffset, formatDate, formatTime, inputToDate, dateToInput, parseTime } from './date';
-
+import {
+  getDateDiff,
+  getDayOffset,
+  formatDate,
+  formatTime,
+  inputToDate,
+  dateToInput,
+  parseTime
+} from './date';
 
 describe('getDateDiff', () => {
   test('Returns positive difference when a is later than b', () => {
@@ -15,15 +22,14 @@ describe('getDateDiff', () => {
   });
 });
 
-
 describe('getDayOffset', () => {
   test('Returns correct day offsets for dates with no time component', () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
@@ -35,10 +41,10 @@ describe('getDayOffset', () => {
   test('Returns correct day offsets for dates with time components', () => {
     const today = new Date();
     today.setHours(2, 6, 9, 14);
-    
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
@@ -47,7 +53,6 @@ describe('getDayOffset', () => {
     expect(getDayOffset(yesterday)).toBe(-1);
   });
 });
-
 
 describe('formatDate', () => {
   test('Returns "Today" for current date when pretty printing', () => {
@@ -110,7 +115,7 @@ describe('formatDate', () => {
   test('Returns weekday for future dates within this week when pretty printing', () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-01 00:00:00')); // A Sunday
-    
+
     const wednesday = new Date(2023, 0, 4);
     const saturday = new Date(2023, 0, 7);
 
@@ -123,7 +128,7 @@ describe('formatDate', () => {
   test('Returns weekday for future dates within three days, even if a different week, when pretty printing', () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-05 00:00:00')); // A Thursday
-    
+
     const sunday = new Date();
     sunday.setDate(sunday.getDate() + 3);
 
@@ -135,7 +140,7 @@ describe('formatDate', () => {
   test('Returns formatted date string for past dates within this week when pretty printing', () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-06 00:00:00')); // A Friday
-    
+
     const sunday = new Date(2023, 0, 1);
     const thursday = new Date(2023, 0, 4);
 
@@ -148,7 +153,7 @@ describe('formatDate', () => {
   test('Returns formatted date string for future dates more than three days out, if a different week, when pretty printing', () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2023-01-05 00:00:00')); // A Thursday
-    
+
     const sunday = new Date();
     sunday.setDate(sunday.getDate() + 4);
 
@@ -162,7 +167,6 @@ describe('formatDate', () => {
     expect(formatDate(date, false)).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
   });
 });
-
 
 describe('formatTime', () => {
   test('Formats hours and minutes correctly', () => {
@@ -184,7 +188,6 @@ describe('formatTime', () => {
   });
 });
 
-
 describe('inputToDate', () => {
   test('converts date string to Date object', () => {
     const result = inputToDate('2023-01-15');
@@ -194,7 +197,6 @@ describe('inputToDate', () => {
     expect(result.getDate()).toBe(15);
   });
 });
-
 
 describe('dateToInput', () => {
   test('converts Date object to date string', () => {
@@ -207,7 +209,6 @@ describe('dateToInput', () => {
     expect(dateToInput(date)).toBe('2023-01-05');
   });
 });
-
 
 describe('parseTime', () => {
   test('Parses hours:minutes:seconds format', () => {
@@ -227,7 +228,11 @@ describe('parseTime', () => {
   });
 
   test('Throws error for invalid format', () => {
-    expect(() => parseTime('01:01:01:01')).toThrow('Invalid time to parse: 01:01:01:01');
-    expect(() => parseTime('invalid_str')).toThrow('Invalid time to parse: invalid_str');
+    expect(() => parseTime('01:01:01:01')).toThrow(
+      'Invalid time to parse: 01:01:01:01'
+    );
+    expect(() => parseTime('invalid_str')).toThrow(
+      'Invalid time to parse: invalid_str'
+    );
   });
 });

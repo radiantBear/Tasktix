@@ -1,4 +1,8 @@
-import { getTextColor, getBackgroundColor, randomNamedColor } from '@/lib/color';
+import {
+  getTextColor,
+  getBackgroundColor,
+  randomNamedColor
+} from '@/lib/color';
 import { namedColors, NamedColor } from '@/lib/model/color';
 
 describe('getTextColor', () => {

@@ -8,7 +8,13 @@ export default class ListMember {
   canComplete: boolean;
   canAssign: boolean;
 
-  constructor(user: User, canAdd: boolean = false, canRemove: boolean = false, canComplete: boolean = false, canAssign: boolean = false) {
+  constructor(
+    user: User,
+    canAdd: boolean = false,
+    canRemove: boolean = false,
+    canComplete: boolean = false,
+    canAssign: boolean = false
+  ) {
     this.user = user;
     this.canAdd = canAdd;
     this.canRemove = canRemove;
@@ -19,5 +25,11 @@ export default class ListMember {
 
 export function extractListMemberFromRow(row: DB_ListMember): ListMember {
   const user = extractUserFromRow(row);
-  return new ListMember(user, row.lm_canAdd, row.lm_canRemove, row.lm_canComplete, row.lm_canRemove);
+  return new ListMember(
+    user,
+    row.lm_canAdd,
+    row.lm_canRemove,
+    row.lm_canComplete,
+    row.lm_canRemove
+  );
 }

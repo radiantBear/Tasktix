@@ -4,14 +4,16 @@
 
 import api from '@/lib/api'; // Adjust the import path as needed
 
-
-function createFetchResponse(status: number, message: string, content: any): Response {
+function createFetchResponse(
+  status: number,
+  message: string,
+  content: any
+): Response {
   return {
     status,
     json: jest.fn().mockResolvedValue({ message, content })
   } as any;
 }
-
 
 beforeEach(() => {
   if (!globalThis.fetch) {
@@ -20,11 +22,9 @@ beforeEach(() => {
   jest.spyOn(globalThis, 'fetch').mockClear();
 });
 
-
 afterEach(() => {
   jest.resetAllMocks();
 });
-
 
 describe('get', () => {
   test('Makes request to the provided API route, prepended with "/api"', async () => {
@@ -33,7 +33,9 @@ describe('get', () => {
 
     await api.get('/resource');
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe('/api/resource');
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe(
+      '/api/resource'
+    );
   });
 
   test('Makes an HTTP GET request with no body', async () => {
@@ -42,7 +44,10 @@ describe('get', () => {
 
     await api.get('/resource');
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ method: 'GET', body: undefined });
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'GET',
+      body: undefined
+    });
   });
 
   test('Parses the JSON-encoded server response', async () => {
@@ -78,8 +83,8 @@ describe('get', () => {
       code: 403,
       message: 'Server error message',
       content: null
-    })
-    
+    });
+
     expect(window.location.href).toBe('/signIn');
   });
 
@@ -95,7 +100,6 @@ describe('get', () => {
   });
 });
 
-
 describe('post', () => {
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
@@ -103,7 +107,9 @@ describe('post', () => {
 
     await api.post('/resource', {});
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe('/api/resource');
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe(
+      '/api/resource'
+    );
   });
 
   test('Makes an HTTP POST request with JSON-encoded body by default when `data` is an object', async () => {
@@ -112,16 +118,16 @@ describe('post', () => {
 
     await api.post('/resource', { key: 'value' });
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ 
-      method: 'POST', 
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: '{"key":"value"}' 
+      body: '{"key":"value"}'
     });
   });
 
   test('Throws an unknown encoding error when `data` is an object and `encodingType` is not JSON', async () => {
     const data = { key: 'value' };
-    
+
     await expect(api.post('/resource', data, 'text/plain')).rejects.toThrow(
       'Unknown encoding text/plain for object parameter'
     );
@@ -133,13 +139,12 @@ describe('post', () => {
 
     await api.post('/resource', 'data here');
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ 
-      method: 'POST', 
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: 'data here' 
+      body: 'data here'
     });
   });
-
 
   test('Makes an HTTP POST request with custom encoding type when when `data` is a string and an encoding is specified', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
@@ -147,10 +152,10 @@ describe('post', () => {
 
     await api.post('/resource', 'data here', 'text/somethingCustom');
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ 
-      method: 'POST', 
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'POST',
       headers: { 'Content-Type': 'text/somethingCustom' },
-      body: 'data here' 
+      body: 'data here'
     });
   });
 
@@ -172,7 +177,9 @@ describe('post', () => {
     const error = new Error('Exception message');
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
-    await expect(api.post('/resource', {})).rejects.toThrow('Exception message');
+    await expect(api.post('/resource', {})).rejects.toThrow(
+      'Exception message'
+    );
   });
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
@@ -188,8 +195,8 @@ describe('post', () => {
       code: 403,
       message: 'Server error message',
       content: null
-    })
-    
+    });
+
     expect(window.location.href).toBe('/signIn');
   });
 
@@ -204,7 +211,6 @@ describe('post', () => {
     });
   });
 });
-
 
 describe('put', () => {
   it('should send a PUT request with JSON stringified data and resolve with server response', async () => {
@@ -231,7 +237,9 @@ describe('put', () => {
 
     await api.put('/resource', {});
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe('/api/resource');
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe(
+      '/api/resource'
+    );
   });
 
   test('Makes an HTTP PUT request with JSON-encoded body by default', async () => {
@@ -240,10 +248,10 @@ describe('put', () => {
 
     await api.put('/resource', { key: 'value' });
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ 
-      method: 'PUT', 
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: '{"key":"value"}' 
+      body: '{"key":"value"}'
     });
   });
 
@@ -289,8 +297,8 @@ describe('put', () => {
       code: 403,
       message: 'Server error message',
       content: null
-    })
-    
+    });
+
     expect(window.location.href).toBe('/signIn');
   });
 
@@ -305,7 +313,6 @@ describe('put', () => {
     });
   });
 });
-
 
 describe('patch', () => {
   it('should send a PATCH request with JSON stringified data and resolve with server response', async () => {
@@ -332,7 +339,9 @@ describe('patch', () => {
 
     await api.patch('/resource', {});
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe('/api/resource');
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe(
+      '/api/resource'
+    );
   });
 
   test('Makes an HTTP PATCH request with JSON-encoded body by default', async () => {
@@ -341,10 +350,10 @@ describe('patch', () => {
 
     await api.patch('/resource', { key: 'value' });
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ 
-      method: 'PATCH', 
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: '{"key":"value"}' 
+      body: '{"key":"value"}'
     });
   });
 
@@ -374,7 +383,9 @@ describe('patch', () => {
     const error = new Error('Exception message');
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
-    await expect(api.patch('/resource', {})).rejects.toThrow('Exception message');
+    await expect(api.patch('/resource', {})).rejects.toThrow(
+      'Exception message'
+    );
   });
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
@@ -390,8 +401,8 @@ describe('patch', () => {
       code: 403,
       message: 'Server error message',
       content: null
-    })
-    
+    });
+
     expect(window.location.href).toBe('/signIn');
   });
 
@@ -407,7 +418,6 @@ describe('patch', () => {
   });
 });
 
-
 describe('delete', () => {
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
@@ -415,7 +425,9 @@ describe('delete', () => {
 
     await api.delete('/resource');
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe('/api/resource');
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][0]).toBe(
+      '/api/resource'
+    );
   });
 
   test('Makes an HTTP GET request with no body', async () => {
@@ -424,7 +436,10 @@ describe('delete', () => {
 
     await api.delete('/resource');
 
-    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({ method: 'DELETE', body: undefined });
+    expect((globalThis.fetch as jest.Mock).mock.calls[0][1]).toMatchObject({
+      method: 'DELETE',
+      body: undefined
+    });
   });
 
   test('Parses the JSON-encoded server response', async () => {
@@ -460,8 +475,8 @@ describe('delete', () => {
       code: 403,
       message: 'Server error message',
       content: null
-    })
-    
+    });
+
     expect(window.location.href).toBe('/signIn');
   });
 

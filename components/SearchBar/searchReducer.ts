@@ -1,12 +1,15 @@
 import { Filters, InputAction } from './types';
 
-export default function searchReducer(state: Filters, action: InputAction): Filters {  
+export default function searchReducer(
+  state: Filters,
+  action: InputAction
+): Filters {
   let newState = structuredClone(state);
 
-  switch(action.type) {
+  switch (action.type) {
     case 'Add':
     case 'Update':
-      newState[action.label] = action.value
+      newState[action.label] = action.value;
       break;
 
     case 'Remove':

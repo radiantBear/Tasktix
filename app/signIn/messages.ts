@@ -1,9 +1,13 @@
 import { InputMessage } from '@/components/InputMessage';
-import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
+import {
+  validateUsername,
+  validateEmail,
+  validatePassword
+} from '@/lib/validate';
 
 export function getUsernameMessage(input: string): InputMessage {
-  if(input)
-    if(!validateUsername(input))
+  if (input)
+    if (!validateUsername(input))
       return {
         message: 'Username can only have letters, numbers, and underscores',
         color: 'danger'
@@ -20,10 +24,9 @@ export function getUsernameMessage(input: string): InputMessage {
     };
 }
 
-
 export function getEmailMessage(input: string): InputMessage {
-  if(input)
-    if(!validateEmail(input))
+  if (input)
+    if (!validateEmail(input))
       return {
         message: 'Please enter a valid email',
         color: 'danger'
@@ -40,16 +43,14 @@ export function getEmailMessage(input: string): InputMessage {
     };
 }
 
-
 export function getPasswordMessage(input: string): InputMessage {
-  if(input) {
+  if (input) {
     const passwordResult = validatePassword(input);
     return {
       message: `Password is ${passwordResult.strength}`,
       color: passwordResult.color
     };
-  }
-  else
+  } else
     return {
       message: `Password is required`,
       color: 'danger'

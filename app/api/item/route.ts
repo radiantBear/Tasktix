@@ -1,5 +1,8 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
-import { getIsListAssigneeBySection, getListBySectionId } from '@/lib/database/list';
+import {
+  getIsListAssigneeBySection,
+  getListBySectionId
+} from '@/lib/database/list';
 import { createListItem } from '@/lib/database/listItem';
 import ListItem from '@/lib/model/listItem';
 import { getUser } from '@/lib/session';
@@ -7,8 +10,7 @@ import { validateListItemName } from '@/lib/validate';
 
 export async function POST(request: Request) {
   const user = await getUser();
-  if(!user)
-    return ClientError.Unauthenticated('Not logged in');
+  if (!user) return ClientError.Unauthenticated('Not logged in');
 
   const requestBody = await request.json();
 
@@ -20,33 +22,32 @@ export async function POST(request: Request) {
   const expectedMs = requestBody.duration || null;
 
   const isMember = await getIsListAssigneeBySection(user.id, sectionId);
-  if(!isMember)
-    return ClientError.BadRequest('List not found');
+  if (!isMember) return ClientError.BadRequest('List not found');
 
   const list = await getListBySectionId(sectionId);
-  if(!list)
-    return ClientError.BadRequest('List not found');
-  
-  if(!name)
-    return ClientError.BadRequest('Item name is required');
-  if(!validateListItemName(name))
+  if (!list) return ClientError.BadRequest('List not found');
+
+  if (!name) return ClientError.BadRequest('Item name is required');
+  if (!validateListItemName(name))
     return ClientError.BadRequest('Invalid item name');
-  if(!dueDate && list.hasDueDates)
+  if (!dueDate && list.hasDueDates)
     return ClientError.BadRequest('Invalid due date');
-  if(!priority)
-    return ClientError.BadRequest('Invalid priority');
-  if(!sectionId)
-    return ClientError.BadRequest('Invalid section ID');
-  if(!sectionIndex && sectionIndex !== 0)
+  if (!priority) return ClientError.BadRequest('Invalid priority');
+  if (!sectionId) return ClientError.BadRequest('Invalid section ID');
+  if (!sectionIndex && sectionIndex !== 0)
     return ClientError.BadRequest('Invalid section Index');
-  if(!expectedMs && list.hasTimeTracking)
+  if (!expectedMs && list.hasTimeTracking)
     return ClientError.BadRequest('Invalid expected duration');
 
-  const listItem = new ListItem(name, { priority, expectedMs, sectionIndex, dateDue: dueDate });
+  const listItem = new ListItem(name, {
+    priority,
+    expectedMs,
+    sectionIndex,
+    dateDue: dueDate
+  });
 
   const result = await createListItem(sectionId, listItem);
 
-  if(!result)
-    return ServerError.Internal('Could not create item');
+  if (!result) return ServerError.Internal('Could not create item');
   return Success.Created('Item created', `/item/${listItem.id}`);
 }

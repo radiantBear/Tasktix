@@ -1,7 +1,11 @@
-import ListItemGroup from "@/components/ListItemGroup";
-import { getListMembersByUser, getListsByUser, getTagsByUser } from "@/lib/database/list";
-import { getListItemsByUser } from "@/lib/database/listItem";
-import { getUser } from "@/lib/session";
+import ListItemGroup from '@/components/ListItemGroup';
+import {
+  getListMembersByUser,
+  getListsByUser,
+  getTagsByUser
+} from '@/lib/database/list';
+import { getListItemsByUser } from '@/lib/database/listItem';
+import { getUser } from '@/lib/session';
 
 export default async function Page() {
   const user = await getUser();
@@ -13,7 +17,13 @@ export default async function Page() {
 
   return (
     <main className='p-8 w-full flex flex-col gap-8 overflow-y-scroll'>
-      <ListItemGroup startingLists={JSON.stringify(lists)} startingItems={JSON.stringify(items)} startingTags={JSON.stringify(tags)} members={JSON.stringify(members)} alternate="You're all caught up!" />
+      <ListItemGroup
+        startingLists={JSON.stringify(lists)}
+        startingItems={JSON.stringify(items)}
+        startingTags={JSON.stringify(tags)}
+        members={JSON.stringify(members)}
+        alternate="You're all caught up!"
+      />
     </main>
   );
 }

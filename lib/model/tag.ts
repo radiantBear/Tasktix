@@ -8,8 +8,7 @@ export default class Tag {
   color: NamedColor;
 
   constructor(name: string, color: NamedColor, id?: string) {
-    if(!id)
-      id = generateId();
+    if (!id) id = generateId();
 
     this.id = id;
     this.name = name;

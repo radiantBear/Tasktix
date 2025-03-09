@@ -1,6 +1,14 @@
 import { Success, ClientError, ServerError } from '@/lib/Response';
-import { validateUsername, validateEmail, validatePassword } from '@/lib/validate';
-import { createUser, getUserByUsername, getUserByEmail } from '@/lib/database/user';
+import {
+  validateUsername,
+  validateEmail,
+  validatePassword
+} from '@/lib/validate';
+import {
+  createUser,
+  getUserByUsername,
+  getUserByEmail
+} from '@/lib/database/user';
 import User from '@/lib/model/user';
 import { hash } from '@/lib/security/hash';
 
@@ -17,16 +25,16 @@ export async function POST(request: Request) {
     const email = requestBody.email;
     const password = requestBody.password;
 
-    if(!validateUsername(username))
+    if (!validateUsername(username))
       return ClientError.BadRequest('Invalid username');
-    if(!validateEmail(email))
+    if (!validateEmail(email))
       return ClientError.BadRequest('Invalid email address');
-    if(!validatePassword(password).valid)
+    if (!validatePassword(password).valid)
       return ClientError.BadRequest('Invalid password');
 
-    if(await getUserByUsername(username))
+    if (await getUserByUsername(username))
       return ClientError.BadRequest('Username unavailable');
-    if(await getUserByEmail(email))
+    if (await getUserByEmail(email))
       return ClientError.BadRequest('Another account already uses this email');
 
     const user = new User(
@@ -39,12 +47,11 @@ export async function POST(request: Request) {
     );
 
     let result = await createUser(user);
-    
-    if(!result)
-      return ServerError.Internal('Could not create user');
+
+    if (!result) return ServerError.Internal('Could not create user');
 
     return Success.Created('User Created', `/api/user/${user.id}`);
-  } catch(error: any) {
+  } catch (error: any) {
     return ServerError.Internal(error.toString());
   }
 }

@@ -3,8 +3,17 @@
 import Sidebar, { listReducer, ListContext } from '@/components/Sidebar';
 import { ReactNode, useReducer } from 'react';
 
-export default function LayoutClient({ startingLists, children }: { startingLists: string, children: ReactNode }) {
-  const [lists, dispatchEvent] = useReducer(listReducer, JSON.parse(startingLists));
+export default function LayoutClient({
+  startingLists,
+  children
+}: {
+  startingLists: string;
+  children: ReactNode;
+}) {
+  const [lists, dispatchEvent] = useReducer(
+    listReducer,
+    JSON.parse(startingLists)
+  );
 
   return (
     <ListContext.Provider value={dispatchEvent}>
