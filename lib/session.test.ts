@@ -1,9 +1,10 @@
-import { setUser, getUser, clearUser } from './session'; // Update with the actual file path
+import { cookies } from 'next/headers';
+
 import { createSession, deleteSession } from '@/lib/database/session';
 import { getUserBySessionId } from '@/lib/database/user';
-import { cookies } from 'next/headers';
 import User from '@/lib/model/user';
-import Session from './model/session';
+import Session from '@/lib/model/session';
+import { setUser, getUser, clearUser } from './session';
 
 jest.mock('@/lib/database/session');
 jest.mock('@/lib/database/user');

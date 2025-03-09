@@ -1,4 +1,4 @@
-import { generateId } from '@/lib/generateId';
+import { generateId } from './generateId';
 
 test('Generates a 16-character ID by default', () => {
   const result = generateId();

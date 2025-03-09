@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import api from '@/lib/api'; // Adjust the import path as needed
+import api from './api'; // Adjust the import path as needed
 
 function createFetchResponse(
   status: number,
