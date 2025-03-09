@@ -74,6 +74,11 @@ export function dateToInput(date: Date): string {
 
 export function parseTime(time: string): number {
   const timeParts = time.split(':');
+  
+  for (const part of timeParts) {
+    if (!Number.isInteger(Number(part)))
+      throw Error(`Invalid time to parse: ${time}`);
+  }
 
   if(timeParts.length == 3) {
     const [hours, minutes, seconds] = timeParts;
