@@ -32,7 +32,7 @@ export async function compare(
 
 function _hash(password: string, salt: BinaryLike): Promise<string> {
   return new Promise((resolve, reject) => {
-    scrypt(password, salt, 128, (err: any, key) => {
+    scrypt(password, salt, 128, (err, key) => {
       if (err) reject(err);
 
       resolve(key.toString('base64'));
