@@ -45,14 +45,10 @@ export function formatTime(time: number): string {
   let hours = (hoursMs / 3600000).toString();
   let minutes = (minsMs / 60000).toString();
 
-  if(hours.length < 1)
-    hours = '00';
-  else if(hours.length < 2)
+  if(hours.length < 2)
     hours = '0'+hours;
 
-  if(minutes.length < 1)
-    minutes = '00';
-  else if(minutes.length < 2)
+  if(minutes.length < 2)
     minutes = '0'+minutes;
 
   return `${hours}:${minutes}`;
