@@ -1,9 +1,9 @@
 export default class ServerError {
   static Internal(
     message: string,
-    content: string | undefined = undefined,
-    headers: HeadersInit | undefined = undefined
-  ) {
+    content?: string,
+    headers?: HeadersInit
+  ): Response {
     return Response.json(
       { message, content },
       { status: 500, statusText: 'Internal Server Error', headers: headers }
@@ -12,9 +12,9 @@ export default class ServerError {
 
   static BadGateway(
     message: string,
-    content: string | undefined = undefined,
-    headers: HeadersInit | undefined = undefined
-  ) {
+    content?: string,
+    headers?: HeadersInit
+  ): Response {
     return Response.json(
       { message, content },
       { status: 502, statusText: 'Bad Gateway', headers: headers }
