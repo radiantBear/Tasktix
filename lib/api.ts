@@ -9,7 +9,7 @@ export default {
     return request(resource, 'GET');
   },
 
-  post(resource: string, data: object, encodingType: string = 'application/json') {
+  post(resource: string, data: string|object, encodingType?: string) {
     return request(resource, 'POST', data, encodingType);
   },
 
@@ -17,9 +17,8 @@ export default {
     return request(resource, 'PUT', data, encodingType);
   },
 
-  patch(resource: string, data: string|object, encodingType: string = 'application/json') {
+  patch(resource: string, data: object, encodingType: string = 'application/json') {
     return request(resource, 'PATCH', data, encodingType);
-      
   },
 
   delete(resource: string) {
@@ -27,20 +26,25 @@ export default {
   }
 } as const;
 
-function request(resource: string, method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE', data: string|object|undefined = undefined, encodingType: string|undefined = undefined): Promise<ServerResponse> {
+function request(resource: string, method: 'GET'|'POST'|'PUT'|'PATCH'|'DELETE', data?: string|object, encodingType?: string): Promise<ServerResponse> {
   return new Promise(async function(resolve, reject) {
     try {
       let body: string|undefined;
-      if(typeof data === 'string')
+      if(typeof data === 'string') {
+        encodingType ??= 'text/plain';
         body = data;
+      }
       else if(data !== undefined) {
+        if (!encodingType)
+          encodingType = 'application/json';
+        
         if(encodingType === 'application/json')
           body = JSON.stringify(data);
         else
           throw Error(`Unknown encoding ${encodingType} for object parameter`);
       }
 
-      const options: any = {
+      const options: RequestInit = {
         method,
         body
       }
