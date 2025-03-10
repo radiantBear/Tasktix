@@ -1,6 +1,5 @@
 import { generateId } from '@/lib/generateId';
 import ListMember from './listMember';
-import { mergeListItems } from './listItem';
 import ListSection from './listSection';
 import { NamedColor } from './color';
 
@@ -35,39 +34,4 @@ export default class List {
     this.members = members;
     this.sections = sections;
   }
-}
-
-export function mergeLists(original: List[]): List[] {
-  const accumulator: List[] = [];
-
-  for (const current of original) {
-    const last = accumulator.at(-1);
-
-    if (last?.id == current.id) {
-      // Merge new data into list
-
-      // Add any new members
-      last?.members.push(...current.members);
-      if (last)
-        last.members = last.members.filter(
-          (item: ListMember, index: number, arr: ListMember[]) =>
-            arr.findIndex(_item => _item.user.id == item.user.id) == index
-        );
-
-      const lastSection = last?.sections.at(-1);
-      if (lastSection && lastSection?.id == current.sections.at(0)?.id) {
-        // Merge new data into list section
-        lastSection.items = mergeListItems([
-          ...(lastSection?.items || []),
-          ...(current.sections.at(0)?.items || [])
-        ]);
-      }
-      // Add new list section
-      else last?.sections.push(...current.sections);
-    }
-    // Add new list
-    else accumulator.push(current);
-  }
-
-  return accumulator;
 }

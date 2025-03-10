@@ -1,6 +1,8 @@
 import ListItem, { Priority, Status } from '@/lib/model/listItem';
 import { DB_Assignee, extractAssigneeFromRow } from './assignee';
 import { DB_Tag, extractTagFromRow } from './tag';
+import Assignee from '@/lib/model/assignee';
+import Tag from '@/lib/model/tag';
 
 export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_id: string;
@@ -43,4 +45,28 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
   });
 
   return listItem;
+}
+
+export function mergeListItems(original: ListItem[]): ListItem[] {
+  const accumulator: ListItem[] = [];
+
+  for (const item of original) {
+    if (accumulator.at(-1)?.id == item.id) {
+      accumulator.at(-1)?.assignees.push(...item.assignees);
+      accumulator
+        .at(-1)
+        ?.assignees.filter(
+          (item: Assignee, index: number, arr: Assignee[]) =>
+            arr.indexOf(item) == index
+        );
+      accumulator.at(-1)?.tags.push(...item.tags);
+      accumulator
+        .at(-1)
+        ?.tags.filter(
+          (item: Tag, index: number, arr: Tag[]) => arr.indexOf(item) == index
+        );
+    } else accumulator.push(item);
+  }
+
+  return accumulator;
 }

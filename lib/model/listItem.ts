@@ -79,27 +79,3 @@ export default class ListItem {
     this.sectionId = sectionId;
   }
 }
-
-export function mergeListItems(original: ListItem[]): ListItem[] {
-  const accumulator: ListItem[] = [];
-
-  for (const item of original) {
-    if (accumulator.at(-1)?.id == item.id) {
-      accumulator.at(-1)?.assignees.push(...item.assignees);
-      accumulator
-        .at(-1)
-        ?.assignees.filter(
-          (item: Assignee, index: number, arr: Assignee[]) =>
-            arr.indexOf(item) == index
-        );
-      accumulator.at(-1)?.tags.push(...item.tags);
-      accumulator
-        .at(-1)
-        ?.tags.filter(
-          (item: Tag, index: number, arr: Tag[]) => arr.indexOf(item) == index
-        );
-    } else accumulator.push(item);
-  }
-
-  return accumulator;
-}

@@ -2,6 +2,8 @@ import { NamedColor } from '@/lib/model/color';
 import List from '@/lib/model/list';
 import { DB_ListSection, extractListSectionFromRow } from './listSection';
 import { DB_ListMember, extractListMemberFromRow } from './listMember';
+import ListMember from '@/lib/model/listMember';
+import { mergeListItems } from './listItem';
 
 export interface DB_List extends DB_ListMember, DB_ListSection {
   l_id: string;
@@ -30,4 +32,39 @@ export function extractListFromRow(row: DB_List): List {
   list.id = row.l_id;
 
   return list;
+}
+
+export function mergeLists(original: List[]): List[] {
+  const accumulator: List[] = [];
+
+  for (const current of original) {
+    const last = accumulator.at(-1);
+
+    if (last?.id == current.id) {
+      // Merge new data into list
+
+      // Add any new members
+      last?.members.push(...current.members);
+      if (last)
+        last.members = last.members.filter(
+          (item: ListMember, index: number, arr: ListMember[]) =>
+            arr.findIndex(_item => _item.user.id == item.user.id) == index
+        );
+
+      const lastSection = last?.sections.at(-1);
+      if (lastSection && lastSection?.id == current.sections.at(0)?.id) {
+        // Merge new data into list section
+        lastSection.items = mergeListItems([
+          ...(lastSection?.items || []),
+          ...(current.sections.at(0)?.items || [])
+        ]);
+      }
+      // Add new list section
+      else last?.sections.push(...current.sections);
+    }
+    // Add new list
+    else accumulator.push(current);
+  }
+
+  return accumulator;
 }

@@ -1,8 +1,12 @@
 'use server';
 
-import ListItem, { mergeListItems } from '@/lib/model/listItem';
+import ListItem from '@/lib/model/listItem';
 import { execute, query } from './db_connect';
-import { DB_ListItem, extractListItemFromRow } from './model/listItem';
+import {
+  DB_ListItem,
+  extractListItemFromRow,
+  mergeListItems
+} from './model/listItem';
 
 export async function createListItem(
   sectionId: string,

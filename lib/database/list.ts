@@ -1,10 +1,10 @@
 'use server';
 
 import ListMember from '@/lib/model/listMember';
-import List, { mergeLists } from '@/lib/model/list';
+import List from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
 import { execute, query } from './db_connect';
-import { DB_List, extractListFromRow } from './model/list';
+import { DB_List, extractListFromRow, mergeLists } from './model/list';
 import { extractListMemberFromRow } from './model/listMember';
 import { DB_Tag, extractTagFromRow } from './model/tag';
 
