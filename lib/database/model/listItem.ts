@@ -47,26 +47,21 @@ export function extractListItemFromRow(row: DB_ListItem): ListItem {
   return listItem;
 }
 
-export function mergeListItems(original: ListItem[]): ListItem[] {
-  const accumulator: ListItem[] = [];
+// Expects list items to be sorted by item ID, then assignee user ID and tag ID
+export function extractListItemsFromRows(rows: DB_ListItem[]): ListItem[] {
+  const listItems: ListItem[] = [];
 
-  for (const item of original) {
-    if (accumulator.at(-1)?.id == item.id) {
-      accumulator.at(-1)?.assignees.push(...item.assignees);
-      accumulator
-        .at(-1)
-        ?.assignees.filter(
-          (item: Assignee, index: number, arr: Assignee[]) =>
-            arr.indexOf(item) == index
-        );
-      accumulator.at(-1)?.tags.push(...item.tags);
-      accumulator
-        .at(-1)
-        ?.tags.filter(
-          (item: Tag, index: number, arr: Tag[]) => arr.indexOf(item) == index
-        );
-    } else accumulator.push(item);
+  for (const item of rows) {
+    const lastItem = listItems.at(-1);
+    if (lastItem?.id == item.i_id) {
+      if (lastItem?.assignees.at(-1)?.user.id != item.ia_u_id)
+        lastItem?.assignees.push(extractAssigneeFromRow(item));
+      if (lastItem?.tags.at(-1)?.id != item.t_id)
+        lastItem?.tags.push(extractTagFromRow(item));
+    } else {
+      listItems.push(extractListItemFromRow(item));
+    }
   }
 
-  return accumulator;
+  return listItems;
 }

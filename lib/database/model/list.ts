@@ -2,8 +2,7 @@ import { NamedColor } from '@/lib/model/color';
 import List from '@/lib/model/list';
 import { DB_ListSection, extractListSectionFromRow } from './listSection';
 import { DB_ListMember, extractListMemberFromRow } from './listMember';
-import ListMember from '@/lib/model/listMember';
-import { mergeListItems } from './listItem';
+import { extractListItemFromRow } from './listItem';
 
 export interface DB_List extends DB_ListMember, DB_ListSection {
   l_id: string;
@@ -34,37 +33,25 @@ export function extractListFromRow(row: DB_List): List {
   return list;
 }
 
-export function mergeLists(original: List[]): List[] {
-  const accumulator: List[] = [];
+// Expects lists to be sorted by list ID, then list member user ID and list section ID
+export function extractListsFromRows(rows: DB_List[]): List[] {
+  const lists: List[] = [];
 
-  for (const current of original) {
-    const last = accumulator.at(-1);
+  for (const current of rows) {
+    const last = lists.at(-1);
 
     if (last?.id == current.id) {
-      // Merge new data into list
+      if (last?.members.at(-1)?.user.id != current.lm_u_id)
+        last?.members.push(extractListMemberFromRow(current));
 
-      // Add any new members
-      last?.members.push(...current.members);
-      if (last)
-        last.members = last.members.filter(
-          (item: ListMember, index: number, arr: ListMember[]) =>
-            arr.findIndex(_item => _item.user.id == item.user.id) == index
-        );
-
-      const lastSection = last?.sections.at(-1);
-      if (lastSection && lastSection?.id == current.sections.at(0)?.id) {
-        // Merge new data into list section
-        lastSection.items = mergeListItems([
-          ...(lastSection?.items || []),
-          ...(current.sections.at(0)?.items || [])
-        ]);
-      }
-      // Add new list section
-      else last?.sections.push(...current.sections);
+      if (last?.sections.at(-1)?.id != current.ls_id)
+        last?.sections.push(extractListSectionFromRow(current));
+      else if (last?.sections.at(-1)?.items.at(-1)?.id != current.i_id)
+        last.sections.at(-1)?.items.push(extractListItemFromRow(current));
+    } else {
+      lists.push(extractListFromRow(current));
     }
-    // Add new list
-    else accumulator.push(current);
   }
 
-  return accumulator;
+  return lists;
 }

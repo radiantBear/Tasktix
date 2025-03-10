@@ -2,11 +2,7 @@
 
 import ListItem from '@/lib/model/listItem';
 import { execute, query } from './db_connect';
-import {
-  DB_ListItem,
-  extractListItemFromRow,
-  mergeListItems
-} from './model/listItem';
+import { DB_ListItem, extractListItemsFromRows } from './model/listItem';
 
 export async function createListItem(
   sectionId: string,
@@ -68,7 +64,7 @@ export async function getListItemById(id: string): Promise<ListItem | false> {
 
   if (!result) return false;
 
-  return mergeListItems(result.map(extractListItemFromRow))[0];
+  return extractListItemsFromRows(result)[0];
 }
 
 export async function getListItemsByUser(
@@ -90,7 +86,7 @@ export async function getListItemsByUser(
 
   if (!result) return false;
 
-  return mergeListItems(result.map(extractListItemFromRow));
+  return extractListItemsFromRows(result);
 }
 
 export async function linkTag(itemId: string, tagId: string): Promise<boolean> {

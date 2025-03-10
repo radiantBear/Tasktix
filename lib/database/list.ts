@@ -4,7 +4,7 @@ import ListMember from '@/lib/model/listMember';
 import List from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
 import { execute, query } from './db_connect';
-import { DB_List, extractListFromRow, mergeLists } from './model/list';
+import { DB_List, extractListsFromRows } from './model/list';
 import { extractListMemberFromRow } from './model/listMember';
 import { DB_Tag, extractTagFromRow } from './model/tag';
 
@@ -87,7 +87,7 @@ export async function getListById(id: string): Promise<List | false> {
 
   if (!result) return false;
 
-  return mergeLists(result.map(extractListFromRow))[0];
+  return extractListsFromRows(result)[0];
 }
 
 export async function getListBySectionId(id: string): Promise<List | false> {
@@ -111,7 +111,7 @@ export async function getListBySectionId(id: string): Promise<List | false> {
 
   if (!result) return false;
 
-  return mergeLists(result.map(extractListFromRow))[0];
+  return extractListsFromRows(result)[0];
 }
 
 export async function getListsByUser(id: string): Promise<List[] | false> {
@@ -126,7 +126,7 @@ export async function getListsByUser(id: string): Promise<List[] | false> {
 
   if (!result) return false;
 
-  return mergeLists(result.map(extractListFromRow));
+  return extractListsFromRows(result);
 }
 
 export async function getListMembersByUser(
