@@ -4,7 +4,12 @@ import ListMember from '@/lib/model/listMember';
 import List from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
 import { execute, query } from './db_connect';
-import { DB_List, extractListsFromRows } from './model/list';
+import {
+  DB_BareList,
+  DB_List,
+  extractBareListFromRow,
+  extractListsFromRows
+} from './model/list';
 import { extractListMemberFromRow } from './model/listMember';
 import { DB_Tag, extractTagFromRow } from './model/tag';
 
@@ -116,17 +121,17 @@ export async function getListBySectionId(id: string): Promise<List | false> {
 
 export async function getListsByUser(id: string): Promise<List[] | false> {
   const sql = `
-    SELECT * FROM \`lists\`
+    SELECT \`lists\`.* FROM \`lists\`
     INNER JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
     WHERE \`listMembers\`.\`lm_u_id\` = :id
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
 
-  const result = await query<DB_List>(sql, { id });
+  const result = await query<DB_BareList>(sql, { id });
 
   if (!result) return false;
 
-  return extractListsFromRows(result);
+  return result.map(extractBareListFromRow);
 }
 
 export async function getListMembersByUser(
@@ -134,6 +139,8 @@ export async function getListMembersByUser(
 ): Promise<{ [id: string]: ListMember[] } | false> {
   const sql = `
     SELECT * FROM \`lists\`
+      LEFT JOIN \`listMembers\` ON \`listMembers\`.\`lm_l_id\` = \`lists\`.\`l_id\`
+      LEFT JOIN \`listSections\` ON \`listSections\`.\`ls_l_id\` = \`lists\`.\`l_id\`
     WHERE \`lists\`.\`l_id\` IN (
       SELECT \`listMembers\`.\`lm_l_id\` FROM \`listMembers\`
       WHERE \`listMembers\`.\`lm_u_id\` = :userId
@@ -167,7 +174,7 @@ export async function getIsListAssignee(
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
 
-  const result = await query<DB_List>(sql, { userId, listId });
+  const result = await query<DB_BareList>(sql, { userId, listId });
 
   return !!(result && result.length);
 }
@@ -233,7 +240,7 @@ export async function getTagsByUser(
     ORDER BY \`lists\`.\`l_id\` ASC, \`tags\`.\`t_name\` ASC;
   `;
 
-  const result = await query<DB_List>(sql, { userId });
+  const result = await query<DB_Tag>(sql, { userId });
 
   if (!result) return false;
 
