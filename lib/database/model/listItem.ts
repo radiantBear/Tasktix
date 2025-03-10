@@ -1,8 +1,6 @@
 import ListItem, { Priority, Status } from '@/lib/model/listItem';
 import { DB_Assignee, extractAssigneeFromRow } from './assignee';
 import { DB_Tag, extractTagFromRow } from './tag';
-import Assignee from '@/lib/model/assignee';
-import Tag from '@/lib/model/tag';
 
 export interface DB_ListItem extends DB_Assignee, DB_Tag {
   i_id: string;

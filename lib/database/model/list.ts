@@ -59,12 +59,12 @@ export function extractListsFromRows(rows: DB_List[]): List[] {
     const last = lists.at(-1);
 
     if (last?.id == list.l_id) {
-      if (last?.members.at(-1)?.user.id != list.lm_u_id)
-        last?.members.push(extractListMemberFromRow(list));
+      if (last.members.at(-1)?.user.id != list.lm_u_id)
+        last.members.push(extractListMemberFromRow(list));
 
-      if (last?.sections.at(-1)?.id != list.ls_id)
-        last?.sections.push(extractListSectionFromRow(list));
-      else if (last?.sections.at(-1)?.items.at(-1)?.id != list.i_id)
+      if (last.sections.at(-1)?.id != list.ls_id)
+        last.sections.push(extractListSectionFromRow(list));
+      else if (last.sections.at(-1)?.items.at(-1)?.id != list.i_id)
         last.sections.at(-1)?.items.push(extractListItemFromRow(list));
     } else {
       lists.push(extractListFromRow(list));
