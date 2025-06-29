@@ -5,9 +5,8 @@ import List from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
 import { execute, query } from './db_connect';
 import {
-  DB_BareList,
   DB_List,
-  extractBareListFromRow,
+  extractListFromRow,
   extractListsFromRows
 } from './model/list';
 import { extractListMemberFromRow } from './model/listMember';
@@ -127,11 +126,11 @@ export async function getListsByUser(id: string): Promise<List[] | false> {
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
 
-  const result = await query<DB_BareList>(sql, { id });
+  const result = await query<DB_List>(sql, { id });
 
   if (!result) return false;
 
-  return result.map(extractBareListFromRow);
+  return result.map(extractListFromRow);
 }
 
 export async function getListMembersByUser(
@@ -174,7 +173,7 @@ export async function getIsListAssignee(
     ORDER BY \`lists\`.\`l_name\` ASC;
   `;
 
-  const result = await query<DB_BareList>(sql, { userId, listId });
+  const result = await query<DB_List>(sql, { userId, listId });
 
   return !!(result && result.length);
 }

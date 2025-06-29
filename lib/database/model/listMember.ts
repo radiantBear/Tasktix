@@ -17,6 +17,6 @@ export function extractListMemberFromRow(row: DB_ListMember): ListMember {
     row.lm_canAdd,
     row.lm_canRemove,
     row.lm_canComplete,
-    row.lm_canRemove
+    row.lm_canAssign
   );
 }
