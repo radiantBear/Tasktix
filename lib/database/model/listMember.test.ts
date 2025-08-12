@@ -1,6 +1,7 @@
-import { DB_ListMember, extractListMemberFromRow } from './listMember';
 import ListMember from '@/lib/model/listMember';
 import User from '@/lib/model/user';
+
+import { DB_ListMember, extractListMemberFromRow } from './listMember';
 
 describe('extractListMemberFromRow', () => {
   test('Accurately extracts list member from row data', () => {

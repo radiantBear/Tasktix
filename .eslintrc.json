@@ -38,8 +38,7 @@
     "no-console": "error",
     "react/prop-types": "off", // Using TypeScript for type checking
     "react/react-in-jsx-scope": "off", // Not needed with React 17+
-    "jsx-a11y/click-events-have-key-events": "error",
-    "jsx-a11y/interactive-supports-focus": "error",
+    "jsx-a11y/no-autofocus": "warn",
     "prettier/prettier": "error",
     "no-unused-vars": "off",
     "unused-imports/no-unused-vars": "off",

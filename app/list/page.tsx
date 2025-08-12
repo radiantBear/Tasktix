@@ -18,11 +18,11 @@ export default async function Page() {
   return (
     <main className='p-8 w-full flex flex-col gap-8 overflow-y-scroll'>
       <ListItemGroup
-        startingLists={JSON.stringify(lists)}
-        startingItems={JSON.stringify(items)}
-        startingTags={JSON.stringify(tags)}
-        members={JSON.stringify(members)}
         alternate="You're all caught up!"
+        members={JSON.stringify(members)}
+        startingItems={JSON.stringify(items)}
+        startingLists={JSON.stringify(lists)}
+        startingTags={JSON.stringify(tags)}
       />
     </main>
   );

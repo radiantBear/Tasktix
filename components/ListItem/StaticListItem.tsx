@@ -2,16 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Checkbox, Chip } from '@nextui-org/react';
 import { DragControls } from 'framer-motion';
 import { CardChecklist, GripVertical } from 'react-bootstrap-icons';
-import DateInput from '../DateInput';
-import { addSnackbar } from '../Snackbar';
-import ExpectedInput from './ExpectedInput';
-import ElapsedInput from './ElapsedInput';
-import More from './More';
-import Name from '../Name';
-import Priority from './Priority';
-import Tags from './Tags';
-import TimeButton from './TimeButton';
-import Users from './Users';
+import Link from 'next/link';
+
 import { default as api } from '@/lib/api';
 import { formatDate } from '@/lib/date';
 import { NamedColor } from '@/lib/model/color';
@@ -20,7 +12,18 @@ import ListMember from '@/lib/model/listMember';
 import Tag from '@/lib/model/tag';
 import List from '@/lib/model/list';
 import { getBackgroundColor, getTextColor } from '@/lib/color';
-import Link from 'next/link';
+
+import DateInput from '../DateInput';
+import { addSnackbar } from '../Snackbar';
+import Name from '../Name';
+
+import ExpectedInput from './ExpectedInput';
+import ElapsedInput from './ElapsedInput';
+import More from './More';
+import Priority from './Priority';
+import Tags from './Tags';
+import TimeButton from './TimeButton';
+import Users from './Users';
 
 interface StaticListItemParams {
   item: ListItemModel;
@@ -74,6 +77,7 @@ export default function StaticListItem({
 }: StaticListItemParams) {
   const minute = 1000 * 60;
   const today = new Date();
+
   today.setHours(0, 0, 0, 0);
 
   const timer = useRef<NodeJS.Timeout>();
@@ -99,6 +103,7 @@ export default function StaticListItem({
         .then(() => {
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.name = name;
           _setItem(newItem);
         })
@@ -111,6 +116,7 @@ export default function StaticListItem({
         .then(() => {
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.dateDue = date;
           _setItem(newItem);
 
@@ -126,6 +132,7 @@ export default function StaticListItem({
         .then(() => {
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.priority = priority;
           _setItem(newItem);
 
@@ -141,6 +148,7 @@ export default function StaticListItem({
         .then(() => {
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.status = 'Paused';
           newItem.dateCompleted = null;
           _setItem(newItem);
@@ -172,6 +180,7 @@ export default function StaticListItem({
 
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.status = 'Completed';
           newItem.dateCompleted = dateCompleted;
           _setItem(newItem);
@@ -188,6 +197,7 @@ export default function StaticListItem({
         .then(() => {
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.expectedMs = ms;
           _setItem(newItem);
 
@@ -199,6 +209,7 @@ export default function StaticListItem({
 
     startedRunning: () => {
       const startedDate = new Date();
+
       api
         .patch(`/item/${_item.id}`, {
           dateStarted: startedDate,
@@ -215,6 +226,7 @@ export default function StaticListItem({
 
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.status = 'In Progress';
           _setItem(newItem);
 
@@ -227,6 +239,7 @@ export default function StaticListItem({
     pausedRunning: () => {
       const newElapsed =
         elapsedLive + (Date.now() - lastTime.current.getTime());
+
       api
         .patch(`/item/${_item.id}`, {
           dateStarted: null,
@@ -241,6 +254,7 @@ export default function StaticListItem({
 
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.status = 'Paused';
           _setItem(newItem);
 
@@ -252,6 +266,7 @@ export default function StaticListItem({
 
     resetTime: () => {
       const status = _item.status == 'Completed' ? 'Completed' : 'Unstarted';
+
       api
         .patch(`/item/${_item.id}`, { dateStarted: null, status, elapsedMs: 0 })
         .then(() => {
@@ -262,6 +277,7 @@ export default function StaticListItem({
 
           // Update the internal state
           const newItem = structuredClone(_item);
+
           newItem.status = status;
           _setItem(newItem);
 
@@ -279,6 +295,7 @@ export default function StaticListItem({
           const newTags = structuredClone(tags);
 
           const tag = tagsAvailable?.find(tag => tag.id == id);
+
           if (!tag) throw Error('Could not find tag with id ' + id);
 
           newTags.push(new Tag(tag.name, tag.color, id));
@@ -294,6 +311,7 @@ export default function StaticListItem({
         .then(() => {
           // Update the internal state
           const newTags = structuredClone(tags);
+
           for (let i = 0; i < newTags.length; i++)
             if (newTags[i].id == id) newTags.splice(i, 1);
           setTags(newTags);
@@ -350,11 +368,11 @@ export default function StaticListItem({
       <span className='flex gap-4 items-center justify-between w-2/5'>
         {reorderControls ? (
           <div
+            className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}
             onPointerDown={e => {
               e.preventDefault();
               if (_item.status != 'Completed') reorderControls.start(e);
             }}
-            className={`px-1 py-2 -mx-3 rounded-lg ${_item.status == 'Completed' ? 'text-foreground/20' : 'text-foreground/50 cursor-grab'} text-lg`}
           >
             <GripVertical />
           </div>
@@ -363,12 +381,12 @@ export default function StaticListItem({
         )}
 
         <Checkbox
-          tabIndex={0}
+          className='-mr-3'
           isSelected={_item.status == 'Completed'}
+          tabIndex={0}
           onChange={e => {
             e.target.checked ? set.complete() : set.incomplete();
           }}
-          className='-mr-3'
         />
 
         <span className='flex gap-4 items-center justify-start grow flex-wrap'>
@@ -380,9 +398,9 @@ export default function StaticListItem({
             ) : (
               <span className={`-ml-1 flex ${hasDueDates || 'mt-1'}`}>
                 <Name
+                  className='shrink'
                   name={_item.name}
                   updateName={set.name}
-                  className='shrink'
                 />
               </span>
             )}
@@ -395,6 +413,7 @@ export default function StaticListItem({
               </span>
             ) : hasDueDates ? (
               <DateInput
+                className='h-fit'
                 color={
                   _item.dateDue && _item.dateDue < today
                     ? 'danger'
@@ -407,7 +426,6 @@ export default function StaticListItem({
                 }
                 value={_item.dateDue || new Date()}
                 onValueChange={set.dueDate}
-                className='h-fit'
               />
             ) : (
               <></>
@@ -417,10 +435,10 @@ export default function StaticListItem({
           {list && (
             <Link href={`/list/${list.id}`}>
               <Chip
+                className={`p-2 ${getBackgroundColor(list.color)}/20 ${getTextColor(list.color)}`}
+                size='sm'
                 startContent={<CardChecklist className='mx-1' />}
                 variant='flat'
-                size='sm'
-                className={`p-2 ${getBackgroundColor(list.color)}/20 ${getTextColor(list.color)}`}
               >
                 {list.name}
               </Chip>
@@ -436,21 +454,21 @@ export default function StaticListItem({
         />
 
         <Tags
+          addNewTag={addNewTag}
+          className='hidden lg:flex'
+          isComplete={_item.status == 'Completed'}
+          linkTag={set.linkedTag}
           tags={tagsAvailable.filter(tag => tags.find(t => tag.id == t.id))}
           tagsAvailable={tagsAvailable}
-          isComplete={_item.status == 'Completed'}
-          addNewTag={addNewTag}
-          linkTag={set.linkedTag}
           unlinkTag={set.unlinkedTag}
-          className='hidden lg:flex'
         />
 
         {members.length > 1 ? (
           <Users
-            itemId={_item.id}
             assignees={_item.assignees}
-            members={members}
             isComplete={_item.status == 'Completed'}
+            itemId={_item.id}
+            members={members}
           />
         ) : (
           <></>
@@ -463,21 +481,21 @@ export default function StaticListItem({
                 className={`flex gap-4 ${_item.status == 'Completed' ? 'opacity-50' : ''}`}
               >
                 <ExpectedInput
-                  ms={_item.expectedMs}
                   disabled={_item.status == 'Completed'}
+                  ms={_item.expectedMs}
                   updateMs={set.expectedMs}
                 />
-                <span className='border-r-1 border-content3'></span>
+                <span className='border-r-1 border-content3' />
                 <ElapsedInput
-                  ms={elapsedLive}
                   disabled={_item.status == 'Completed'}
+                  ms={elapsedLive}
                   resetTime={set.resetTime}
                 />
               </span>
               <TimeButton
-                status={_item.status}
-                startRunning={set.startedRunning}
                 pauseRunning={set.pausedRunning}
+                startRunning={set.startedRunning}
+                status={_item.status}
               />
             </span>
           ) : (
@@ -485,15 +503,15 @@ export default function StaticListItem({
           )}
 
           <More
-            item={_item}
-            tags={tags}
-            tagsAvailable={tagsAvailable}
-            members={members}
+            addNewTag={addNewTag}
+            elapsedLive={elapsedLive}
             hasDueDates={hasDueDates}
             hasTimeTracking={hasTimeTracking}
-            elapsedLive={elapsedLive}
+            item={_item}
+            members={members}
             set={set}
-            addNewTag={addNewTag}
+            tags={tags}
+            tagsAvailable={tagsAvailable}
           />
         </span>
       </span>

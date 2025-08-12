@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+
 import {
   getIsListAssignee,
   getListById,
@@ -5,15 +7,16 @@ import {
 } from '@/lib/database/list';
 import List from '@/components/List';
 import { getUser } from '@/lib/session';
-import { redirect } from 'next/navigation';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const list = await getListById(params.id);
   const tagsAvailable = await getTagsByListId(params.id);
 
   const user = await getUser();
+
   if (!list || !user) redirect('/user');
   const isMember = await getIsListAssignee(user.id, list.id);
+
   if (!isMember) redirect('/user');
 
   return (

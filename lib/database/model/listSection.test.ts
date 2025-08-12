@@ -1,9 +1,10 @@
-import { DB_ListSection, extractListSectionFromRow } from './listSection';
 import Assignee from '@/lib/model/assignee';
 import ListItem from '@/lib/model/listItem';
 import ListSection from '@/lib/model/listSection';
 import Tag from '@/lib/model/tag';
 import User from '@/lib/model/user';
+
+import { DB_ListSection, extractListSectionFromRow } from './listSection';
 
 describe('extractListSectionFromRow', () => {
   test('Accurately extracts list section from row data', () => {

@@ -8,18 +8,21 @@ import {
   useDisclosure
 } from '@nextui-org/react';
 import { ThreeDots, TrashFill } from 'react-bootstrap-icons';
+
+import { NamedColor } from '@/lib/model/color';
+import ListItem from '@/lib/model/listItem';
+import Tag from '@/lib/model/tag';
+import ListMember from '@/lib/model/listMember';
+
 import DateInput2 from '../DateInput2';
 import Name from '../Name';
+
 import Priority from './Priority';
 import Tags from './Tags';
 import Users from './Users';
 import ExpectedInput from './ExpectedInput';
 import ElapsedInput from './ElapsedInput';
 import TimeButton from './TimeButton';
-import { NamedColor } from '@/lib/model/color';
-import ListItem from '@/lib/model/listItem';
-import Tag from '@/lib/model/tag';
-import ListMember from '@/lib/model/listMember';
 
 interface SetItem {
   name: (name: string) => void;
@@ -63,7 +66,7 @@ export default function More({
 
   return (
     <>
-      <Button onPress={onOpen} variant='ghost' isIconOnly>
+      <Button isIconOnly variant='ghost' onPress={onOpen}>
         <ThreeDots />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -75,8 +78,8 @@ export default function More({
               <ModalBody className='gap-4 py-4'>
                 <div className='flex gap-4 items-center'>
                   <Checkbox
-                    tabIndex={0}
                     isSelected={isComplete}
+                    tabIndex={0}
                     onChange={e => {
                       e.target.checked ? set.complete() : set.incomplete();
                     }}
@@ -84,29 +87,29 @@ export default function More({
                   <span className='flex grow'>
                     <Name
                       showLabel
+                      disabled={isComplete}
                       name={item.name}
                       updateName={set.name}
-                      disabled={isComplete}
                     />
                   </span>
                 </div>
                 <div className='flex gap-4 items-center'>
                   <Priority
+                    className='w-full'
                     isComplete={isComplete}
                     priority={item.priority}
-                    wrapperClassName='!my-0 w-1/2'
-                    className='w-full'
                     setPriority={set.priority}
+                    wrapperClassName='!my-0 w-1/2'
                   />
                   {hasDueDates ? (
                     <DateInput2
+                      className='w-1/2'
+                      color='primary'
                       disabled={isComplete}
                       label='Due date'
                       value={item.dateDue || undefined}
-                      onValueChange={set.dueDate}
-                      color='primary'
                       variant='underlined'
-                      className='w-1/2'
+                      onValueChange={set.dueDate}
                     />
                   ) : (
                     <></>
@@ -114,22 +117,22 @@ export default function More({
                 </div>
 
                 <Tags
+                  addNewTag={addNewTag}
+                  className='py-2'
+                  isComplete={item.status == 'Completed'}
+                  linkTag={set.linkedTag}
                   tags={tags}
                   tagsAvailable={tagsAvailable}
-                  isComplete={item.status == 'Completed'}
-                  addNewTag={addNewTag}
-                  linkTag={set.linkedTag}
                   unlinkTag={set.unlinkedTag}
-                  className='py-2'
                 />
 
                 {members.length > 1 ? (
                   <Users
-                    itemId={item.id}
                     assignees={item.assignees}
-                    members={members}
-                    isComplete={isComplete}
                     className='py-2'
+                    isComplete={isComplete}
+                    itemId={item.id}
+                    members={members}
                   />
                 ) : (
                   <></>
@@ -142,33 +145,33 @@ export default function More({
                         className={`flex gap-6 ${isComplete ? 'opacity-50' : ''}`}
                       >
                         <ExpectedInput
-                          ms={item.expectedMs}
                           disabled={isComplete}
+                          ms={item.expectedMs}
                           updateMs={set.expectedMs}
                         />
-                        <span className='border-r-1 border-content3'></span>
+                        <span className='border-r-1 border-content3' />
                         <ElapsedInput
-                          ms={elapsedLive}
                           disabled={isComplete}
+                          ms={elapsedLive}
                           resetTime={set.resetTime}
                         />
                       </span>
                       <TimeButton
-                        status={item.status}
-                        startRunning={set.startedRunning}
                         pauseRunning={set.pausedRunning}
+                        startRunning={set.startedRunning}
+                        status={item.status}
                       />
                     </>
                   ) : (
                     <></>
                   )}
                   <Button
+                    color='danger'
+                    variant='ghost'
                     onPress={() => {
                       onClose();
                       set.deleted();
                     }}
-                    variant='ghost'
-                    color='danger'
                   >
                     <TrashFill />
                     Delete

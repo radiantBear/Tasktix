@@ -1,9 +1,11 @@
 import * as crypto from 'crypto';
+
 import { hash, compare } from './hash';
 
 // Allow mocking methods for testing response on failure
 jest.mock('crypto', () => {
   const actualCrypto = jest.requireActual('crypto');
+
   return {
     ...actualCrypto,
     randomFill: jest.fn(),
@@ -13,6 +15,7 @@ jest.mock('crypto', () => {
 
 beforeEach(() => {
   const actualCrypto = jest.requireActual('crypto');
+
   (crypto.randomFill as jest.Mock).mockImplementation(actualCrypto.randomFill);
   (crypto.scrypt as jest.Mock).mockImplementation(actualCrypto.scrypt);
 });

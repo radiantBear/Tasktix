@@ -46,6 +46,7 @@ export function getEmailMessage(input: string): InputMessage {
 export function getPasswordMessage(input: string): InputMessage {
   if (input) {
     const passwordResult = validatePassword(input);
+
     return {
       message: `Password is ${passwordResult.strength}`,
       color: passwordResult.color

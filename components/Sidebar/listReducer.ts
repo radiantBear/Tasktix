@@ -1,4 +1,5 @@
 import List from '@/lib/model/list';
+
 import { Action } from './types';
 
 export default function listReducer(lists: List[], action: Action) {
@@ -6,6 +7,7 @@ export default function listReducer(lists: List[], action: Action) {
     case 'add':
       if (!action.name || !action.color)
         throw Error('Missing required action parameters');
+
       return [
         ...lists,
         new List(action.name, action.color, [], [], true, true, true, action.id)

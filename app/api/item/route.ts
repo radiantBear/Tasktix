@@ -10,6 +10,7 @@ import { validateListItemName } from '@/lib/validate';
 
 export async function POST(request: Request) {
   const user = await getUser();
+
   if (!user) return ClientError.Unauthenticated('Not logged in');
 
   const requestBody = await request.json();
@@ -22,9 +23,11 @@ export async function POST(request: Request) {
   const expectedMs = requestBody.duration || null;
 
   const isMember = await getIsListAssigneeBySection(user.id, sectionId);
+
   if (!isMember) return ClientError.BadRequest('List not found');
 
   const list = await getListBySectionId(sectionId);
+
   if (!list) return ClientError.BadRequest('List not found');
 
   if (!name) return ClientError.BadRequest('Item name is required');
@@ -49,5 +52,6 @@ export async function POST(request: Request) {
   const result = await createListItem(sectionId, listItem);
 
   if (!result) return ServerError.Internal('Could not create item');
+
   return Success.Created('Item created', `/item/${listItem.id}`);
 }

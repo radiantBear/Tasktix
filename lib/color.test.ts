@@ -1,5 +1,6 @@
-import { getTextColor, getBackgroundColor, randomNamedColor } from './color';
 import { namedColors, NamedColor } from '@/lib/model/color';
+
+import { getTextColor, getBackgroundColor, randomNamedColor } from './color';
 
 describe('getTextColor', () => {
   test('Returns the correct NextUI text color class for valid semantic colors', () => {
@@ -48,6 +49,7 @@ describe('getBackgroundColor', () => {
 describe('randomNamedColor', () => {
   test('Returns a valid named color', () => {
     const result = randomNamedColor();
+
     expect(namedColors.includes(result)).toBe(true);
   });
 

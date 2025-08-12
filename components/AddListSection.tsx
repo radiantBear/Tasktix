@@ -1,10 +1,12 @@
 'use client';
 
-import api from '@/lib/api';
 import { Button, Input } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
-import { addSnackbar } from './Snackbar';
+
+import api from '@/lib/api';
 import ListSection from '@/lib/model/listSection';
+
+import { addSnackbar } from './Snackbar';
 
 export default function AddListSection({
   listId,
@@ -21,6 +23,7 @@ export default function AddListSection({
       .post(`/list/${listId}/section`, { name })
       .then(res => {
         const id = res.content?.split('/').at(-1);
+
         addListSection(new ListSection(name, [], id));
         setName('');
       })
@@ -29,17 +32,17 @@ export default function AddListSection({
 
   return (
     <form
-      onSubmit={createSection}
       className='rounded-md w-100 overfLow-hidden border-2 border-content3 bg-content1 p-4 h-18 flex items-center justify-center gap-4 shadow-lg shadow-content2'
+      onSubmit={createSection}
     >
       <Input
+        className='w-52'
         placeholder='Name'
         value={name}
-        onValueChange={setName}
         variant='underlined'
-        className='w-52'
+        onValueChange={setName}
       />
-      <Button type='submit' tabIndex={0} variant='flat' color='primary'>
+      <Button color='primary' tabIndex={0} type='submit' variant='flat'>
         Add Section
       </Button>
     </form>

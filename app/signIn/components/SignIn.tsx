@@ -1,26 +1,15 @@
 'use client';
 
-import Message, { InputMessage } from '@/components/InputMessage';
 import { Button, Input } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { addSnackbar } from '@/components/Snackbar';
 import { default as api } from '@/lib/api';
-import { useRouter } from 'next/navigation';
 import { setLoggedIn } from '@/app/body';
 
 export default function SignIn() {
-  interface InputMessages {
-    username: InputMessage;
-    password: InputMessage;
-  }
-
-  const defaultMessage: InputMessage = { message: '', color: 'default' };
-
   const [inputs, setInputs] = useState({ username: '', password: '' });
-  const [inputMsgs, setInputMsgs] = useState<InputMessages>({
-    username: defaultMessage,
-    password: defaultMessage
-  });
   const router = useRouter();
 
   function handleUsernameInput(input: string) {
@@ -46,24 +35,20 @@ export default function SignIn() {
     <form onSubmit={handleSubmit}>
       <Input
         label='Username'
-        value={inputs.username}
-        color={inputMsgs.username.color}
-        description={<Message data={inputMsgs.username} />}
-        onValueChange={handleUsernameInput}
         type='text'
+        value={inputs.username}
         variant='underlined'
+        onValueChange={handleUsernameInput}
       />
       <Input
         label='Password'
-        value={inputs.password}
-        color={inputMsgs.password.color}
-        description={<Message data={inputMsgs.password} />}
-        onValueChange={handlePasswordInput}
         type='password'
+        value={inputs.password}
         variant='underlined'
+        onValueChange={handlePasswordInput}
       />
       <div className='flex justify-center mt-6'>
-        <Button type='submit' color='primary'>
+        <Button color='primary' type='submit'>
           Sign In
         </Button>
       </div>

@@ -1,13 +1,14 @@
-import { Filters, InputOptionGroup } from './types';
 import { Filter as FilterIcon, FilterSquareFill } from 'react-bootstrap-icons';
 import { Key, ReactElement, useReducer, useState } from 'react';
-import searchReducer from './searchReducer';
-import InputElement from './InputElement';
 import {
   Autocomplete,
   AutocompleteItem,
   AutocompleteSection
 } from '@nextui-org/react';
+
+import { Filters, InputOptionGroup } from './types';
+import searchReducer from './searchReducer';
+import InputElement from './InputElement';
 import { getIcon } from './getIcon';
 
 export default function SearchBar({
@@ -30,15 +31,17 @@ export default function SearchBar({
   });
 
   const inputFields: ReactElement[] = [];
+
   for (const key in filters) {
     const option = _options.find(option => option.label == key);
+
     if (!option) return;
 
     inputFields.push(
       <InputElement
+        dispatchFilters={dispatchFilters}
         inputOption={option}
         value={filters}
-        dispatchFilters={dispatchFilters}
         onValueChange={onValueChange}
       />
     );
@@ -46,6 +49,7 @@ export default function SearchBar({
 
   function addUsedOption(option: Key) {
     const newOptions = structuredClone(usedOptions);
+
     newOptions.add(option.toString());
     setUsedOptions(newOptions);
     dispatchFilters({
@@ -69,10 +73,12 @@ export default function SearchBar({
   function handleInput(input: string) {
     if (input.at(-1) != ':') {
       setValue(input);
+
       return;
     }
 
     const optionName = input.slice(0, -1);
+
     if (
       inputOptions.find(option =>
         option.options.find(option => option.label == optionName)
@@ -93,28 +99,28 @@ export default function SearchBar({
     <span className='grow rounded-md w-100 overflow-hidden p-4 h-16 flex items-center justify-center gap-4 border-2 border-content3 bg-content1 shadow-lg shadow-content2'>
       {usedOptions.size ? (
         <button aria-label='Clear filter' onClick={clearUsedOptions}>
-          <FilterSquareFill size={20} className='-mr-1' />
+          <FilterSquareFill className='-mr-1' size={20} />
         </button>
       ) : (
-        <FilterIcon size={20} className='-mr-1' />
+        <FilterIcon className='-mr-1' size={20} />
       )}
 
       <Autocomplete
-        startContent={<span className='flex gap-3'>{inputFields}</span>}
-        variant='underlined'
-        placeholder={usedOptions.size ? '' : 'Filter...'}
         className='grow'
         classNames={{ selectorButton: 'hidden' }}
         inputValue={value}
-        onValueChange={handleInput}
+        placeholder={usedOptions.size ? '' : 'Filter...'}
         selectedKey={null}
+        startContent={<span className='flex gap-3'>{inputFields}</span>}
+        variant='underlined'
         onSelectionChange={handleSelectionChange}
+        onValueChange={handleInput}
       >
         {remainingOptions.map(option => (
           <AutocompleteSection
+            key={option.label}
             showDivider
             title={option.label}
-            key={option.label}
           >
             {option.options.map(option => (
               <AutocompleteItem

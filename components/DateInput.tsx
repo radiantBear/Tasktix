@@ -1,6 +1,5 @@
 'use client';
 
-import { formatDate } from '@/lib/date';
 import {
   Button,
   Popover,
@@ -8,6 +7,9 @@ import {
   PopoverTrigger
 } from '@nextui-org/react';
 import { ReactNode, useEffect, useState } from 'react';
+
+import { formatDate } from '@/lib/date';
+
 import CalendarInput from './CalendarInput';
 
 export default function DateInput({
@@ -52,12 +54,12 @@ export default function DateInput({
   }
 
   return (
-    <Popover placement='bottom' isOpen={isOpen} onOpenChange={setIsOpen}>
+    <Popover isOpen={isOpen} placement='bottom' onOpenChange={setIsOpen}>
       <PopoverTrigger className='-ml-2 -mb-2 mt-1'>
         <Button
+          className={`w-fit min-w-0 px-2 py-1 text-xs justify-start ${className}`}
           color={color}
           variant='light'
-          className={`w-fit min-w-0 px-2 py-1 text-xs justify-start ${className}`}
         >
           {displayContent
             ? `${label || ''} ${displayContent}`
@@ -66,8 +68,8 @@ export default function DateInput({
       </PopoverTrigger>
       <PopoverContent className='p-0 overflow-hidden'>
         <CalendarInput
-          defaultValue={defaultValue}
           color={color}
+          defaultValue={defaultValue}
           value={value}
           onValueChange={handleInput}
         />

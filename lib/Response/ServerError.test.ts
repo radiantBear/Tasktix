@@ -36,6 +36,7 @@ describe('Internal', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -85,6 +86,7 @@ describe('BadGateway', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });

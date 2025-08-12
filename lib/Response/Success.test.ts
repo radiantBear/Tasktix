@@ -36,6 +36,7 @@ describe('OK', () => {
     const message = 'Success message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -88,6 +89,7 @@ describe('Created', () => {
     const location = '/new/resource';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });

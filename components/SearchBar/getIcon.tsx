@@ -1,4 +1,3 @@
-import { InputOption } from './types';
 import {
   CalendarEventFill,
   ChevronDown,
@@ -7,6 +6,8 @@ import {
   Toggle2On
 } from 'react-bootstrap-icons';
 import { ReactElement } from 'react';
+
+import { InputOption } from './types';
 
 export function getIcon(type: InputOption['type']): ReactElement {
   switch (type) {

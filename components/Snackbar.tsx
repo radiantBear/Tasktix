@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { generateId } from '@/lib/generateId';
 import { setTimeout } from 'timers';
+
+import { useCallback, useEffect, useState } from 'react';
+
+import { generateId } from '@/lib/generateId';
 
 export interface SnackbarFns {
   add: (
@@ -38,10 +40,12 @@ export default function Snackbar() {
       color: SnackbarMessage['color'] = 'default'
     ) => {
       const id = generateId();
+
       setSnackbarQueue(snackbarQueue => [
         ...snackbarQueue,
         { id, message, color }
       ]);
+
       return id;
     },
     []

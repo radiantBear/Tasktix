@@ -1,10 +1,9 @@
 'use client';
 
-import {
-  getUsernameMessage,
-  getEmailMessage,
-  getPasswordMessage
-} from '../messages';
+import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button, Input } from '@nextui-org/react';
+
 import Message, { InputMessage } from '@/components/InputMessage';
 import {
   validateUsername,
@@ -12,11 +11,14 @@ import {
   validatePassword
 } from '@/lib/validate';
 import { addSnackbar } from '@/components/Snackbar';
-import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button, Input } from '@nextui-org/react';
 import { default as api } from '@/lib/api';
 import { setLoggedIn } from '@/app/body';
+
+import {
+  getUsernameMessage,
+  getEmailMessage,
+  getPasswordMessage
+} from '../messages';
 
 export default function SignUp() {
   interface InputMessages {
@@ -67,7 +69,9 @@ export default function SignUp() {
         email: getEmailMessage(inputs.email),
         password: getPasswordMessage(inputs.password)
       };
+
       setInputMsgs(messages);
+
       return;
     }
 
@@ -92,34 +96,34 @@ export default function SignUp() {
   return (
     <form onSubmit={handleSubmit}>
       <Input
-        label='Username'
-        value={inputs.username}
         color={inputMsgs.username.color}
         description={<Message data={inputMsgs.username} />}
-        onValueChange={handleUsernameInput}
+        label='Username'
         type='text'
+        value={inputs.username}
         variant='underlined'
+        onValueChange={handleUsernameInput}
       />
       <Input
-        label='Email'
-        value={inputs.email}
         color={inputMsgs.email.color}
         description={<Message data={inputMsgs.email} />}
-        onValueChange={handleEmailInput}
+        label='Email'
         type='email'
+        value={inputs.email}
         variant='underlined'
+        onValueChange={handleEmailInput}
       />
       <Input
-        label='Password'
-        value={inputs.password}
         color={inputMsgs.password.color}
         description={<Message data={inputMsgs.password} />}
-        onValueChange={handlePasswordInput}
+        label='Password'
         type='password'
+        value={inputs.password}
         variant='underlined'
+        onValueChange={handlePasswordInput}
       />
       <div className='flex justify-center mt-6'>
-        <Button type='submit' color='primary'>
+        <Button color='primary' type='submit'>
           Sign Up
         </Button>
       </div>

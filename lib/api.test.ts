@@ -29,6 +29,7 @@ afterEach(() => {
 describe('get', () => {
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.get('/resource');
@@ -40,6 +41,7 @@ describe('get', () => {
 
   test('Makes an HTTP GET request with no body', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.get('/resource');
@@ -52,6 +54,7 @@ describe('get', () => {
 
   test('Parses the JSON-encoded server response', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     const response = await api.get('/resource');
@@ -65,6 +68,7 @@ describe('get', () => {
 
   test('Rejects the promise if fetch fails', async () => {
     const error = new Error('Exception message');
+
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
     await expect(api.get('/resource')).rejects.toThrow('Exception message');
@@ -72,6 +76,7 @@ describe('get', () => {
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
     const fakeResponse = createFetchResponse(403, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     Object.defineProperty(window, 'location', {
@@ -90,6 +95,7 @@ describe('get', () => {
 
   test('Rejects for error responses with HTTP status codes >= 400 (other than 403)', async () => {
     const fakeResponse = createFetchResponse(500, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await expect(api.get('/resource')).rejects.toEqual({
@@ -103,6 +109,7 @@ describe('get', () => {
 describe('post', () => {
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.post('/resource', {});
@@ -114,6 +121,7 @@ describe('post', () => {
 
   test('Makes an HTTP POST request with JSON-encoded body by default when `data` is an object', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.post('/resource', { key: 'value' });
@@ -135,6 +143,7 @@ describe('post', () => {
 
   test('Makes an HTTP POST request with plaintext body by default when `data` is a string', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.post('/resource', 'data here');
@@ -148,6 +157,7 @@ describe('post', () => {
 
   test('Makes an HTTP POST request with custom encoding type when when `data` is a string and an encoding is specified', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.post('/resource', 'data here', 'text/somethingCustom');
@@ -161,6 +171,7 @@ describe('post', () => {
 
   test('Parses the server response as JSON', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'postData');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
     const data = { key: 'value' };
 
@@ -175,6 +186,7 @@ describe('post', () => {
 
   test('Rejects the promise if fetch fails', async () => {
     const error = new Error('Exception message');
+
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
     await expect(api.post('/resource', {})).rejects.toThrow(
@@ -184,6 +196,7 @@ describe('post', () => {
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
     const fakeResponse = createFetchResponse(403, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     Object.defineProperty(window, 'location', {
@@ -202,6 +215,7 @@ describe('post', () => {
 
   test('Rejects for error responses with HTTP status codes >= 400 (other than 403)', async () => {
     const fakeResponse = createFetchResponse(500, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await expect(api.post('/resource', {})).rejects.toEqual({
@@ -215,10 +229,12 @@ describe('post', () => {
 describe('put', () => {
   it('should send a PUT request with JSON stringified data and resolve with server response', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'putData');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
     const data = { key: 'value' };
 
     const response = await api.put('/resource', data);
+
     expect(globalThis.fetch).toHaveBeenCalledWith('/api/resource', {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -233,6 +249,7 @@ describe('put', () => {
 
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.put('/resource', {});
@@ -244,6 +261,7 @@ describe('put', () => {
 
   test('Makes an HTTP PUT request with JSON-encoded body by default', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.put('/resource', { key: 'value' });
@@ -265,6 +283,7 @@ describe('put', () => {
 
   test('Parses the server response as JSON', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'postData');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
     const data = { key: 'value' };
 
@@ -279,6 +298,7 @@ describe('put', () => {
 
   test('Rejects the promise if fetch fails', async () => {
     const error = new Error('Exception message');
+
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
     await expect(api.put('/resource', {})).rejects.toThrow('Exception message');
@@ -286,6 +306,7 @@ describe('put', () => {
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
     const fakeResponse = createFetchResponse(403, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     Object.defineProperty(window, 'location', {
@@ -304,6 +325,7 @@ describe('put', () => {
 
   test('Rejects for error responses with HTTP status codes >= 400 (other than 403)', async () => {
     const fakeResponse = createFetchResponse(500, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await expect(api.put('/resource', {})).rejects.toEqual({
@@ -317,10 +339,12 @@ describe('put', () => {
 describe('patch', () => {
   it('should send a PATCH request with JSON stringified data and resolve with server response', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'patchData');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
     const data = { key: 'value' };
 
     const response = await api.patch('/resource', data);
+
     expect(globalThis.fetch).toHaveBeenCalledWith('/api/resource', {
       method: 'PATCH',
       body: JSON.stringify(data),
@@ -335,6 +359,7 @@ describe('patch', () => {
 
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.patch('/resource', {});
@@ -346,6 +371,7 @@ describe('patch', () => {
 
   test('Makes an HTTP PATCH request with JSON-encoded body by default', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.patch('/resource', { key: 'value' });
@@ -367,6 +393,7 @@ describe('patch', () => {
 
   test('Parses the server response as JSON', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'patchData');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
     const data = { key: 'value' };
 
@@ -381,6 +408,7 @@ describe('patch', () => {
 
   test('Rejects the promise if fetch fails', async () => {
     const error = new Error('Exception message');
+
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
     await expect(api.patch('/resource', {})).rejects.toThrow(
@@ -390,6 +418,7 @@ describe('patch', () => {
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
     const fakeResponse = createFetchResponse(403, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     Object.defineProperty(window, 'location', {
@@ -408,6 +437,7 @@ describe('patch', () => {
 
   test('Rejects for error responses with HTTP status codes >= 400 (other than 403)', async () => {
     const fakeResponse = createFetchResponse(500, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await expect(api.patch('/resource', {})).rejects.toEqual({
@@ -421,6 +451,7 @@ describe('patch', () => {
 describe('delete', () => {
   test('Makes request to the provided API route, prepended with "/api"', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.delete('/resource');
@@ -432,6 +463,7 @@ describe('delete', () => {
 
   test('Makes an HTTP GET request with no body', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await api.delete('/resource');
@@ -444,6 +476,7 @@ describe('delete', () => {
 
   test('Parses the JSON-encoded server response', async () => {
     const fakeResponse = createFetchResponse(200, 'OK', 'data');
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     const response = await api.delete('/resource');
@@ -457,6 +490,7 @@ describe('delete', () => {
 
   test('Rejects the promise if fetch fails', async () => {
     const error = new Error('Exception message');
+
     (globalThis.fetch as jest.Mock).mockRejectedValue(error);
 
     await expect(api.delete('/resource')).rejects.toThrow('Exception message');
@@ -464,6 +498,7 @@ describe('delete', () => {
 
   test('Redirects to /signIn when response code is 403 and reject with server response', async () => {
     const fakeResponse = createFetchResponse(403, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     Object.defineProperty(window, 'location', {
@@ -482,6 +517,7 @@ describe('delete', () => {
 
   test('Rejects for error responses with HTTP status codes >= 400 (other than 403)', async () => {
     const fakeResponse = createFetchResponse(500, 'Server error message', null);
+
     (globalThis.fetch as jest.Mock).mockResolvedValue(fakeResponse);
 
     await expect(api.delete('/resource')).rejects.toEqual({

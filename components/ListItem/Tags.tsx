@@ -1,7 +1,5 @@
 'use client';
 
-import { getBackgroundColor, getTextColor } from '@/lib/color';
-import TagModel from '@/lib/model/tag';
 import {
   Button,
   Chip,
@@ -12,7 +10,11 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import { X, Plus, Tags as TagsIcon } from 'react-bootstrap-icons';
+
+import TagModel from '@/lib/model/tag';
+import { getBackgroundColor, getTextColor } from '@/lib/color';
 import { NamedColor } from '@/lib/model/color';
+
 import TagInput from '../TagInput';
 
 export default function Tags({
@@ -36,16 +38,16 @@ export default function Tags({
 
   return (
     <Popover
-      placement='bottom'
       isOpen={isPopoverOpen}
+      placement='bottom'
       onOpenChange={open => {
         if (!isComplete) setIsPopoverOpen(open);
       }}
     >
       <PopoverTrigger>
         <Card
-          tabIndex={isComplete ? 1 : 0}
           className={`px-4 basis-1/6 grow shrink flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer bg-transparent ${isComplete ? 'opacity-50 cursor-default' : 'hover:bg-foreground/10 focus:z-10 focus:outline-2 focus:outline-focus focus:outline-offset-2'} ${className}`}
+          tabIndex={isComplete ? 1 : 0}
         >
           <TagsIcon className='shrink-0' />
           <span className='ml-2 flex flex-row items-center justify-start overflow-hidden flex-nowrap'>
@@ -54,13 +56,13 @@ export default function Tags({
               .map(tag => (
                 <Chip
                   key={tag.id}
-                  variant='dot'
-                  size='sm'
                   classNames={{
                     dot: getBackgroundColor(tag.color),
                     base: 'border-0',
                     content: getTextColor(tag.color)
                   }}
+                  size='sm'
+                  variant='dot'
                 >
                   {tag.name}
                 </Chip>
@@ -78,11 +80,11 @@ export default function Tags({
             >
               {tag.name}
               <Button
-                onPress={unlinkTag.bind(null, tag.id)}
-                variant='flat'
-                color='danger'
                 isIconOnly
                 className='rounded-lg w-8 h-8 min-w-8 min-h-8'
+                color='danger'
+                variant='flat'
+                onPress={unlinkTag.bind(null, tag.id)}
               >
                 <X />
               </Button>
@@ -100,11 +102,11 @@ export default function Tags({
                   >
                     {tag.name}
                     <Button
-                      onPress={linkTag.bind(null, tag.id)}
-                      variant='flat'
-                      color='primary'
                       isIconOnly
                       className='rounded-lg w-8 h-8 min-w-8 min-h-8'
+                      color='primary'
+                      variant='flat'
+                      onPress={linkTag.bind(null, tag.id)}
                     >
                       <Plus />
                     </Button>
@@ -115,10 +117,10 @@ export default function Tags({
           <></>
         )}
         <TagInput
-          linkTag={linkTag}
           addNewTag={addNewTag}
           className='p-1.5 pl-1'
           classNames={{ name: 'w-24' }}
+          linkTag={linkTag}
         />
       </PopoverContent>
     </Popover>

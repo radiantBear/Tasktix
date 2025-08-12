@@ -1,5 +1,6 @@
-import Tag from './tag';
 import * as generateIdModule from '@/lib/generateId';
+
+import Tag from './tag';
 
 beforeEach(() => {
   jest

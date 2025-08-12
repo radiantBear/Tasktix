@@ -1,4 +1,5 @@
 import Assignee from '@/lib/model/assignee';
+
 import { DB_User, extractUserFromRow } from './user';
 
 export interface DB_Assignee extends DB_User {
@@ -9,5 +10,6 @@ export interface DB_Assignee extends DB_User {
 
 export function extractAssigneeFromRow(row: DB_Assignee): Assignee {
   const user = extractUserFromRow(row);
+
   return new Assignee(user, row.ia_role);
 }

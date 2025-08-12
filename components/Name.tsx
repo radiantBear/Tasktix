@@ -26,30 +26,30 @@ export default function Name({
 
   return (
     <form
+      className='flex grow shrink w-full'
       onSubmit={e => {
         e.preventDefault();
         updateName(newName);
       }}
-      className='flex grow shrink w-full'
     >
       <Input
-        label={showLabel && 'Name'}
-        value={newName}
-        onValueChange={setNewName}
-        disabled={disabled}
-        size='sm'
-        variant='underlined'
         className={`${disabled && 'opacity-50'} ${className}`}
         classNames={{
           inputWrapper: `${showLabel || showUnderline || 'border-transparent'}`,
           input: `${showLabel || showUnderline || '-mb-2'} ${classNames?.input}`
         }}
+        disabled={disabled}
+        label={showLabel && 'Name'}
+        size='sm'
+        value={newName}
+        variant='underlined'
+        onValueChange={setNewName}
       />
       <Button
-        type='submit'
-        color='primary'
         isIconOnly
         className={`rounded-lg w-8 h-8 min-w-8 min-h-8 ${newName == prevName ? 'hidden' : ''} ${showLabel ? 'mt-4' : ''} ${classNames?.button}`}
+        color='primary'
+        type='submit'
       >
         <Check />
       </Button>

@@ -4,7 +4,7 @@ import {
   Selection,
   SlotsToClasses
 } from '@nextui-org/react';
-import { useState } from 'react';
+
 import ListItem from '@/lib/model/listItem';
 
 export default function Priority({
@@ -42,27 +42,27 @@ export default function Priority({
   return (
     <div className={`-mt-2 -mb-2 ${wrapperClassName}`}>
       <Select
-        isDisabled={isComplete}
-        variant='flat'
-        labelPlacement='outside'
-        size='sm'
         className={`w-28 grow-0 shrink-0 ${className || ''}`}
+        classNames={classNames}
+        color={`${priority == 'High' ? 'danger' : priority == 'Medium' ? 'warning' : 'success'}`}
+        isDisabled={isComplete}
         label={<span className='ml-2 text-foreground'>Priority</span>}
+        labelPlacement='outside'
         placeholder='Select...'
         selectedKeys={_priority}
+        size='sm'
+        variant='flat'
         onSelectionChange={(keys: Selection) =>
           setPriority((keys != 'all' && keys.keys().next().value) || 'Low')
         }
-        color={`${priority == 'High' ? 'danger' : priority == 'Medium' ? 'warning' : 'success'}`}
-        classNames={classNames}
       >
-        <SelectItem key='High' value='High' color='danger'>
+        <SelectItem key='High' color='danger' value='High'>
           High
         </SelectItem>
-        <SelectItem key='Medium' value='Medium' color='warning'>
+        <SelectItem key='Medium' color='warning' value='Medium'>
           Medium
         </SelectItem>
-        <SelectItem key='Low' value='Low' color='success'>
+        <SelectItem key='Low' color='success' value='Low'>
           Low
         </SelectItem>
       </Select>

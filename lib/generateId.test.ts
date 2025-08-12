@@ -2,17 +2,21 @@ import { generateId } from './generateId';
 
 test('Generates a 16-character ID by default', () => {
   const result = generateId();
+
   expect(result.length).toBe(16);
 });
 
 test('Generates IDs of the specified length', () => {
   const result = generateId(64);
+
   expect(result.length).toBe(64);
 
   const result2 = generateId(512);
+
   expect(result2.length).toBe(512);
 
   const result3 = generateId(1);
+
   expect(result3.length).toBe(1);
 });
 

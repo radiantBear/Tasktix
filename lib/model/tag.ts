@@ -1,4 +1,5 @@
 import { generateId } from '../generateId';
+
 import { NamedColor } from './color';
 
 export default class Tag {

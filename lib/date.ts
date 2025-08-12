@@ -5,6 +5,7 @@ export function getDateDiff(a: Date, b: Date): number {
 export function getDayOffset(date: Date): number {
   const day = 1000 * 60 * 60 * 24;
   const today = new Date();
+
   today.setHours(0, 0, 0, 0);
 
   return Math.floor(getDateDiff(date, today) / day);
@@ -49,6 +50,7 @@ export function formatTime(time: number): string {
 
 export function inputToDate(date: string): Date {
   const [year, month, day] = date.split('-');
+
   return new Date(Number(year), Number(month) - 1, Number(day));
 }
 
@@ -73,14 +75,17 @@ export function parseTime(time: string): number {
 
   if (timeParts.length == 3) {
     const [hours, minutes, seconds] = timeParts;
+
     return (
       ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000
     );
   } else if (timeParts.length == 2) {
     const [hours, minutes] = timeParts;
+
     return (Number(hours) * 60 + Number(minutes)) * 60 * 1000;
   } else if (timeParts.length == 1) {
     const [minutes] = timeParts;
+
     return Number(minutes) * 60 * 1000;
   }
 

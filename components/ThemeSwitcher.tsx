@@ -1,3 +1,5 @@
+import { clearTimeout, setTimeout } from 'timers';
+
 import {
   Button,
   Listbox,
@@ -9,7 +11,6 @@ import {
 import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
 import { Display, MoonFill, SunFill } from 'react-bootstrap-icons';
-import { clearTimeout, setTimeout } from 'timers';
 
 export default function ThemeSwitcher() {
   const timer = useRef<NodeJS.Timeout>();
@@ -48,45 +49,45 @@ export default function ThemeSwitcher() {
   return (
     <Popover isOpen={isOpen}>
       <PopoverTrigger
-        onMouseOver={() => handleMouse(true)}
         onMouseLeave={() => handleMouse(false)}
+        onMouseOver={() => handleMouse(true)}
       >
         <Button
-          onClick={() => setTheme(themeIcon == 'dark' ? 'light' : 'dark')}
+          isIconOnly
           aria-label={`Set ${themeIcon == 'dark' ? 'light' : 'dark'} theme`}
           variant='ghost'
-          isIconOnly
+          onClick={() => setTheme(themeIcon == 'dark' ? 'light' : 'dark')}
         >
           {isMounted && themeIcon == 'dark' ? <SunFill /> : <MoonFill />}
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        onMouseOver={() => handleMouse(true)}
         onMouseLeave={() => handleMouse(false)}
+        onMouseOver={() => handleMouse(true)}
       >
         <Listbox
-          selectionMode='single'
-          selectedKeys={[theme || 'system']}
           aria-label='Choose theme'
+          selectedKeys={[theme || 'system']}
+          selectionMode='single'
         >
           <ListboxItem
             key='light'
-            onPress={() => setTheme('light')}
             startContent={<SunFill />}
+            onPress={() => setTheme('light')}
           >
             Light
           </ListboxItem>
           <ListboxItem
             key='dark'
-            onPress={() => setTheme('dark')}
             startContent={<MoonFill />}
+            onPress={() => setTheme('dark')}
           >
             Dark
           </ListboxItem>
           <ListboxItem
             key='system'
-            onPress={() => setTheme('system')}
             startContent={<Display />}
+            onPress={() => setTheme('system')}
           >
             System
           </ListboxItem>

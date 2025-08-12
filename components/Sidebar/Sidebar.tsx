@@ -1,15 +1,18 @@
 'use client';
 
+import { setTimeout } from 'timers';
+
 import { ReactNode, useContext, useState } from 'react';
 import { Button, Input, Link } from '@nextui-org/react';
 import { Check, Plus } from 'react-bootstrap-icons';
 import { usePathname, useRouter } from 'next/navigation';
+
 import { default as api } from '@/lib/api';
 import { addSnackbar } from '@/components/Snackbar';
-import { setTimeout } from 'timers';
 import { validateListName } from '@/lib/validate';
 import List from '@/lib/model/list';
 import { randomNamedColor } from '@/lib/color';
+
 import { ListContext } from './listContext';
 
 export default function Sidebar({ lists }: { lists: List[] }) {
@@ -19,12 +22,15 @@ export default function Sidebar({ lists }: { lists: List[] }) {
 
   function finalizeNew(name: string) {
     const color = randomNamedColor();
+
     api
       .post('/list', { name, color })
       .then(res => {
         const id = res.content?.split('/').at(-1);
+
         if (!id) {
           addSnackbar('No list ID returned', 'error');
+
           return;
         }
         router.push(`${res.content}`);
@@ -44,15 +50,15 @@ export default function Sidebar({ lists }: { lists: List[] }) {
 
   return (
     <aside className='w-48 bg-transparent shadow-l-lg shadow-content4 p-4 pr-0 flex flex-col gap-4 overflow-y-scroll'>
-      <NavItem name='Today' link='/list' />
+      <NavItem link='/list' name='Today' />
       <NavSection
-        name='Lists'
         endContent={<AddList addList={() => setAddingList(true)} />}
+        name='Lists'
       >
         {lists
           .sort((a, b) => (a.name > b.name ? 1 : 0))
           .map(list => (
-            <NavItem key={list.id} name={list.name} link={`/list/${list.id}`} />
+            <NavItem key={list.id} link={`/list/${list.id}`} name={list.name} />
           ))}
         {addingList ? (
           <NewItem finalize={finalizeNew} remove={removeNew} />
@@ -99,7 +105,7 @@ export function NavItem({
     <span
       className={`pl-2 my-1 flex items-center justify-between border-l-2${isActive ? ' border-primary' : ' border-transparent'} text-sm`}
     >
-      <Link href={link} color='foreground'>
+      <Link color='foreground' href={link}>
         {name}
       </Link>
       {endContent}
@@ -110,11 +116,11 @@ export function NavItem({
 function AddList({ addList }: { addList: () => any }) {
   return (
     <Button
-      onPress={addList}
-      variant='ghost'
-      color='primary'
       isIconOnly
       className='border-0 text-foreground rounded-lg w-8 h-8 min-w-8 min-h-8'
+      color='primary'
+      variant='ghost'
+      onPress={addList}
     >
       <Plus size={'1.25em'} />
     </Button>
@@ -143,21 +149,21 @@ function NewItem({
       }}
     >
       <Input
-        value={name}
         autoFocus
-        onValueChange={updateName}
-        onBlur={remove}
-        variant='underlined'
         color='primary'
         placeholder='List name'
         size='sm'
+        value={name}
+        variant='underlined'
+        onBlur={remove}
+        onValueChange={updateName}
       />
       <Button
-        type='submit'
-        variant='ghost'
-        color='primary'
         isIconOnly
         className='rounded-lg w-8 h-8 min-w-8 min-h-8'
+        color='primary'
+        type='submit'
+        variant='ghost'
       >
         <Check />
       </Button>

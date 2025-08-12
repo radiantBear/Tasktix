@@ -1,6 +1,7 @@
 'use server';
 
 import User from '@/lib/model/user';
+
 import { execute, query } from './db_connect';
 import { DB_User, extractUserFromRow } from './model/user';
 

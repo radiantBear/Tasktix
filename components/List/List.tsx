@@ -1,6 +1,7 @@
 'use client';
 
-import ListSection from './ListSection';
+import { useState } from 'react';
+
 import AddListSection from '@/components/AddListSection';
 import { addSnackbar } from '@/components/Snackbar';
 import { default as api } from '@/lib/api';
@@ -8,13 +9,14 @@ import { default as ListModel } from '@/lib/model/list';
 import { default as ListSectionModel } from '@/lib/model/listSection';
 import Tag from '@/lib/model/tag';
 import { NamedColor } from '@/lib/model/color';
-import { useState } from 'react';
 import SearchBar from '@/components/SearchBar';
 import {
   Filters,
   InputOption,
   InputOptionGroup
 } from '@/components/SearchBar/types';
+
+import ListSection from './ListSection';
 import { ListSettings } from './ListSettings';
 
 export default function List({
@@ -25,6 +27,7 @@ export default function List({
   startingTagsAvailable: string;
 }) {
   const builtList: ListModel = JSON.parse(startingList);
+
   for (const section of builtList.sections) {
     for (const item of section.items) {
       item.dateCreated = new Date(item.dateCreated);
@@ -51,6 +54,7 @@ export default function List({
         .then(res => {
           const id = res.content?.split('/').at(-1) || '';
           const newTags = structuredClone(tagsAvailable || []);
+
           newTags.push(new Tag(name, color, id));
           setTagsAvailable(newTags);
 
@@ -64,6 +68,7 @@ export default function List({
     if (!list) return;
 
     const newList = structuredClone(list);
+
     newList.sections.push(section);
     setList(newList);
   }
@@ -82,6 +87,7 @@ export default function List({
         addSnackbar(res.message, 'success');
 
         const newList = structuredClone(list);
+
         for (let i = 0; i < newList.sections.length; i++)
           if (newList.sections[i].id == id) newList.sections.splice(i, 1);
         setList(newList);
@@ -94,63 +100,68 @@ export default function List({
       <span className='flex gap-4 items-center'>
         <SearchBar inputOptions={filterOptions} onValueChange={setFilters} />
         <ListSettings
-          listId={list.id}
-          listName={list.name}
-          listColor={list.color}
-          tagsAvailable={tagsAvailable}
-          setTagsAvailable={setTagsAvailable}
           addNewTag={addNewTag}
+          hasDueDates={list.hasDueDates}
           hasTimeTracking={list.hasTimeTracking}
           isAutoOrdered={list.isAutoOrdered}
-          hasDueDates={list.hasDueDates}
-          setListName={(value: string) => {
+          listColor={list.color}
+          listId={list.id}
+          listName={list.name}
+          setHasDueDates={(value: boolean) => {
             const newList = structuredClone(list);
-            newList.name = value;
-            setList(newList);
-            window.location.reload();
-          }}
-          setListColor={(value: NamedColor) => {
-            const newList = structuredClone(list);
-            newList.color = value;
+
+            newList.hasDueDates = value;
             setList(newList);
           }}
           setHasTimeTracking={(value: boolean) => {
             const newList = structuredClone(list);
+
             newList.hasTimeTracking = value;
             setList(newList);
           }}
           setIsAutoOrdered={(value: boolean) => {
             const newList = structuredClone(list);
+
             newList.isAutoOrdered = value;
             setList(newList);
           }}
-          setHasDueDates={(value: boolean) => {
+          setListColor={(value: NamedColor) => {
             const newList = structuredClone(list);
-            newList.hasDueDates = value;
+
+            newList.color = value;
             setList(newList);
           }}
+          setListName={(value: string) => {
+            const newList = structuredClone(list);
+
+            newList.name = value;
+            setList(newList);
+            window.location.reload();
+          }}
+          setTagsAvailable={setTagsAvailable}
+          tagsAvailable={tagsAvailable}
         />
       </span>
 
       {list.sections.map(section => (
         <ListSection
           key={section.id}
+          addNewTag={addNewTag}
+          deleteSection={deleteListSection.bind(null, section.id)}
+          filters={filters}
+          hasDueDates={list.hasDueDates}
+          hasTimeTracking={list.hasTimeTracking}
           id={section.id}
+          isAutoOrdered={list.isAutoOrdered}
           listId={list.id}
-          name={section.name}
           members={list.members}
+          name={section.name}
           startingItems={section.items}
           tagsAvailable={tagsAvailable}
-          hasTimeTracking={list.hasTimeTracking}
-          hasDueDates={list.hasDueDates}
-          isAutoOrdered={list.isAutoOrdered}
-          filters={filters}
-          deleteSection={deleteListSection.bind(null, section.id)}
-          addNewTag={addNewTag}
         />
       ))}
 
-      <AddListSection listId={list.id} addListSection={addListSection} />
+      <AddListSection addListSection={addListSection} listId={list.id} />
     </>
   );
 }
@@ -172,6 +183,7 @@ function getFilterOptions(
     },
     { type: 'Select', label: 'tag', selectOptions: tagsAvailable }
   ];
+
   if (list.members.length > 1)
     generalOptions.push({
       type: 'Select',
@@ -203,6 +215,7 @@ function getFilterOptions(
       ]
     }
   ];
+
   if (list.hasDueDates)
     filterOptions.push({
       label: 'Due',

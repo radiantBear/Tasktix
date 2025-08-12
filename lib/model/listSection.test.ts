@@ -1,6 +1,7 @@
+import * as generateIdModule from '@/lib/generateId';
+
 import ListItem from './listItem';
 import ListSection from './listSection';
-import * as generateIdModule from '@/lib/generateId';
 
 beforeEach(() => {
   jest

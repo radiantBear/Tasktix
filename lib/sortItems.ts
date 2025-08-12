@@ -27,11 +27,13 @@ export function sortItems(
   b: ListItem
 ): number {
   const completed_order = sortItemsByCompleted(a, b);
+
   if (completed_order != 0) return completed_order;
 
   if (hasDueDates) {
     if (!a.dateDue) {
       if (b.dateDue) return -1;
+
       return 0;
     }
     if (!b.dateDue || a.dateDue > b.dateDue) return 1;

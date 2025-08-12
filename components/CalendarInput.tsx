@@ -36,6 +36,7 @@ export default function CalendarInput({
 
   function handleSelect(date: number) {
     const newDate = new Date(currentRange.getTime());
+
     newDate.setDate(date);
 
     if (onValueChange) onValueChange(newDate);
@@ -45,6 +46,7 @@ export default function CalendarInput({
   // Update the month on the display
   function updateCurrentRange(monthOffset: number) {
     const newDate = new Date(currentRange);
+
     newDate.setMonth(newDate.getMonth() + monthOffset);
     setCurrentRange(newDate);
   }
@@ -54,9 +56,9 @@ export default function CalendarInput({
       <div className='flex flex-col bg-content2 w-full p-1'>
         <span className='flex justify-between items-center gap-2'>
           <Button
-            onPress={() => updateCurrentRange(-1)}
             isIconOnly
             className='bg-transparent hover:bg-foreground/10'
+            onPress={() => updateCurrentRange(-1)}
           >
             <ChevronLeft />
           </Button>
@@ -65,9 +67,9 @@ export default function CalendarInput({
             year: 'numeric'
           })}
           <Button
-            onPress={() => updateCurrentRange(1)}
             isIconOnly
             className='bg-transparent hover:bg-foreground/10'
+            onPress={() => updateCurrentRange(1)}
           >
             <ChevronRight />
           </Button>
@@ -110,19 +112,21 @@ function CalendarInputBody({
   const monthNum = month.getMonth();
 
   const monthStart = new Date(month.getTime());
+
   monthStart.setDate(1);
   const monthEnd = new Date(month.getTime());
+
   monthEnd.setMonth(monthEnd.getMonth() + 1);
   monthEnd.setDate(0);
 
   const before = monthStart.getDay();
   const blanks = [];
+
   for (let i = 0; i < before; i++)
-    blanks.push(
-      <div key={`blank${i}`} className='w-6 min-w-6 h-6 min-h-6'></div>
-    );
+    blanks.push(<div key={`blank${i}`} className='w-6 min-w-6 h-6 min-h-6' />);
 
   let hoverColor = 'data-[hover=true]:text-default';
+
   switch (color) {
     case 'primary':
       hoverColor = 'data-[hover=true]:text-primary';
@@ -142,16 +146,17 @@ function CalendarInputBody({
   }
 
   const days = [];
+
   for (let i = 1; i <= monthEnd.getDate(); i++)
     if (isCurrentMonth && current.getDate() == i)
       days.push(
         <Button
           key={`${monthNum}:${i}`}
-          variant='solid'
-          onPress={() => onSelect(i)}
+          isIconOnly
           className='w-6 min-w-6 h-6 min-h-6 rounded-md'
           color={color}
-          isIconOnly
+          variant='solid'
+          onPress={() => onSelect(i)}
         >
           {i}
         </Button>
@@ -160,11 +165,11 @@ function CalendarInputBody({
       days.push(
         <Button
           key={`${monthNum}:${i}`}
-          variant='light'
-          onPress={() => onSelect(i)}
+          isIconOnly
           className={`w-6 min-w-6 h-6 min-h-6 rounded-md ${[0, 6].includes((before + i - 1) % 7) ? 'text-foreground/65' : 'text-foreground'} ${hoverColor}`}
           color={color}
-          isIconOnly
+          variant='light'
+          onPress={() => onSelect(i)}
         >
           {i}
         </Button>

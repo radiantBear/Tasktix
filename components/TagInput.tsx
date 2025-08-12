@@ -1,9 +1,11 @@
 import { FormEvent, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
 import { Button, Input } from '@nextui-org/react';
+
+import { NamedColor } from '@/lib/model/color';
+
 import ColorPicker from './ColorPicker';
 import { addSnackbar } from './Snackbar';
-import { NamedColor } from '@/lib/model/color';
 
 export default function TagInput({
   className,
@@ -23,14 +25,17 @@ export default function TagInput({
     e.preventDefault();
     if (!newTagColor) {
       addSnackbar('Please specify a tag color', 'error');
+
       return;
     }
     if (!newTagName) {
       addSnackbar('Please specify a tag name', 'error');
+
       return;
     }
 
     const id = await addNewTag(newTagName, newTagColor);
+
     if (linkTag) linkTag(id);
     setNewTagName('');
     setNewTagColor(null);
@@ -38,29 +43,29 @@ export default function TagInput({
 
   return (
     <form
-      onSubmit={handleSubmit}
       key='add'
       className={`flex w-full gap-2 ${className}`}
+      onSubmit={handleSubmit}
     >
       <Input
-        variant='underlined'
-        placeholder='Add tag...'
         className={classNames?.name}
+        placeholder='Add tag...'
         size='sm'
         value={newTagName}
+        variant='underlined'
         onValueChange={setNewTagName}
       />
       <ColorPicker
+        className='rounded-lg w-8 h-8 min-w-8 min-h-8'
         value={newTagColor}
         onValueChange={setNewTagColor}
-        className='rounded-lg w-8 h-8 min-w-8 min-h-8'
       />
       <Button
-        type='submit'
-        variant='flat'
-        color='primary'
         isIconOnly
         className='rounded-lg w-8 h-8 min-w-8 min-h-8'
+        color='primary'
+        type='submit'
+        variant='flat'
       >
         <Check />
       </Button>

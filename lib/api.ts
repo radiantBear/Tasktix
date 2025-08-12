@@ -43,6 +43,7 @@ function request(
   return new Promise(async function (resolve, reject) {
     try {
       let body: string | undefined;
+
       if (typeof data === 'string') {
         encodingType ??= 'text/plain';
         body = data;
@@ -58,6 +59,7 @@ function request(
         method,
         body
       };
+
       if (encodingType) options.headers = { 'Content-Type': encodingType };
 
       const result = await fetch('/api' + resource, options);

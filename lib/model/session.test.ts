@@ -1,5 +1,6 @@
-import Session from './session';
 import * as generateIdModule from '@/lib/generateId';
+
+import Session from './session';
 
 beforeEach(() => {
   jest

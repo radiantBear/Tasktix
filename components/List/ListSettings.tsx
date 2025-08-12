@@ -4,22 +4,23 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  Spacer,
   Switch,
   Tab,
   Tabs,
   useDisclosure
 } from '@nextui-org/react';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { TrashFill, GearWideConnected } from 'react-bootstrap-icons';
-import { addSnackbar } from '../Snackbar';
-import { default as api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import { ListContext } from '../Sidebar';
+
+import { default as api } from '@/lib/api';
 import Tag from '@/lib/model/tag';
-import ColorPicker from '../ColorPicker';
 import { NamedColor } from '@/lib/model/color';
 import Name from '@/components/Name';
+
+import { ListContext } from '../Sidebar';
+import ColorPicker from '../ColorPicker';
+import { addSnackbar } from '../Snackbar';
 import TagInput from '../TagInput';
 
 export function ListSettings({
@@ -158,11 +159,11 @@ export function ListSettings({
   return (
     <>
       <Button
-        onPress={onOpen}
-        variant='ghost'
-        size='lg'
         isIconOnly
         className='bg-content1 shadow-lg shadow-content2'
+        size='lg'
+        variant='ghost'
+        onPress={onOpen}
       >
         <GearWideConnected aria-label='Settings' size={20} />
       </Button>
@@ -174,16 +175,16 @@ export function ListSettings({
           <ModalBody className='overflow-clip'>
             <Tabs aria-label='Options' variant='underlined'>
               <Tab
-                title='General'
                 className='flex flex-col gap-4 grow justify-between'
+                title='General'
               >
                 <span className='flex flex-col gap-4 overflow-y-auto'>
                   <span className='flex gap-4 mb-2'>
                     <Name
-                      name={listName}
-                      updateName={updateName}
                       showUnderline
                       classNames={{ input: 'text-md' }}
+                      name={listName}
+                      updateName={updateName}
                     />
                     <ColorPicker
                       value={listColor}
@@ -192,59 +193,59 @@ export function ListSettings({
                   </span>
                   <Switch
                     isSelected={hasTimeTracking}
-                    onValueChange={updateHasTimeTracking}
                     size='sm'
+                    onValueChange={updateHasTimeTracking}
                   >
                     Track completion time
                   </Switch>
                   <Switch
                     isSelected={hasDueDates}
-                    onValueChange={updateHasDueDates}
                     size='sm'
+                    onValueChange={updateHasDueDates}
                   >
                     Track due dates
                   </Switch>
                   <Switch
                     isSelected={isAutoOrdered}
-                    onValueChange={updateIsAutoOrdered}
                     size='sm'
+                    onValueChange={updateIsAutoOrdered}
                   >
                     Auto-order list items
                   </Switch>
                 </span>
                 <span className='flex justify-end'>
                   <Button
-                    onPress={deleteList}
+                    color='danger'
                     startContent={<TrashFill />}
                     variant='ghost'
-                    color='danger'
+                    onPress={deleteList}
                   >
                     Delete list
                   </Button>
                 </span>
               </Tab>
               <Tab
-                title='Tags'
                 className='flex flex-col gap-6 grow shrink justify-between overflow-clip'
+                title='Tags'
               >
                 <span className='flex flex-col gap-4 shrink overflow-y-auto'>
                   {tagsAvailable.map(tag => (
-                    <span className='flex gap-2 items-center' key={tag.id}>
+                    <span key={tag.id} className='flex gap-2 items-center'>
                       <Name
+                        showUnderline
                         name={tag.name}
                         updateName={updateTagName.bind(null, tag)}
-                        showUnderline
                       />
                       <ColorPicker
                         value={tag.color}
                         onValueChange={updateTagColor.bind(null, tag)}
                       />
                       <Button
-                        onPress={deleteTag.bind(null, tag.id)}
+                        isIconOnly
+                        color='danger'
                         size='sm'
                         variant='ghost'
-                        color='danger'
-                        isIconOnly
+                        onPress={deleteTag.bind(null, tag.id)}
                       >
                         <TrashFill />
                       </Button>

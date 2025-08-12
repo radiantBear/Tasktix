@@ -1,8 +1,4 @@
 import { useState } from 'react';
-import { ListItem, StaticListItem } from '@/components/ListItem';
-import AddItem from '@/components/List/AddItem';
-import ListItemModel from '@/lib/model/listItem';
-import { NamedColor } from '@/lib/model/color';
 import {
   ChevronContract,
   ChevronExpand,
@@ -16,6 +12,12 @@ import {
   DropdownMenu,
   DropdownTrigger
 } from '@nextui-org/react';
+import { AnimatePresence, motion, Reorder } from 'framer-motion';
+
+import { ListItem, StaticListItem } from '@/components/ListItem';
+import AddItem from '@/components/List/AddItem';
+import ListItemModel from '@/lib/model/listItem';
+import { NamedColor } from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import {
   sortItems,
@@ -23,8 +25,8 @@ import {
   sortItemsByIndex
 } from '@/lib/sortItems';
 import ListMember from '@/lib/model/listMember';
-import { AnimatePresence, motion, Reorder } from 'framer-motion';
 import { default as api } from '@/lib/api';
+
 import { addSnackbar } from '../Snackbar';
 import { Filters } from '../SearchBar/types';
 import Name from '../Name';
@@ -67,7 +69,9 @@ export default function ListSection({
       .sort(sortItemsByCompleted)
       .map((item, i) => {
         const newItem: Item = structuredClone(item);
+
         newItem.visualIndex = i;
+
         return newItem;
       })
   );
@@ -82,6 +86,7 @@ export default function ListSection({
     dateCompleted?: ListItemModel['dateCompleted']
   ) {
     const newItems = structuredClone(items);
+
     for (const item of newItems)
       if (item.id == id) {
         item.status = status;
@@ -92,24 +97,28 @@ export default function ListSection({
 
   function updateExpectedMs(id: string, ms: number) {
     const newItems = structuredClone(items);
+
     for (const item of newItems) if (item.id == id) item.expectedMs = ms;
     setItems(newItems);
   }
 
   function updatePriority(id: string, priority: ListItemModel['priority']) {
     const newItems = structuredClone(items);
+
     for (const item of newItems) if (item.id == id) item.priority = priority;
     setItems(newItems);
   }
 
   function updateDueDate(id: string, date: Date) {
     const newItems = structuredClone(items);
+
     for (const item of newItems) if (item.id == id) item.dateDue = date;
     setItems(newItems);
   }
 
   function addItem(item: ListItemModel) {
     const newItems = structuredClone(items);
+
     newItems.push(item);
     setItems(newItems);
     setIsCollapsed(false);
@@ -117,6 +126,7 @@ export default function ListSection({
 
   function reorderItem(item: ListItemModel, lastVisualIndex: number) {
     const index = items.findIndex(i => i.id == item.id);
+
     if (index == lastVisualIndex) return;
 
     const oldIndex = item.sectionIndex;
@@ -139,6 +149,7 @@ export default function ListSection({
         const index1 = Math.min(newIndex, oldIndex);
         const index2 = Math.max(newIndex, oldIndex);
         const newItems = structuredClone(items);
+
         for (let i = 0; i < newItems.length; i++) {
           newItems[i].visualIndex = i;
           if (
@@ -155,6 +166,7 @@ export default function ListSection({
 
   function deleteItem(id: string) {
     const newItems = structuredClone(items);
+
     for (let i = 0; i < newItems.length; i++)
       if (newItems[i].id == id) newItems.splice(i, 1);
     setItems(newItems);
@@ -165,33 +177,33 @@ export default function ListSection({
       <div className='bg-content3 font-bold p-4 h-16 flex items-center justify-between'>
         <span className='min-w-fit shrink-0 flex'>
           <Button
-            onPress={() => setIsCollapsed(!isCollapsed)}
             isIconOnly
             className='hover:bg-foreground/10 -ml-2 mr-2'
+            onPress={() => setIsCollapsed(!isCollapsed)}
           >
             {isCollapsed ? <ChevronExpand /> : <ChevronContract />}
           </Button>
           <Name
-            name={name}
-            updateName={() => null}
             className='mt-0.5'
             classNames={{ input: 'text-md' }}
+            name={name}
+            updateName={() => null}
           />
         </span>
         <span className='flex gap-4'>
           <AddItem
-            sectionId={id}
-            hasTimeTracking={hasTimeTracking}
-            hasDueDates={hasDueDates}
-            nextIndex={items.length}
             addItem={addItem}
+            hasDueDates={hasDueDates}
+            hasTimeTracking={hasTimeTracking}
+            nextIndex={items.length}
+            sectionId={id}
           />
           <Dropdown placement='bottom'>
             <DropdownTrigger>
               <Button
-                variant='light'
                 isIconOnly
                 className='border-2 border-content4 hover:!bg-content4'
+                variant='light'
               >
                 <ThreeDots />
               </Button>
@@ -203,9 +215,9 @@ export default function ListSection({
             >
               <DropdownItem
                 key='delete'
-                startContent={<TrashFill />}
-                color='danger'
                 className='text-danger'
+                color='danger'
+                startContent={<TrashFill />}
               >
                 Delete
               </DropdownItem>
@@ -217,14 +229,14 @@ export default function ListSection({
         {isCollapsed || (
           <motion.section
             key='content'
-            initial='collapsed'
             animate='open'
             exit='collapsed'
+            initial='collapsed'
+            transition={{ duration: 0.25 }}
             variants={{
               open: { height: 'auto' },
               collapsed: { height: 0 }
             }}
-            transition={{ duration: 0.25 }}
           >
             {isAutoOrdered ? (
               items
@@ -233,19 +245,19 @@ export default function ListSection({
                 .map(item => (
                   <StaticListItem
                     key={item.id}
+                    addNewTag={addNewTag}
+                    deleteItem={deleteItem.bind(null, item.id)}
+                    hasDueDates={hasDueDates}
+                    hasTimeTracking={hasTimeTracking}
                     item={item}
                     members={members}
-                    tagsAvailable={tagsAvailable}
-                    hasTimeTracking={hasTimeTracking}
-                    hasDueDates={hasDueDates}
-                    setStatus={setStatus.bind(null, item.id)}
-                    setPaused={() => setStatus(item.id, 'Paused')}
                     setCompleted={setStatus.bind(null, item.id, 'Completed')}
+                    setPaused={() => setStatus(item.id, 'Paused')}
+                    setStatus={setStatus.bind(null, item.id)}
+                    tagsAvailable={tagsAvailable}
                     updateDueDate={updateDueDate.bind(null, item.id)}
-                    updatePriority={updatePriority.bind(null, item.id)}
                     updateExpectedMs={updateExpectedMs.bind(null, item.id)}
-                    deleteItem={deleteItem.bind(null, item.id)}
-                    addNewTag={addNewTag}
+                    updatePriority={updatePriority.bind(null, item.id)}
                   />
                 ))
             ) : (
@@ -259,24 +271,24 @@ export default function ListSection({
                   .map(item => (
                     <ListItem
                       key={item.id}
+                      addNewTag={addNewTag}
+                      deleteItem={deleteItem.bind(null, item.id)}
+                      hasDueDates={hasDueDates}
+                      hasTimeTracking={hasTimeTracking}
                       item={item}
                       members={members}
-                      tagsAvailable={tagsAvailable}
-                      hasTimeTracking={hasTimeTracking}
-                      hasDueDates={hasDueDates}
-                      setStatus={setStatus.bind(null, item.id)}
-                      setPaused={() => setStatus(item.id, 'Paused')}
-                      setCompleted={setStatus.bind(null, item.id, 'Completed')}
-                      updateDueDate={updateDueDate.bind(null, item.id)}
-                      updatePriority={updatePriority.bind(null, item.id)}
-                      updateExpectedMs={updateExpectedMs.bind(null, item.id)}
-                      deleteItem={deleteItem.bind(null, item.id)}
-                      addNewTag={addNewTag}
                       reorder={reorderItem.bind(
                         null,
                         item,
                         item.visualIndex || 0
                       )}
+                      setCompleted={setStatus.bind(null, item.id, 'Completed')}
+                      setPaused={() => setStatus(item.id, 'Paused')}
+                      setStatus={setStatus.bind(null, item.id)}
+                      tagsAvailable={tagsAvailable}
+                      updateDueDate={updateDueDate.bind(null, item.id)}
+                      updateExpectedMs={updateExpectedMs.bind(null, item.id)}
+                      updatePriority={updatePriority.bind(null, item.id)}
                     />
                   ))}
               </Reorder.Group>
@@ -323,6 +335,7 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
 
     case 'completedBefore':
       if (value) value.setHours(0, 0, 0, 0);
+
       return (
         !!item.dateCompleted &&
         value &&
@@ -331,11 +344,13 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
     case 'completedOn':
       const start = structuredClone(value);
       const end = structuredClone(value);
+
       if (start) {
         start.setHours(0, 0, 0, 0);
         end.setHours(0, 0, 0, 0);
         end.setDate(value.getDate() + 1);
       }
+
       return (
         !!item.dateCompleted &&
         value &&
@@ -344,6 +359,7 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
       );
     case 'completedAfter':
       if (value) value.setHours(23, 59, 59, 999);
+
       return (
         !!item.dateCompleted &&
         value &&

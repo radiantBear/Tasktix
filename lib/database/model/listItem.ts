@@ -1,4 +1,5 @@
 import ListItem, { Priority, Status } from '@/lib/model/listItem';
+
 import { DB_Assignee, extractAssigneeFromRow } from './assignee';
 import { DB_Tag, extractTagFromRow } from './tag';
 
@@ -51,6 +52,7 @@ export function extractListItemsFromRows(rows: DB_ListItem[]): ListItem[] {
 
   for (const item of rows) {
     const lastItem = listItems.at(-1);
+
     if (lastItem?.id == item.i_id) {
       if (lastItem.assignees.at(-1)?.user.id != item.ia_u_id)
         lastItem.assignees.push(extractAssigneeFromRow(item));

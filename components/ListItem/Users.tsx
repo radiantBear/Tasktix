@@ -1,4 +1,3 @@
-import Assignee from '@/lib/model/assignee';
 import {
   Avatar,
   AvatarGroup,
@@ -10,9 +9,12 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import { PeopleFill, Plus, X } from 'react-bootstrap-icons';
+
+import Assignee from '@/lib/model/assignee';
 import { getBackgroundColor, getTextColor } from '@/lib/color';
 import ListMember from '@/lib/model/listMember';
 import { default as api } from '@/lib/api';
+
 import { addSnackbar } from '../Snackbar';
 
 export default function Users({
@@ -37,6 +39,7 @@ export default function Users({
       .then(res => {
         addSnackbar(res.message, 'success');
         const newAssignees = structuredClone(_assignees);
+
         for (const member of members)
           if (member.user.id == userId)
             newAssignees.push(new Assignee(member.user, ''));
@@ -51,6 +54,7 @@ export default function Users({
       .then(res => {
         addSnackbar(res.message, 'success');
         const newAssignees = structuredClone(_assignees);
+
         for (let i = 0; i < newAssignees.length; i++)
           if (newAssignees[i].user.id == userId) newAssignees.splice(i, 1);
         setAssignees(newAssignees);
@@ -60,27 +64,27 @@ export default function Users({
 
   return (
     <Popover
-      placement='bottom'
       isOpen={isPopoverOpen}
+      placement='bottom'
       onOpenChange={open => {
         if (!isComplete) setIsPopoverOpen(open);
       }}
     >
       <PopoverTrigger>
         <Card
-          tabIndex={isComplete ? 1 : 0}
           className={`px-4 basis-1/6 grow shrink flex flex-row items-center justify-start overflow-hidden flex-nowrap h-10 shadow-none cursor-pointer ${isComplete ? 'opacity-50 cursor-default' : 'hover:bg-foreground/10 focus:z-10 focus:outline-2 focus:outline-focus focus:outline-offset-2'} ${className}`}
+          tabIndex={isComplete ? 1 : 0}
         >
           <PeopleFill className='shrink-0' />
           <AvatarGroup
-            max={4}
             className={`ml-4 ${isComplete ? 'opacity-50' : ''}`}
+            max={4}
           >
             {_assignees.map(assignee => (
               <Avatar
                 key={assignee.user.id}
-                name={assignee.user.username ?? ''}
                 classNames={{ base: getBackgroundColor(assignee.user.color) }}
+                name={assignee.user.username ?? ''}
                 size='sm'
               />
             ))}
@@ -95,11 +99,11 @@ export default function Users({
           >
             {assignee.user.username}
             <Button
-              onPress={removeAssignee.bind(null, assignee.user.id)}
-              variant='flat'
-              color='danger'
               isIconOnly
               className='rounded-lg w-8 h-8 min-w-8 min-h-8'
+              color='danger'
+              variant='flat'
+              onPress={removeAssignee.bind(null, assignee.user.id)}
             >
               <X />
             </Button>
@@ -114,11 +118,11 @@ export default function Users({
               >
                 {member.user.username}
                 <Button
-                  onPress={addAssignee.bind(null, member.user.id)}
-                  variant='flat'
-                  color='primary'
                   isIconOnly
                   className='rounded-lg w-8 h-8 min-w-8 min-h-8'
+                  color='primary'
+                  variant='flat'
+                  onPress={addAssignee.bind(null, member.user.id)}
                 >
                   <Plus />
                 </Button>

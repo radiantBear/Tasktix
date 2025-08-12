@@ -1,12 +1,13 @@
+import Assignee from '@/lib/model/assignee';
+import ListItem from '@/lib/model/listItem';
+import Tag from '@/lib/model/tag';
+import User from '@/lib/model/user';
+
 import {
   DB_ListItem,
   extractListItemFromRow,
   extractListItemsFromRows
 } from './listItem';
-import Assignee from '@/lib/model/assignee';
-import ListItem from '@/lib/model/listItem';
-import Tag from '@/lib/model/tag';
-import User from '@/lib/model/user';
 
 describe('extractListItemFromRow', () => {
   test('Accurately extracts bare list item data', () => {

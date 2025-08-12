@@ -1,6 +1,7 @@
-import User from './user';
 import * as generateIdModule from '@/lib/generateId';
 import * as colorModule from '@/lib/color';
+
+import User from './user';
 
 const fixedDateCreated = new Date('2020-01-01T00:00:00Z');
 const fixedDateSignedIn = new Date('2020-01-02T00:00:00Z');

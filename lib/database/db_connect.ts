@@ -23,6 +23,7 @@ export async function query<T extends RowDataPacket>(
     conn = await connect();
 
     let result;
+
     if (values) [result] = await conn.query<T[]>(sql, values);
     else [result] = await conn.query<T[]>(sql);
 
@@ -31,12 +32,11 @@ export async function query<T extends RowDataPacket>(
     if (result.length) return result;
 
     return false;
-  } catch (err) {
+  } catch {
     /* Don't let ending the connection cause an error if it's having issues too */
     try {
       conn?.end();
-    } catch (_) {}
-    console.error(err);
+    } catch {}
 
     return false;
   }
@@ -52,18 +52,18 @@ export async function execute(
     conn = await connect();
 
     let result;
+
     if (values) [result] = await conn.execute<ResultSetHeader>(sql, values);
     else [result] = await conn.execute<ResultSetHeader>(sql);
 
     await conn.end();
 
     return result;
-  } catch (err) {
+  } catch {
     /* Don't let ending the connection cause an error if it's having issues too */
     try {
       conn?.end();
-    } catch (_) {}
-    console.error(err);
+    } catch {}
 
     return false;
   }

@@ -12,12 +12,15 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   const user = await getUser();
+
   if (!user) return ClientError.Unauthenticated('Not logged in');
 
   const item = await getListItemById(params.id);
+
   if (!item) return ClientError.NotFound('List item not found');
 
   const isMember = await getIsListAssigneeByItem(user.id, params.id);
+
   if (!isMember) return ClientError.BadRequest('List item not found');
 
   const requestBody = await request.json();
@@ -41,6 +44,7 @@ export async function PATCH(
   const result = await updateListItem(item);
 
   if (!result) return ServerError.Internal('Could not update item');
+
   return Success.OK('Item updated');
 }
 
@@ -49,10 +53,12 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const session = await getUser();
+
   if (!session) return ClientError.Unauthenticated('Not logged in');
 
   const result = await deleteListItem(params.id);
 
   if (!result) return ServerError.Internal('Could not delete item');
+
   return Success.OK('Item deleted');
 }

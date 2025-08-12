@@ -12,12 +12,15 @@ export async function PATCH(
   { params }: { params: { id: string; tagId: string } }
 ) {
   const user = await getUser();
+
   if (!user) return ClientError.Unauthenticated('Not logged in');
 
   const isMember = await getIsListAssignee(user.id, params.id);
+
   if (!isMember) return ClientError.BadRequest('List not found');
 
   const tag = await getTagById(params.tagId);
+
   if (!tag) return ClientError.BadRequest('Tag not found');
 
   const requestBody = await request.json();
@@ -28,6 +31,7 @@ export async function PATCH(
   const result = await updateTag(params.id, tag);
 
   if (!result) return ServerError.Internal('Could not add tag');
+
   return Success.OK('Tag added');
 }
 
@@ -36,13 +40,16 @@ export async function DELETE(
   { params }: { params: { id: string; tagId: string } }
 ) {
   const user = await getUser();
+
   if (!user) return ClientError.Unauthenticated('Not logged in');
 
   const isMember = await getIsListAssignee(user.id, params.id);
+
   if (!isMember) return ClientError.BadRequest('List not found');
 
   const result = await deleteTag(params.tagId);
 
   if (!result) return ServerError.Internal('Could not remove tag');
+
   return Success.OK('Tag removed');
 }

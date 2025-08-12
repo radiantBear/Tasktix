@@ -21,12 +21,14 @@ describe('getDateDiff', () => {
   test('Returns positive difference when a is later than b', () => {
     const a = new Date('2023-01-02');
     const b = new Date('2023-01-01');
+
     expect(getDateDiff(a, b)).toBe(24 * 60 * 60 * 1000);
   });
 
   test('Returns negative difference when a is earlier than b', () => {
     const a = new Date('2023-01-01');
     const b = new Date('2023-01-02');
+
     expect(getDateDiff(a, b)).toBe(-(24 * 60 * 60 * 1000));
   });
 });
@@ -34,12 +36,15 @@ describe('getDateDiff', () => {
 describe('getDayOffset', () => {
   test('Returns correct day offsets for dates with no time component', () => {
     const today = new Date();
+
     today.setHours(0, 0, 0, 0);
 
     const tomorrow = new Date(today);
+
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const yesterday = new Date(today);
+
     yesterday.setDate(yesterday.getDate() - 1);
 
     expect(getDayOffset(today)).toBe(0);
@@ -49,12 +54,15 @@ describe('getDayOffset', () => {
 
   test('Returns correct day offsets for dates with time components', () => {
     const today = new Date();
+
     today.setHours(2, 6, 9, 14);
 
     const tomorrow = new Date(today);
+
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const yesterday = new Date(today);
+
     yesterday.setDate(yesterday.getDate() - 1);
 
     expect(getDayOffset(today)).toBe(0);
@@ -66,29 +74,34 @@ describe('getDayOffset', () => {
 describe('formatDate', () => {
   test('Returns "Today" for current date when pretty printing', () => {
     const today = new Date();
+
     expect(formatDate(today)).toBe('Today');
   });
 
   test('Returns "Today" for current date at midnight when pretty printing', () => {
     const today = new Date();
+
     today.setHours(0, 0, 0, 0);
     expect(formatDate(today)).toBe('Today');
   });
 
   test('Returns "Today" for current date just before midnight when pretty printing', () => {
     const today = new Date();
+
     today.setHours(23, 59, 59, 999);
     expect(formatDate(today)).toBe('Today');
   });
 
   test('Returns "Tomorrow" for tomorrow when pretty printing', () => {
     const tomorrow = new Date();
+
     tomorrow.setDate(tomorrow.getDate() + 1);
     expect(formatDate(tomorrow)).toBe('Tomorrow');
   });
 
   test('Returns "Tomorrow" for tomorrow at midnight when pretty printing', () => {
     const tomorrow = new Date();
+
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
     expect(formatDate(tomorrow)).toBe('Tomorrow');
@@ -96,6 +109,7 @@ describe('formatDate', () => {
 
   test('Returns "Tomorrow" for tomorrow just before midnight when pretty printing', () => {
     const tomorrow = new Date();
+
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(23, 59, 59, 999);
     expect(formatDate(tomorrow)).toBe('Tomorrow');
@@ -103,12 +117,14 @@ describe('formatDate', () => {
 
   test('Returns "Yesterday" for yesterday when pretty printing', () => {
     const yesterday = new Date();
+
     yesterday.setDate(yesterday.getDate() - 1);
     expect(formatDate(yesterday)).toBe('Yesterday');
   });
 
   test('Returns "Yesterday" for yesterday at midnight when pretty printing', () => {
     const yesterday = new Date();
+
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
     expect(formatDate(yesterday)).toBe('Yesterday');
@@ -116,6 +132,7 @@ describe('formatDate', () => {
 
   test('Returns "Yesterday" for yesterday just before midnight when pretty printing', () => {
     const yesterday = new Date();
+
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(23, 59, 59, 999);
     expect(formatDate(yesterday)).toBe('Yesterday');
@@ -135,6 +152,7 @@ describe('formatDate', () => {
     jest.setSystemTime(new Date('2023-01-05 00:00:00')); // A Thursday
 
     const sunday = new Date();
+
     sunday.setDate(sunday.getDate() + 3);
 
     expect(formatDate(sunday)).toBe('Sunday');
@@ -154,6 +172,7 @@ describe('formatDate', () => {
     jest.setSystemTime(new Date('2023-01-05 00:00:00')); // A Thursday
 
     const sunday = new Date();
+
     sunday.setDate(sunday.getDate() + 4);
 
     expect(formatDate(sunday)).toBe('01/09/2023');
@@ -161,6 +180,7 @@ describe('formatDate', () => {
 
   test('Returns formatted date string when not pretty printing', () => {
     const date = new Date();
+
     expect(formatDate(date, false)).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
   });
 });
@@ -188,6 +208,7 @@ describe('formatTime', () => {
 describe('inputToDate', () => {
   test('converts date string to Date object', () => {
     const result = inputToDate('2023-01-15');
+
     expect(result).toBeInstanceOf(Date);
     expect(result.getFullYear()).toBe(2023);
     expect(result.getMonth()).toBe(0); // January is 0
@@ -198,11 +219,13 @@ describe('inputToDate', () => {
 describe('dateToInput', () => {
   test('converts Date object to date string', () => {
     const date = new Date(2023, 0, 15); // 2023-01-15
+
     expect(dateToInput(date)).toBe('2023-01-15');
   });
 
   test('pads month and day with leading zeros', () => {
     const date = new Date(2023, 0, 5); // 2023-01-05
+
     expect(dateToInput(date)).toBe('2023-01-05');
   });
 });

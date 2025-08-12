@@ -1,5 +1,6 @@
 import { NamedColor } from '@/lib/model/color';
 import List from '@/lib/model/list';
+
 import { DB_ListSection, extractListSectionFromRow } from './listSection';
 import { DB_ListMember, extractListMemberFromRow } from './listMember';
 import { extractListItemFromRow } from './listItem';
@@ -28,6 +29,7 @@ export function extractListFromRow(row: DB_List): List {
     row.l_isAutoOrdered,
     row.l_id
   );
+
   list.id = row.l_id;
 
   return list;

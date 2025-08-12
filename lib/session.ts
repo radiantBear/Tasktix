@@ -1,14 +1,16 @@
 'use server';
 
+import { cookies } from 'next/headers';
+
 import { createSession, deleteSession } from '@/lib/database/session';
 import { getUserBySessionId } from '@/lib/database/user';
 import Session from '@/lib/model/session';
 import User from '@/lib/model/user';
-import { cookies } from 'next/headers';
 
 export async function setUser(userId: string): Promise<string | false> {
   const session = new Session();
   const date = new Date();
+
   date.setDate(date.getDate() + 1);
 
   session.userId = userId;

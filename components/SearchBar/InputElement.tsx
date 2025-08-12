@@ -1,7 +1,3 @@
-import { Filters, InputAction, InputOption } from './types';
-import DateInput from '@/components/DateInput';
-import TimeInput from '@/components/TimeInput';
-import { getTextColor } from '@/lib/color';
 import {
   Input,
   Select,
@@ -10,6 +6,12 @@ import {
   Switch
 } from '@nextui-org/react';
 import { ReactElement } from 'react';
+
+import DateInput from '@/components/DateInput';
+import TimeInput from '@/components/TimeInput';
+import { getTextColor } from '@/lib/color';
+
+import { Filters, InputAction, InputOption } from './types';
 
 export default function InputElement({
   inputOption,
@@ -37,33 +39,33 @@ export default function InputElement({
     case 'String':
       return (
         <Input
-          value={value[inputOption.label]}
-          onValueChange={handleInput}
-          label={`${inputOption.label}:`}
           autoFocus
+          className='flex items-center w-52 h-fit mt-1 shrink-0'
+          label={`${inputOption.label}:`}
           labelPlacement='outside-left'
           size='sm'
-          className='flex items-center w-52 h-fit mt-1 shrink-0'
+          value={value[inputOption.label]}
+          onValueChange={handleInput}
         />
       );
 
     case 'Select':
       return (
         <Select
-          selectedKeys={value[inputOption.label]}
-          onSelectionChange={handleInput}
-          label={`${inputOption.label}:`}
           autoFocus
-          selectionMode='multiple'
-          labelPlacement='outside-left'
-          size='sm'
           className='flex items-center w-52 shrink-0'
+          label={`${inputOption.label}:`}
+          labelPlacement='outside-left'
+          selectedKeys={value[inputOption.label]}
+          selectionMode='multiple'
+          size='sm'
+          onSelectionChange={handleInput}
         >
           {inputOption?.selectOptions?.map(option => (
             <SelectItem
               key={option.name}
-              value={option.name}
               className={option.color ? '!' + getTextColor(option.color) : ''}
+              value={option.name}
             >
               {option.name}
             </SelectItem>
@@ -74,37 +76,37 @@ export default function InputElement({
     case 'Date':
       return (
         <DateInput
-          value={value[inputOption.label]}
-          onValueChange={handleInput}
-          label={`${inputOption.label}:`}
           autoFocus
           className='!mb-1 h-unit-8 rounded-small'
+          label={`${inputOption.label}:`}
+          value={value[inputOption.label]}
+          onValueChange={handleInput}
         />
       );
 
     case 'Time':
       return (
         <TimeInput
-          value={value[inputOption.label]}
-          onValueChange={handleInput}
-          label={`${inputOption.label}:`}
-          size='sm'
-          labelPlacement='outside-left'
           className='shrink-0'
           classNames={{ input: 'w-12' }}
+          label={`${inputOption.label}:`}
+          labelPlacement='outside-left'
+          size='sm'
+          value={value[inputOption.label]}
+          onValueChange={handleInput}
         />
       );
 
     case 'Toggle':
       return (
         <Switch
-          value={value[inputOption.label]}
-          onValueChange={handleInput}
           autoFocus
           classNames={{
             base: 'flex-row-reverse gap-2 -mr-2',
             label: 'text-tiny'
           }}
+          value={value[inputOption.label]}
+          onValueChange={handleInput}
         >{`${inputOption.label}:`}</Switch>
       );
   }

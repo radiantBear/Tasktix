@@ -8,8 +8,10 @@ import {
   SlotsToClasses
 } from '@nextui-org/react';
 import { useEffect, useRef, useState } from 'react';
-import CalendarInput from './CalendarInput';
+
 import { formatDate } from '@/lib/date';
+
+import CalendarInput from './CalendarInput';
 
 export default function DateInput2({
   label,
@@ -20,7 +22,6 @@ export default function DateInput2({
   color = 'default',
   size,
   variant,
-  tabIndex,
   disabled,
   value,
   onValueChange
@@ -78,6 +79,7 @@ export default function DateInput2({
         input.current.dataset.focusWithin = 'false';
         input.current.dataset.focus = 'false';
       }
+
       return;
     }
     lastTrigger.current = new Date();
@@ -105,34 +107,35 @@ export default function DateInput2({
 
   return (
     <Input
-      label={label}
-      value={date ? formatDate(date, false) : undefined}
-      placeholder={placeholder}
-      defaultValue={defaultValue ? formatDate(defaultValue) : undefined}
-      variant={variant}
-      onFocusChange={debounceOpenChange}
       className={`${className} ${disabled ? 'opacity-50' : ''}`}
       classNames={classNames}
+      defaultValue={defaultValue ? formatDate(defaultValue) : undefined}
       disabled={disabled}
+      label={label}
+      placeholder={placeholder}
+      size={size}
       startContent={
         <Popover
-          placement='bottom-start'
           isOpen={isOpen}
+          placement='bottom-start'
           onOpenChange={debounceOpenChange}
         >
           <PopoverTrigger className='-ml-2 -mb-2 mt-1'>
-            <div className='invisible'></div>
+            <div className='invisible' />
           </PopoverTrigger>
           <PopoverContent className='p-0 overflow-hidden'>
             <CalendarInput
-              defaultValue={defaultValue}
               color={color}
+              defaultValue={defaultValue}
               value={value}
               onValueChange={handleInput}
             />
           </PopoverContent>
         </Popover>
       }
+      value={date ? formatDate(date, false) : undefined}
+      variant={variant}
+      onFocusChange={debounceOpenChange}
     />
   );
 }

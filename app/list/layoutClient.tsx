@@ -1,7 +1,8 @@
 'use client';
 
-import Sidebar, { listReducer, ListContext } from '@/components/Sidebar';
 import { ReactNode, useReducer } from 'react';
+
+import Sidebar, { listReducer, ListContext } from '@/components/Sidebar';
 
 export default function LayoutClient({
   startingLists,

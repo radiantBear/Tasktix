@@ -1,4 +1,5 @@
 import User from '@/lib/model/user';
+
 import { DB_Assignee, extractAssigneeFromRow } from './assignee';
 
 describe('extractAssigneeFromRow', () => {

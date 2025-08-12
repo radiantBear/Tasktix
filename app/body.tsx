@@ -8,11 +8,12 @@ import {
   NavbarContent,
   NavbarItem
 } from '@nextui-org/react';
-import { default as api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useState } from 'react';
-import Snackbar from '@/components/Snackbar';
 import Image from 'next/image';
+
+import Snackbar from '@/components/Snackbar';
+import { default as api } from '@/lib/api';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 export let setLoggedIn: () => void;
@@ -26,6 +27,7 @@ export default function Body({
   isLoggedInAtStart: boolean;
 }) {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInAtStart);
+
   setLoggedIn = () => setIsLoggedIn(true);
   setLoggedOut = () => setIsLoggedIn(false);
 
@@ -34,16 +36,16 @@ export default function Body({
       <Navbar maxWidth='full'>
         <NavbarBrand
           as={Link}
-          href='/'
           className='flex flex-row justify-left items-center gap-2'
+          href='/'
         >
           <Image
-            src='/logo.png'
             priority
-            width={100}
-            height={26}
             alt='Tasktix'
+            height={26}
+            src='/logo.png'
             style={{ borderRadius: 0 }}
+            width={100}
           />
         </NavbarBrand>
         <NavbarContent className='justify-center'>
@@ -89,7 +91,7 @@ function AccountButton({ isLoggedIn }: { isLoggedIn: boolean }) {
     );
 
   return (
-    <Button key='signOut' onPress={handleClick} color='primary' variant='flat'>
+    <Button key='signOut' color='primary' variant='flat' onPress={handleClick}>
       Sign Out
     </Button>
   );

@@ -7,12 +7,14 @@ import { validateColor, validateListName } from '@/lib/validate';
 
 export async function POST(request: Request) {
   const session = await getUser();
+
   if (!session) return ClientError.Unauthenticated('Not logged in');
 
   const requestBody = await request.json();
 
   const name = requestBody.name;
   const color = requestBody.color;
+
   if (!name) return ClientError.BadRequest('List name is required');
   if (!validateListName(name))
     return ClientError.BadRequest('Invalid list name');
@@ -26,5 +28,6 @@ export async function POST(request: Request) {
   const result = await createList(list);
 
   if (!result) return ServerError.Internal('Could not create list');
+
   return Success.Created('List created', `/list/${list.id}`);
 }

@@ -1,4 +1,5 @@
 import { RowDataPacket } from 'mysql2/promise';
+
 import { NamedColor } from '@/lib/model/color';
 import User from '@/lib/model/user';
 

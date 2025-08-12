@@ -1,8 +1,10 @@
+import { Reorder, useDragControls } from 'framer-motion';
+
 import ListItemModel from '@/lib/model/listItem';
 import { NamedColor } from '@/lib/model/color';
 import Tag from '@/lib/model/tag';
 import ListMember from '@/lib/model/listMember';
-import { Reorder, useDragControls } from 'framer-motion';
+
 import StaticListItem from './StaticListItem';
 
 export default function ListItem({
@@ -41,27 +43,27 @@ export default function ListItem({
   return (
     <Reorder.Item
       key={item.id}
-      value={item}
-      dragListener={false}
-      dragControls={controls}
-      onDragEnd={reorder}
       className='border-b-1 border-content3 last:border-b-0'
+      dragControls={controls}
+      dragListener={false}
+      value={item}
+      onDragEnd={reorder}
     >
       <StaticListItem
-        reorderControls={controls}
+        addNewTag={addNewTag}
+        deleteItem={deleteItem}
+        hasDueDates={hasDueDates}
+        hasTimeTracking={hasTimeTracking}
         item={item}
         members={members}
-        tagsAvailable={tagsAvailable}
-        hasTimeTracking={hasTimeTracking}
-        hasDueDates={hasDueDates}
-        setStatus={setStatus}
-        setPaused={setPaused}
+        reorderControls={controls}
         setCompleted={setCompleted}
+        setPaused={setPaused}
+        setStatus={setStatus}
+        tagsAvailable={tagsAvailable}
         updateDueDate={updateDueDate}
-        updatePriority={updatePriority}
         updateExpectedMs={updateExpectedMs}
-        deleteItem={deleteItem}
-        addNewTag={addNewTag}
+        updatePriority={updatePriority}
       />
     </Reorder.Item>
   );

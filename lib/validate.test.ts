@@ -224,6 +224,7 @@ describe('validateListItemName', () => {
 describe('validateColor', () => {
   test('Accepts named colors', () => {
     let result = validateColor('Pink');
+
     expect(result).toBe(true);
 
     result = validateColor('Red');
@@ -259,6 +260,7 @@ describe('validateColor', () => {
 
   test('Rejects semantic colors', () => {
     let result = validateColor('success');
+
     expect(result).toBe(false);
 
     result = validateColor('warning');

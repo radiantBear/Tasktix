@@ -8,9 +8,11 @@ export async function PATCH(
   { params }: { params: { id: string; sectionId: string } }
 ) {
   const user = await getUser();
+
   if (!user) return ClientError.Unauthenticated('Not logged in');
 
   const isMember = await getIsListAssignee(user.id, params.id);
+
   if (!isMember) return ClientError.BadRequest('List not found');
 
   const requestBody = await request.json();
@@ -27,5 +29,6 @@ export async function PATCH(
   );
 
   if (!result) return ServerError.Internal('Could not reorder items');
+
   return Success.OK('Items reordered');
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import { formatTime } from '@/lib/date';
 import { Input } from '@nextui-org/react';
 import { useState } from 'react';
+
+import { formatTime } from '@/lib/date';
 
 export default function TimeInput({
   label,
@@ -47,22 +48,23 @@ export default function TimeInput({
     setTime(hourStr + ':' + minStr);
 
     const ms = (Number(hourStr) * 60 + Number(minStr)) * 60 * 1000;
+
     if (onValueChange) onValueChange(ms);
   }
 
   return (
     <Input
       autoFocus={autoFocus ?? true}
-      label={label}
-      labelPlacement={labelPlacement}
-      variant={variant}
-      color={color}
-      size={size}
-      value={value != undefined ? formatTime(value) : time}
-      onValueChange={updateTime}
-      tabIndex={tabIndex}
       className={className}
       classNames={classNames}
+      color={color}
+      label={label}
+      labelPlacement={labelPlacement}
+      size={size}
+      tabIndex={tabIndex}
+      value={value != undefined ? formatTime(value) : time}
+      variant={variant}
+      onValueChange={updateTime}
     />
   );
 }

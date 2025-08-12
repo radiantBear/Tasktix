@@ -22,5 +22,6 @@ export default function searchReducer(
   }
 
   action.callback(newState);
+
   return newState;
 }

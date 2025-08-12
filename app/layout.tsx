@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { Providers } from './providers';
-import Body from '@/app/body';
 
-import './globals.css';
+import Body from '@/app/body';
 import { getUser } from '@/lib/session';
+
+import { Providers } from './providers';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Tasktix',
@@ -14,7 +15,7 @@ export default async function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html suppressHydrationWarning lang='en'>
       <body>
         <Providers>
           <Body isLoggedInAtStart={!!(await getUser())}>{children}</Body>

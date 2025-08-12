@@ -1,4 +1,5 @@
 import ListMember from '@/lib/model/listMember';
+
 import { DB_User, extractUserFromRow } from './user';
 
 export interface DB_ListMember extends DB_User {
@@ -12,6 +13,7 @@ export interface DB_ListMember extends DB_User {
 
 export function extractListMemberFromRow(row: DB_ListMember): ListMember {
   const user = extractUserFromRow(row);
+
   return new ListMember(
     user,
     row.lm_canAdd,

@@ -1,5 +1,6 @@
 import { Button } from '@nextui-org/react';
 import { PauseFill, PlayFill } from 'react-bootstrap-icons';
+
 import ListItem from '@/lib/model/listItem';
 
 export default function TimeButton({
@@ -18,11 +19,11 @@ export default function TimeButton({
     case 'Unstarted':
       return (
         <Button
-          tabIndex={0}
-          color='primary'
-          variant='ghost'
           className='w-24'
+          color='primary'
           startContent={playBtn}
+          tabIndex={0}
+          variant='ghost'
           onPress={startRunning}
         >
           Start
@@ -31,11 +32,11 @@ export default function TimeButton({
     case 'In Progress':
       return (
         <Button
-          tabIndex={0}
-          color='warning'
-          variant='ghost'
           className='w-24'
+          color='warning'
           startContent={pauseBtn}
+          tabIndex={0}
+          variant='ghost'
           onPress={pauseRunning}
         >
           Pause
@@ -45,12 +46,12 @@ export default function TimeButton({
     case 'Completed':
       return (
         <Button
-          tabIndex={status == 'Completed' ? 1 : 0}
-          color='primary'
-          variant='ghost'
           className='w-24'
-          startContent={playBtn}
+          color='primary'
           isDisabled={status == 'Completed'}
+          startContent={playBtn}
+          tabIndex={status == 'Completed' ? 1 : 0}
+          variant='ghost'
           onPress={startRunning}
         >
           Resume

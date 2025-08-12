@@ -1,7 +1,8 @@
 import { authorize } from '@/lib/security/authorize';
-import LayoutClient from './layoutClient';
 import { getListsByUser } from '@/lib/database/list';
 import { getUser } from '@/lib/session';
+
+import LayoutClient from './layoutClient';
 
 export default async function UserLayout({
   children
@@ -9,6 +10,7 @@ export default async function UserLayout({
   await authorize();
 
   const user = await getUser();
+
   /* Just need this for TypeScript */
   if (!user) return <></>;
 

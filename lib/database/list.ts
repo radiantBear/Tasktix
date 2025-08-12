@@ -3,6 +3,7 @@
 import ListMember from '@/lib/model/listMember';
 import List from '@/lib/model/list';
 import Tag from '@/lib/model/tag';
+
 import { execute, query } from './db_connect';
 import {
   DB_List,
@@ -44,6 +45,7 @@ export async function createList(list: List): Promise<boolean> {
       userId: member.user.id,
       listId: list.id
     });
+
     if (!result) return false;
   }
 
@@ -152,6 +154,7 @@ export async function getListMembersByUser(
   if (!result) return false;
 
   const returnVal: { [id: string]: ListMember[] } = {};
+
   for (const row of result) {
     if (!returnVal[row.l_id])
       returnVal[row.l_id] = [extractListMemberFromRow(row)];
@@ -244,6 +247,7 @@ export async function getTagsByUser(
   if (!result) return false;
 
   const returnVal: { [id: string]: Tag[] } = {};
+
   for (const row of result) {
     if (!returnVal[row.l_id]) returnVal[row.l_id] = [extractTagFromRow(row)];
     else returnVal[row.l_id].push(extractTagFromRow(row));
@@ -279,6 +283,7 @@ export async function updateList(list: List): Promise<boolean> {
   `;
 
   const result = await execute(sql, { ...list });
+
   if (!result) return false;
 
   return true;
@@ -308,6 +313,7 @@ export async function deleteList(id: string): Promise<boolean> {
   `;
 
   const result = await execute(sql, { id });
+
   if (!result) return false;
 
   return true;
@@ -320,6 +326,7 @@ export async function deleteTag(id: string): Promise<boolean> {
   `;
 
   const result = await execute(sql, { id });
+
   if (!result) return false;
 
   return true;

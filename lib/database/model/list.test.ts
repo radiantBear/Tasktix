@@ -1,4 +1,3 @@
-import { DB_List, extractListFromRow, extractListsFromRows } from './list';
 import Assignee from '@/lib/model/assignee';
 import List from '@/lib/model/list';
 import ListItem from '@/lib/model/listItem';
@@ -6,6 +5,8 @@ import ListMember from '@/lib/model/listMember';
 import ListSection from '@/lib/model/listSection';
 import Tag from '@/lib/model/tag';
 import User from '@/lib/model/user';
+
+import { DB_List, extractListFromRow, extractListsFromRows } from './list';
 
 describe('extractListFromRow', () => {
   test('Accurately extracts bare list data', () => {

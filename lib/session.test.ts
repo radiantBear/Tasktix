@@ -4,6 +4,7 @@ import { createSession, deleteSession } from '@/lib/database/session';
 import { getUserBySessionId } from '@/lib/database/user';
 import User from '@/lib/model/user';
 import Session from '@/lib/model/session';
+
 import { setUser, getUser, clearUser } from './session';
 
 jest.mock('@/lib/database/session');
@@ -37,14 +38,17 @@ describe('setUser', () => {
     expect(createSession).toHaveBeenCalledTimes(1);
     const createSessionCall: Session = (createSession as jest.Mock).mock
       .calls[0][0];
+
     expect(createSessionCall.userId).toBe(userId);
     expect(createSessionCall.id).toEqual(expect.any(String));
     expect(createSessionCall.dateExpire).toEqual(expect.any(Date));
 
     const sessionId = createSessionCall.id;
+
     expect(mockedCookies.set).toHaveBeenCalledTimes(1);
     const mockedCookiesCall: [string, string, unknown] =
       mockedCookies.set.mock.calls[0];
+
     expect(mockedCookiesCall[0]).toBe('user');
     expect(mockedCookiesCall[1]).toBe(sessionId);
 

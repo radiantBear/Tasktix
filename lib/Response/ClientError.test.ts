@@ -36,6 +36,7 @@ describe('BadRequest', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -84,6 +85,7 @@ describe('Unauthenticated', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -132,6 +134,7 @@ describe('Forbidden', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -180,6 +183,7 @@ describe('NotFound', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -228,6 +232,7 @@ describe('Conflict', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -276,6 +281,7 @@ describe('Gone', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });
@@ -322,6 +328,7 @@ describe('PayloadTooLarge', () => {
     const message = 'Error message';
 
     const originalJson = Response.json;
+
     Response.json = jest.fn(() => {
       throw new Error('Stringification failed');
     });

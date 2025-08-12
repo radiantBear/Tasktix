@@ -1,7 +1,5 @@
 'use client';
 
-import { getBackgroundColor } from '@/lib/color';
-import { namedColors, NamedColor } from '@/lib/model/color';
 import {
   Button,
   Popover,
@@ -10,6 +8,9 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import { PaletteFill, X } from 'react-bootstrap-icons';
+
+import { namedColors, NamedColor } from '@/lib/model/color';
+import { getBackgroundColor } from '@/lib/color';
 
 export default function ColorPicker({
   value,
@@ -31,9 +32,9 @@ export default function ColorPicker({
     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <Button
-          size='sm'
           isIconOnly
           className={`${value ? getBackgroundColor(value) : ''} ${className}`}
+          size='sm'
         >
           <PaletteFill />
         </Button>
@@ -41,19 +42,19 @@ export default function ColorPicker({
       <PopoverContent className='grid grid-cols-3 gap-1'>
         {namedColors.map(color => (
           <Button
-            onPress={pickColor.bind(null, color)}
             key={color}
             isIconOnly
-            className={`rounded-md w-6 h-6 min-w-6 min-h-6 ${getBackgroundColor(color)}`}
             aria-label={color}
+            className={`rounded-md w-6 h-6 min-w-6 min-h-6 ${getBackgroundColor(color)}`}
+            onPress={pickColor.bind(null, color)}
           />
         ))}
         <Button
-          onPress={pickColor.bind(null, null)}
           key='clear'
           isIconOnly
-          className={`rounded-md w-6 h-6 min-w-6 min-h-6`}
           aria-label='clear'
+          className={`rounded-md w-6 h-6 min-w-6 min-h-6`}
+          onPress={pickColor.bind(null, null)}
         >
           <X />
         </Button>

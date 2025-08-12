@@ -1,4 +1,5 @@
 import ListSection from '@/lib/model/listSection';
+
 import { DB_ListItem, extractListItemFromRow } from './listItem';
 
 export interface DB_ListSection extends DB_ListItem {

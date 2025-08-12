@@ -1,4 +1,5 @@
 import { generateId } from '../generateId';
+
 import ListItem from './listItem';
 
 export default class ListSection {
