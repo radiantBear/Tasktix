@@ -1,29 +1,27 @@
-import * as generateIdModule from '@/lib/generateId';
+jest.mock('../generateId', () => ({
+  generateId: jest.fn(() => 'mock-generated-id')
+}));
+
+import { generateId } from '../generateId';
 
 import Tag from './tag';
 
 beforeEach(() => {
-  jest
-    .spyOn(generateIdModule, 'generateId')
-    .mockReturnValue('mock-generated-id');
-});
-
-afterEach(() => {
-  jest.restoreAllMocks();
+  (generateId as jest.Mock).mockClear();
 });
 
 test('Generates an id if none provided', () => {
   const tag = new Tag('testTag', 'Amber');
 
   expect(tag.id).toBe('mock-generated-id');
-  expect(generateIdModule.generateId).toHaveBeenCalled();
+  expect(generateId).toHaveBeenCalled();
 });
 
 test('Uses the provided id', () => {
   const tag = new Tag('testTag', 'Amber', 'provided-id');
 
   expect(tag.id).toBe('provided-id');
-  expect(generateIdModule.generateId).not.toHaveBeenCalled();
+  expect(generateId).not.toHaveBeenCalled();
 });
 
 test('Assigns all properties correctly', () => {

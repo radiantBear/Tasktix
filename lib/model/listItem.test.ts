@@ -1,4 +1,8 @@
-import * as generateIdModule from '@/lib/generateId';
+jest.mock('../generateId', () => ({
+  generateId: jest.fn(() => 'mock-generated-id')
+}));
+
+import { generateId } from '../generateId';
 
 import Assignee from './assignee';
 import ListItem from './listItem';
@@ -6,13 +10,7 @@ import User from './user';
 import Tag from './tag';
 
 beforeEach(() => {
-  jest
-    .spyOn(generateIdModule, 'generateId')
-    .mockReturnValue('mock-generated-id');
-});
-
-afterEach(() => {
-  jest.restoreAllMocks();
+  (generateId as jest.Mock).mockClear();
 });
 
 describe('ListItem constructor', () => {
@@ -20,14 +18,14 @@ describe('ListItem constructor', () => {
     const listItem = new ListItem('testListItem', {});
 
     expect(listItem.id).toBe('mock-generated-id');
-    expect(generateIdModule.generateId).toHaveBeenCalled();
+    expect(generateId).toHaveBeenCalled();
   });
 
   test('Uses the provided id', () => {
     const listItem = new ListItem('testListItem', { id: 'provided-id' });
 
     expect(listItem.id).toBe('provided-id');
-    expect(generateIdModule.generateId).not.toHaveBeenCalled();
+    expect(generateId).not.toHaveBeenCalled();
   });
 
   test('Uses sane defaults for a new item when properties are unspecified', () => {

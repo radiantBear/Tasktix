@@ -1,4 +1,8 @@
-import * as generateIdModule from '@/lib/generateId';
+jest.mock('../generateId', () => ({
+  generateId: jest.fn(() => 'mock-generated-id')
+}));
+
+import { generateId } from '../generateId';
 
 import List from './list';
 import ListMember from './listMember';
@@ -6,13 +10,7 @@ import ListSection from './listSection';
 import User from './user';
 
 beforeEach(() => {
-  jest
-    .spyOn(generateIdModule, 'generateId')
-    .mockReturnValue('mock-generated-id');
-});
-
-afterEach(() => {
-  jest.restoreAllMocks();
+  (generateId as jest.Mock).mockClear();
 });
 
 describe('List constructor', () => {
@@ -20,7 +18,7 @@ describe('List constructor', () => {
     const list = new List('testList', 'Amber', [], [], false, false, false);
 
     expect(list.id).toBe('mock-generated-id');
-    expect(generateIdModule.generateId).toHaveBeenCalled();
+    expect(generateId).toHaveBeenCalled();
   });
 
   test('Uses the provided id', () => {
@@ -36,7 +34,7 @@ describe('List constructor', () => {
     );
 
     expect(list.id).toBe('provided-id');
-    expect(generateIdModule.generateId).not.toHaveBeenCalled();
+    expect(generateId).not.toHaveBeenCalled();
   });
 
   test('Assigns all properties correctly', () => {
