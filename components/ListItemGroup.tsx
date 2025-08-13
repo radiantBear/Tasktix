@@ -87,7 +87,7 @@ export default function ListItemGroup({
     listId: string | undefined,
     name: string,
     color: NamedColor
-  ) {
+  ): Promise<string> {
     if (!listId) return new Promise((_, reject) => reject('No list ID'));
 
     return new Promise((resolve, reject) => {

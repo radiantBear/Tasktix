@@ -37,7 +37,7 @@ export default function DateInput({
     | 'success';
   className?: string;
   value?: Date;
-  onValueChange?: (date: Date) => any;
+  onValueChange?: (date: Date) => unknown;
 }) {
   const [isOpen, setIsOpen] = useState(autoFocus);
   const [date, setDate] = useState(value || defaultValue || null);

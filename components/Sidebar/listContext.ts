@@ -1,3 +1,5 @@
-import { createContext } from 'react';
+import { createContext, Dispatch } from 'react';
 
-export const ListContext = createContext(_ => _);
+import { Action } from './types';
+
+export const ListContext = createContext<Dispatch<Action>>(_ => _);

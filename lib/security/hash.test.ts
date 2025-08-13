@@ -55,7 +55,7 @@ describe('hash', () => {
 
   test('Throws an error if salt generation fails', async () => {
     (crypto.randomFill as jest.Mock).mockImplementation(
-      (_, callback: (err: any, str: any) => void): void => {
+      (_, callback: (err: unknown, str: unknown) => void): void => {
         callback(new Error('randomFill failed'), []);
       }
     );
@@ -65,7 +65,7 @@ describe('hash', () => {
 
   test('Throws an error if hashing fails', async () => {
     (crypto.scrypt as jest.Mock).mockImplementation(
-      (_, __, ___, callback: (err: any, key: Buffer) => void): void => {
+      (_, __, ___, callback: (err: unknown, key: Buffer) => void): void => {
         callback(new Error('scrypt failed'), Buffer.alloc(0));
       }
     );
@@ -114,7 +114,7 @@ describe('compare', () => {
     const hashedPassword = await hash('password123');
 
     (crypto.scrypt as jest.Mock).mockImplementation(
-      (_, __, ___, callback: (err: any, key: Buffer) => void): void => {
+      (_, __, ___, callback: (err: unknown, key: Buffer) => void): void => {
         callback(new Error('scrypt failed'), Buffer.alloc(0));
       }
     );

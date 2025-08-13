@@ -44,6 +44,6 @@ export function validateListItemName(name: string): [boolean, string] {
 }
 
 export function validateColor(color: string): boolean {
-  // @ts-ignore: `.has()` can take any string and will return whether it is a named color
+  // @ts-ignore: `.has()` can take unknown string and will return whether it is a named color
   return namedColorSet.has(color);
 }

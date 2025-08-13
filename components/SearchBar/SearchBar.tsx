@@ -16,11 +16,11 @@ export default function SearchBar({
   onValueChange
 }: {
   inputOptions: InputOptionGroup[];
-  onValueChange: (value: Filters) => any;
+  onValueChange: (value: Filters) => unknown;
 }) {
   const [usedOptions, setUsedOptions] = useState<Set<string>>(new Set());
   const [value, setValue] = useState('');
-  const [filters, dispatchFilters] = useReducer(searchReducer, []);
+  const [filters, dispatchFilters] = useReducer(searchReducer, {});
 
   const _options = inputOptions.flatMap(optionGrp => optionGrp.options);
   const remainingOptions = inputOptions.map(o => {
@@ -89,7 +89,7 @@ export default function SearchBar({
     setValue('');
   }
 
-  function handleSelectionChange(selection: Key) {
+  function handleSelectionChange(selection: Key | null) {
     if (selection != null) addUsedOption(selection.toString());
 
     setValue('');

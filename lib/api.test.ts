@@ -7,7 +7,7 @@ import api from './api'; // Adjust the import path as needed
 function createFetchResponse(
   status: number,
   message: string,
-  content: any
+  content: unknown
 ): Response {
   return {
     status,

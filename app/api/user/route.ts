@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     if (!result) return ServerError.Internal('Could not create user');
 
     return Success.Created('User Created', `/api/user/${user.id}`);
-  } catch (error: any) {
-    return ServerError.Internal(error.toString());
+  } catch (error: unknown) {
+    return ServerError.Internal(error?.toString() ?? 'Internal Server Error');
   }
 }

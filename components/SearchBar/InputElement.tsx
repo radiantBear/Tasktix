@@ -21,8 +21,8 @@ export default function InputElement({
 }: {
   inputOption: InputOption;
   value: Filters;
-  dispatchFilters: (action: InputAction) => any;
-  onValueChange: (value: Filters) => any;
+  dispatchFilters: (action: InputAction) => unknown;
+  onValueChange: (value: Filters) => unknown;
 }): ReactElement {
   function handleInput(newValue: number | string | boolean | Selection | Date) {
     if (newValue instanceof Date) newValue.setHours(23, 59, 59, 0);

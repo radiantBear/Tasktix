@@ -17,7 +17,7 @@ export default function Name({
   disabled?: boolean;
   className?: string;
   classNames?: { input?: string; button?: string };
-  updateName: (name: string) => any;
+  updateName: (name: string) => unknown;
 }) {
   const [newName, setNewName] = useState(name);
   const [prevName, setPrevName] = useState(name);

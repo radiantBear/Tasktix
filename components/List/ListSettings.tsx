@@ -46,13 +46,13 @@ export function ListSettings({
   hasTimeTracking: boolean;
   hasDueDates: boolean;
   isAutoOrdered: boolean;
-  setListName: (name: string) => any;
-  setListColor: (color: NamedColor) => any;
-  setTagsAvailable: (value: Tag[]) => any;
-  setHasTimeTracking: (value: boolean) => any;
-  setHasDueDates: (value: boolean) => any;
-  setIsAutoOrdered: (value: boolean) => any;
-  addNewTag: (name: string, color: NamedColor) => any;
+  setListName: (name: string) => unknown;
+  setListColor: (color: NamedColor) => unknown;
+  setTagsAvailable: (value: Tag[]) => unknown;
+  setHasTimeTracking: (value: boolean) => unknown;
+  setHasDueDates: (value: boolean) => unknown;
+  setIsAutoOrdered: (value: boolean) => unknown;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
 }) {
   const router = useRouter();
   const dispatchEvent = useContext(ListContext);

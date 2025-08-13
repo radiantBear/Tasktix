@@ -16,7 +16,7 @@ export default function ElapsedInput({
 }: {
   disabled: boolean;
   ms: number;
-  resetTime: () => any;
+  resetTime: () => unknown;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 

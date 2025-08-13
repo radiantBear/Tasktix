@@ -54,7 +54,7 @@ export default function DateInput2({
   variant?: 'flat' | 'faded' | 'bordered' | 'underlined';
   disabled?: boolean;
   value?: Date;
-  onValueChange?: (date: Date) => any;
+  onValueChange?: (date: Date) => unknown;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(value || defaultValue || null);

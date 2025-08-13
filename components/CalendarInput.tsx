@@ -21,7 +21,7 @@ export default function CalendarInput({
     | 'warning'
     | 'success';
   value?: Date;
-  onValueChange?: (date: Date) => any;
+  onValueChange?: (date: Date) => unknown;
 }) {
   const [date, setDate] = useState(value || defaultValue || null);
   const [currentRange, setCurrentRange] = useState(defaultValue || new Date());
@@ -103,7 +103,7 @@ function CalendarInputBody({
   color: 'default' | 'primary' | 'secondary' | 'danger' | 'warning' | 'success';
   current: Date | null;
   month: Date;
-  onSelect: (value: number) => any;
+  onSelect: (value: number) => unknown;
 }) {
   const isCurrentMonth =
     current &&

@@ -27,7 +27,7 @@ export default function Snackbar() {
   const [snackbarQueue, setSnackbarQueue] = useState<SnackbarMessage[]>([]);
 
   /* Copied styles from https://github.com/nextui-org/nextui/blob/main/packages/core/theme/src/utils/variants.ts for consistency */
-  const styles: any = {
+  const styles = {
     default: 'bg-default/40 text-default-foreground',
     success: 'bg-success/20 text-success-600 dark:text-success',
     warning: 'bg-warning/20 text-warning-600 dark:text-warning',

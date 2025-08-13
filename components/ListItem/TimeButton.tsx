@@ -9,8 +9,8 @@ export default function TimeButton({
   pauseRunning
 }: {
   status: ListItem['status'];
-  startRunning: () => any;
-  pauseRunning: () => any;
+  startRunning: () => unknown;
+  pauseRunning: () => unknown;
 }) {
   const playBtn = <PlayFill className='shrink-0' />;
   const pauseBtn = <PauseFill className='shrink-0' />;

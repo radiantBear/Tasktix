@@ -36,7 +36,7 @@ export default function TimeInput({
   tabIndex?: number;
   className?: string;
   classNames?: { label?: string; inputWrapper?: string; input?: string };
-  onValueChange?: (value: number) => any;
+  onValueChange?: (value: number) => unknown;
 }) {
   const [time, setTime] = useState(formatTime(defaultValue || 0));
 

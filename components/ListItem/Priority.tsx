@@ -35,7 +35,7 @@ export default function Priority({
     | 'popoverContent'
     | 'helperWrapper'
   >;
-  setPriority: (priority: ListItem['priority']) => any;
+  setPriority: (priority: ListItem['priority']) => unknown;
 }) {
   const _priority = new Set([priority]);
 
@@ -52,9 +52,13 @@ export default function Priority({
         selectedKeys={_priority}
         size='sm'
         variant='flat'
-        onSelectionChange={(keys: Selection) =>
-          setPriority((keys != 'all' && keys.keys().next().value) || 'Low')
-        }
+        onSelectionChange={(keys: Selection) => {
+          const key = (keys != 'all' && keys.keys().next().value) || 'Low';
+
+          setPriority(
+            key == 'High' ? 'High' : key == 'Medium' ? 'Medium' : 'Low'
+          );
+        }}
       >
         <SelectItem key='High' color='danger' value='High'>
           High

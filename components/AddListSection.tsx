@@ -13,7 +13,7 @@ export default function AddListSection({
   addListSection
 }: {
   listId: string;
-  addListSection: (_: ListSection) => any;
+  addListSection: (_: ListSection) => unknown;
 }) {
   const [name, setName] = useState('');
 

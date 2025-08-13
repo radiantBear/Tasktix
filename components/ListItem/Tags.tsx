@@ -30,9 +30,9 @@ export default function Tags({
   isComplete: boolean;
   tagsAvailable?: TagModel[];
   className?: string;
-  addNewTag: (name: string, color: NamedColor) => any;
-  linkTag: (id: string) => any;
-  unlinkTag: (id: string) => any;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
+  linkTag: (id: string) => unknown;
+  unlinkTag: (id: string) => unknown;
 }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 

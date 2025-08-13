@@ -59,8 +59,8 @@ export default function ListSection({
   hasTimeTracking: boolean;
   hasDueDates: boolean;
   isAutoOrdered: boolean;
-  deleteSection: () => any;
-  addNewTag: (name: string, color: NamedColor) => any;
+  deleteSection: () => unknown;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
 }) {
   // TODO: Update to use hashmap: don't iterate over every value when finding the right one to modify
   const [items, setItems] = useState<Item[]>(

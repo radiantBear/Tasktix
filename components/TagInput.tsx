@@ -15,8 +15,8 @@ export default function TagInput({
 }: {
   className?: string;
   classNames?: { name: string };
-  addNewTag: (name: string, color: NamedColor) => any;
-  linkTag?: (id: string) => any;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
+  linkTag?: (id: string) => unknown;
 }) {
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState<NamedColor | null>(null);

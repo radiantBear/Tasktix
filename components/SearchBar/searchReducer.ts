@@ -17,7 +17,7 @@ export default function searchReducer(
       break;
 
     case 'Clear':
-      newState = [];
+      newState = {};
       break;
   }
 

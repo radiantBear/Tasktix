@@ -18,7 +18,7 @@ export default function ColorPicker({
   className
 }: {
   value: NamedColor | null;
-  onValueChange: (color: NamedColor | null) => any;
+  onValueChange: (color: NamedColor | null) => unknown;
   className?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);

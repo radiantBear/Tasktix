@@ -28,15 +28,15 @@ export default function ListItem({
   tagsAvailable: Tag[];
   hasTimeTracking: boolean;
   hasDueDates: boolean;
-  setStatus: (status: ListItemModel['status']) => any;
-  setPaused: () => any;
-  setCompleted: (date: ListItemModel['dateCompleted']) => any;
-  updateDueDate: (date: Date) => any;
-  updatePriority: (priority: ListItemModel['priority']) => any;
-  updateExpectedMs: (ms: number) => any;
-  deleteItem: () => any;
-  addNewTag: (name: string, color: NamedColor) => any;
-  reorder: () => any;
+  setStatus: (status: ListItemModel['status']) => unknown;
+  setPaused: () => unknown;
+  setCompleted: (date: ListItemModel['dateCompleted']) => unknown;
+  updateDueDate: (date: Date) => unknown;
+  updatePriority: (priority: ListItemModel['priority']) => unknown;
+  updateExpectedMs: (ms: number) => unknown;
+  deleteItem: () => unknown;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
+  reorder: () => unknown;
 }) {
   const controls = useDragControls();
 

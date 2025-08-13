@@ -18,7 +18,7 @@ export default function ExpectedInput({
 }: {
   ms: number | null;
   disabled: boolean;
-  updateMs: (ms: number) => any;
+  updateMs: (ms: number) => unknown;
 }) {
   const [value, setValue] = useState(ms ?? 0);
   const [isOpen, setIsOpen] = useState(false);

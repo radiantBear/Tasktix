@@ -58,7 +58,7 @@ export default function More({
   hasTimeTracking: boolean;
   elapsedLive: number;
   set: SetItem;
-  addNewTag: (name: string, color: NamedColor) => any;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
 }) {
   const isComplete = item.status == 'Completed';
 

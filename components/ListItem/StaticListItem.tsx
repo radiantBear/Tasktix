@@ -33,14 +33,14 @@ interface StaticListItemParams {
   hasTimeTracking: boolean;
   hasDueDates: boolean;
   reorderControls?: DragControls;
-  setStatus: (status: ListItemModel['status']) => any;
-  updateDueDate: (date: Date) => any;
-  updatePriority: (priority: ListItemModel['priority']) => any;
-  deleteItem: () => any;
-  setPaused: () => any;
-  setCompleted: (date: ListItemModel['dateCompleted']) => any;
-  updateExpectedMs: (ms: number) => any;
-  addNewTag: (name: string, color: NamedColor) => any;
+  setStatus: (status: ListItemModel['status']) => unknown;
+  updateDueDate: (date: Date) => unknown;
+  updatePriority: (priority: ListItemModel['priority']) => unknown;
+  deleteItem: () => unknown;
+  setPaused: () => unknown;
+  setCompleted: (date: ListItemModel['dateCompleted']) => unknown;
+  updateExpectedMs: (ms: number) => unknown;
+  addNewTag: (name: string, color: NamedColor) => Promise<string>;
 }
 
 interface SetItem {

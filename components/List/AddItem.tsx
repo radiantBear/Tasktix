@@ -32,7 +32,7 @@ export default function AddItem({
   hasTimeTracking: boolean;
   hasDueDates: boolean;
   nextIndex: number;
-  addItem: (_: ListItem) => any;
+  addItem: (_: ListItem) => unknown;
 }) {
   const zeroMin = new Date();
 

@@ -113,7 +113,7 @@ export function NavItem({
   );
 }
 
-function AddList({ addList }: { addList: () => any }) {
+function AddList({ addList }: { addList: () => unknown }) {
   return (
     <Button
       isIconOnly
@@ -131,8 +131,8 @@ function NewItem({
   finalize,
   remove
 }: {
-  finalize: (name: string) => any;
-  remove: () => any;
+  finalize: (name: string) => unknown;
+  remove: () => unknown;
 }) {
   const [name, setName] = useState('');
 

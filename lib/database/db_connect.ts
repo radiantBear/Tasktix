@@ -15,7 +15,7 @@ async function connect(): Promise<mysql.Connection> {
 
 export async function query<T extends RowDataPacket>(
   sql: string,
-  values: any
+  values: unknown
 ): Promise<T[] | false> {
   let conn;
 
@@ -44,7 +44,7 @@ export async function query<T extends RowDataPacket>(
 
 export async function execute(
   sql: string,
-  values: any
+  values: unknown
 ): Promise<ResultSetHeader | false> {
   let conn;
 

@@ -43,11 +43,11 @@ export default function List({
   const [tagsAvailable, setTagsAvailable] = useState<Tag[]>(
     JSON.parse(startingTagsAvailable)
   );
-  const [filters, setFilters] = useState<Filters>([]);
+  const [filters, setFilters] = useState<Filters>({});
 
   const filterOptions = getFilterOptions(list, tagsAvailable);
 
-  function addNewTag(name: string, color: NamedColor) {
+  function addNewTag(name: string, color: NamedColor): Promise<string> {
     return new Promise((resolve, reject) => {
       api
         .post(`/list/${list.id}/tag`, { name, color })
