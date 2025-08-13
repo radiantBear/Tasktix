@@ -1,3 +1,6 @@
+[![DeepSource](https://app.deepsource.com/gh/radiantBear/Tasktix.svg/?label=active+issues&show_trend=true&token=M-Vsi4__XSjUWF4f_7gXjWc7)](https://app.deepsource.com/gh/radiantBear/Tasktix/)
+[![Semgrep](https://github.com/radiantBear/Tasktix/actions/workflows/semgrep.yml/badge.svg)](https://github.com/radiantBear/Tasktix/actions/workflows/semgrep.yml)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
