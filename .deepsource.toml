@@ -1,0 +1,13 @@
+version = 1
+
+test_patterns = ["**/*.test.ts"]
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = ["react"]
+  environment = [
+    "nodejs",
+    "browser"
+  ]
