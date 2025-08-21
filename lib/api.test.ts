@@ -12,7 +12,7 @@ function createFetchResponse(
   return {
     status,
     json: jest.fn().mockResolvedValue({ message, content })
-  } as any;
+  } as never;
 }
 
 beforeEach(() => {

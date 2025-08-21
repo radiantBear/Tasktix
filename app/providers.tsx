@@ -8,7 +8,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   return (
-    <NextUIProvider navigate={router.push}>
+    <NextUIProvider navigate={router.push.bind(router)}>
       <ThemeProvider attribute='class' defaultTheme='system'>
         {children}
       </ThemeProvider>

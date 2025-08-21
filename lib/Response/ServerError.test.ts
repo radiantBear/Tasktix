@@ -35,6 +35,7 @@ describe('Internal', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -85,6 +86,7 @@ describe('BadGateway', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {

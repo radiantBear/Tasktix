@@ -103,7 +103,7 @@ describe('extractListSectionFromRow', () => {
       i_dateStarted: null,
       i_dateCompleted: null,
       constructor: { name: 'RowDataPacket' }
-    } as any;
+    } as never;
 
     const section = extractListSectionFromRow(row);
 

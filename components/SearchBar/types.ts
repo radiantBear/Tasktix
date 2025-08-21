@@ -11,6 +11,7 @@ export interface InputOption {
   selectOptions?: { name: string; color?: Color }[];
 }
 
+// TODO: improve type signature of `value`
 export interface InputAction {
   type: 'Add' | 'Update' | 'Remove' | 'Clear';
   label: string;
@@ -18,4 +19,4 @@ export interface InputAction {
   callback: (value: Filters) => unknown;
 }
 
-export type Filters = { [key: string]: any };
+export type Filters = { [key: string]: unknown };

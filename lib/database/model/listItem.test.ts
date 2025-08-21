@@ -26,7 +26,7 @@ describe('extractListItemFromRow', () => {
       i_dateStarted: new Date('2023-02-12 09:03:51'),
       i_dateCompleted: new Date('2023-02-12 09:03:52'),
       constructor: { name: 'RowDataPacket' }
-    } as any;
+    } as never;
 
     const listItem = extractListItemFromRow(row);
 
@@ -64,7 +64,7 @@ describe('extractListItemFromRow', () => {
       i_dateStarted: null,
       i_dateCompleted: null,
       constructor: { name: 'RowDataPacket' }
-    } as any;
+    } as never;
 
     const listItem = extractListItemFromRow(row);
 
@@ -510,7 +510,7 @@ describe('extractListItemsFromRows', () => {
         t_color: 'Amber',
         t_i_id: 'item-id',
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         i_ls_id: 'section-id',
         i_id: 'item-id',
@@ -653,7 +653,7 @@ describe('extractListItemsFromRows', () => {
         t_color: 'Amber',
         t_i_id: 'item-id',
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         i_ls_id: 'section-id',
         i_id: 'item-id-2',
@@ -765,7 +765,7 @@ describe('extractListItemsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         i_ls_id: 'section-id',
         i_id: 'item-id',
@@ -908,7 +908,7 @@ describe('extractListItemsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         i_ls_id: 'section-id',
         i_id: 'item-id-2',

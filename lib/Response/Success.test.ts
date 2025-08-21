@@ -35,6 +35,7 @@ describe('OK', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Success message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -88,6 +89,7 @@ describe('Created', () => {
     const message = 'Success message';
     const location = '/new/resource';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {

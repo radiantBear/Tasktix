@@ -363,7 +363,7 @@ export default function StaticListItem({
 
   return (
     <div
-      className={`p-4 bg-content1 flex gap-4 items-center justify-between w-full ${reorderControls || 'border-b-1 border-content3 last:border-b-0'}`}
+      className={`p-4 bg-content1 flex gap-4 items-center justify-between w-full ${reorderControls ? '' : 'border-b-1 border-content3 last:border-b-0'}`}
     >
       <span className='flex gap-4 items-center justify-between w-2/5'>
         {reorderControls ? (
@@ -385,7 +385,8 @@ export default function StaticListItem({
           isSelected={_item.status == 'Completed'}
           tabIndex={0}
           onChange={e => {
-            e.target.checked ? set.complete() : set.incomplete();
+            if (e.target.checked) set.complete();
+            else set.incomplete();
           }}
         />
 

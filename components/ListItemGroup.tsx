@@ -88,7 +88,7 @@ export default function ListItemGroup({
     name: string,
     color: NamedColor
   ): Promise<string> {
-    if (!listId) return new Promise((_, reject) => reject('No list ID'));
+    if (!listId) return new Promise((_, reject) => reject(Error('No list ID')));
 
     return new Promise((resolve, reject) => {
       api
@@ -103,7 +103,7 @@ export default function ListItemGroup({
 
           resolve(id);
         })
-        .catch(err => reject(err));
+        .catch((err: Error) => reject(err));
     });
   }
 

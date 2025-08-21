@@ -67,8 +67,8 @@ export default function DateInput2({
   }, [value]);
 
   function handleInput(value: Date) {
-    if (value) onValueChange && onValueChange(value);
-    else setDate(value);
+    if (!value) setDate(value);
+    else if (onValueChange) onValueChange(value);
     debounceOpenChange(false);
   }
 

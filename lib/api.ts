@@ -34,49 +34,43 @@ export default {
   }
 } as const;
 
-function request(
+async function request(
   resource: string,
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
   data?: string | object,
   encodingType?: string
 ): Promise<ServerResponse> {
-  return new Promise(async function (resolve, reject) {
-    try {
-      let body: string | undefined;
+  let body: string | undefined;
 
-      if (typeof data === 'string') {
-        encodingType ??= 'text/plain';
-        body = data;
-      } else if (data !== undefined) {
-        if (!encodingType) encodingType = 'application/json';
+  if (typeof data === 'string') {
+    encodingType ??= 'text/plain';
+    body = data;
+  } else if (data !== undefined) {
+    if (!encodingType) encodingType = 'application/json';
 
-        if (encodingType === 'application/json') body = JSON.stringify(data);
-        else
-          throw Error(`Unknown encoding ${encodingType} for object parameter`);
-      }
+    if (encodingType === 'application/json') body = JSON.stringify(data);
+    else throw Error(`Unknown encoding ${encodingType} for object parameter`);
+  }
 
-      const options: RequestInit = {
-        method,
-        body
-      };
+  const options: RequestInit = {
+    method,
+    body
+  };
 
-      if (encodingType) options.headers = { 'Content-Type': encodingType };
+  if (encodingType) options.headers = { 'Content-Type': encodingType };
 
-      const result = await fetch('/api' + resource, options);
-      const parsedResult = await result.json();
+  const result = await fetch('/api' + resource, options);
+  const parsedResult = await result.json();
 
-      const serverResponse: ServerResponse = {
-        code: result.status,
-        message: parsedResult.message,
-        content: parsedResult.content
-      };
+  const serverResponse: ServerResponse = {
+    code: result.status,
+    message: parsedResult.message,
+    content: parsedResult.content
+  };
 
-      if (serverResponse.code == 403) window.location.href = '/signIn';
-      if (serverResponse.code >= 400) reject(serverResponse);
+  if (serverResponse.code == 403) window.location.href = '/signIn';
+  // eslint-disable-next-line @typescript-eslint/only-throw-error
+  if (serverResponse.code >= 400) throw serverResponse;
 
-      resolve(serverResponse);
-    } catch (exception) {
-      reject(exception);
-    }
-  });
+  return serverResponse;
 }

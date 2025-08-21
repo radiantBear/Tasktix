@@ -307,7 +307,11 @@ function checkItemFilter(item: ListItemModel, filters: Filters): boolean {
   return true;
 }
 
-function compareFilter(item: ListItemModel, key: string, value: any): boolean {
+function compareFilter(
+  item: ListItemModel,
+  key: string,
+  value: unknown
+): boolean {
   if (value == undefined) return false;
 
   switch (key) {
@@ -315,37 +319,42 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
       return value == item.name;
 
     case 'priority':
-      return value && value.has(item.priority);
+      return value instanceof Set && value.has(item.priority);
 
     case 'tag':
       return (
-        value &&
+        value instanceof Set &&
         item.tags
           .map(curr => value.has(curr.name))
           .reduce((prev: boolean, curr: boolean) => prev || curr)
       );
 
     case 'user':
-      return item.assignees
-        .map(curr => value.has(curr.user.username))
-        .reduce((prev: boolean, curr: boolean) => prev || curr);
+      return (
+        value instanceof Set &&
+        item.assignees
+          .map(curr => value.has(curr.user.username))
+          .reduce((prev: boolean, curr: boolean) => prev || curr)
+      );
 
     case 'status':
-      return value && value.has(item.status);
+      return value instanceof Set && value.has(item.status);
 
     case 'completedBefore':
-      if (value) value.setHours(0, 0, 0, 0);
+      if (value instanceof Date) value.setHours(0, 0, 0, 0);
 
       return (
         !!item.dateCompleted &&
-        value &&
+        value instanceof Date &&
         value.getTime() > item.dateCompleted.getTime()
       );
     case 'completedOn':
+      if (!(value instanceof Date)) return false;
+
       const start = structuredClone(value);
       const end = structuredClone(value);
 
-      if (start) {
+      if (start && end && value instanceof Date) {
         start.setHours(0, 0, 0, 0);
         end.setHours(0, 0, 0, 0);
         end.setDate(value.getDate() + 1);
@@ -353,45 +362,58 @@ function compareFilter(item: ListItemModel, key: string, value: any): boolean {
 
       return (
         !!item.dateCompleted &&
-        value &&
         start.getTime() <= item.dateCompleted.getTime() &&
         end.getTime() > item.dateCompleted.getTime()
       );
     case 'completedAfter':
-      if (value) value.setHours(23, 59, 59, 999);
+      if (value instanceof Date) value.setHours(23, 59, 59, 999);
 
       return (
         !!item.dateCompleted &&
-        value &&
+        value instanceof Date &&
         value.getTime() < item.dateCompleted.getTime()
       );
 
     case 'dueBefore':
       return (
-        !!item.dateDue && value && value.getTime() > item.dateDue.getTime()
+        !!item.dateDue &&
+        value instanceof Date &&
+        value.getTime() > item.dateDue.getTime()
       );
     case 'dueOn':
       return (
-        !!item.dateDue && value && value.getTime() == item.dateDue.getTime()
+        !!item.dateDue &&
+        value instanceof Date &&
+        value.getTime() == item.dateDue.getTime()
       );
     case 'dueAfter':
       return (
-        !!item.dateDue && value && value.getTime() < item.dateDue.getTime()
+        !!item.dateDue &&
+        value instanceof Date &&
+        value.getTime() < item.dateDue.getTime()
       );
 
     case 'expectedTimeBelow':
-      return !!item.expectedMs && item.expectedMs < value;
+      return (
+        !!item.expectedMs &&
+        typeof value === 'number' &&
+        item.expectedMs < value
+      );
     case 'expectedTimeAt':
-      return !!item.expectedMs && item.expectedMs == value;
+      return !!item.expectedMs && item.expectedMs === value;
     case 'expectedTimeAbove':
-      return !!item.expectedMs && item.expectedMs > value;
+      return (
+        !!item.expectedMs &&
+        typeof value === 'number' &&
+        item.expectedMs > value
+      );
 
     case 'elapsedTimeBelow':
-      return item.elapsedMs < value;
+      return typeof value === 'number' && item.elapsedMs < value;
     case 'elapsedTimeAt':
       return item.elapsedMs == value;
     case 'elapsedTimeAbove':
-      return item.elapsedMs > value;
+      return typeof value === 'number' && item.elapsedMs > value;
 
     default:
       throw Error('Invalid option ' + key);

@@ -98,8 +98,7 @@ export default function AddItem({
   function createItem(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const priorityKey =
-      (values.priority != 'all' && values.priority.keys().next().value) ||
-      'Low';
+      values.priority != 'all' ? values.priority.keys().next().value : 'Low';
     const priority =
       priorityKey == 'High'
         ? 'High'

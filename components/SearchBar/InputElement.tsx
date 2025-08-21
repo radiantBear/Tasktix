@@ -1,10 +1,4 @@
-import {
-  Input,
-  Select,
-  SelectItem,
-  Selection,
-  Switch
-} from '@nextui-org/react';
+import { Input, Select, SelectItem, Switch } from '@nextui-org/react';
 import { ReactElement } from 'react';
 
 import DateInput from '@/components/DateInput';
@@ -24,7 +18,7 @@ export default function InputElement({
   dispatchFilters: (action: InputAction) => unknown;
   onValueChange: (value: Filters) => unknown;
 }): ReactElement {
-  function handleInput(newValue: number | string | boolean | Selection | Date) {
+  function handleInput(newValue: unknown) {
     if (newValue instanceof Date) newValue.setHours(23, 59, 59, 0);
 
     dispatchFilters({

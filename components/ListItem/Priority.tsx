@@ -53,10 +53,14 @@ export default function Priority({
         size='sm'
         variant='flat'
         onSelectionChange={(keys: Selection) => {
-          const key = (keys != 'all' && keys.keys().next().value) || 'Low';
+          const priorityKey = keys != 'all' ? keys.keys().next().value : 'Low';
 
           setPriority(
-            key == 'High' ? 'High' : key == 'Medium' ? 'Medium' : 'Low'
+            priorityKey == 'High'
+              ? 'High'
+              : priorityKey == 'Medium'
+                ? 'Medium'
+                : 'Low'
           );
         }}
       >

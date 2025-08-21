@@ -6,25 +6,14 @@
     "node": true
   },
   "extends": [
-    "plugin:react/recommended",
     "plugin:prettier/recommended",
-    "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
     "next/core-web-vitals"
   ],
-  "plugins": [
-    "react",
-    "unused-imports",
-    "import",
-    "@typescript-eslint",
-    "jsx-a11y",
-    "prettier"
-  ],
-  "parser": "@typescript-eslint/parser",
+  "plugins": ["unused-imports", "import", "jsx-a11y", "prettier"],
   "parserOptions": {
     "ecmaFeatures": {
-      "impliedStrict": true,
-      "jsx": true
+      "impliedStrict": true
     },
     "ecmaVersion": "latest",
     "sourceType": "module"
@@ -36,21 +25,11 @@
   },
   "rules": {
     "no-console": "error",
-    "react/prop-types": "off", // Using TypeScript for type checking
-    "react/react-in-jsx-scope": "off", // Not needed with React 17+
     "jsx-a11y/no-autofocus": "warn",
     "prettier/prettier": "error",
     "no-unused-vars": "off",
     "unused-imports/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "args": "after-used",
-        "ignoreRestSiblings": false,
-        "argsIgnorePattern": "^_.*?$"
-      }
-    ],
     "import/order": [
       "error",
       {
@@ -74,16 +53,6 @@
         "newlines-between": "always"
       }
     ],
-    "react/self-closing-comp": "error",
-    "react/jsx-sort-props": [
-      "error",
-      {
-        "callbacksLast": true,
-        "shorthandFirst": true,
-        "noSortAlphabetically": false,
-        "reservedFirst": true
-      }
-    ],
     "padding-line-between-statements": [
       "error",
       { "blankLine": "always", "prev": "*", "next": "return" },
@@ -94,5 +63,63 @@
         "next": ["const", "let", "var"]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+      ],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "warn", // Creating problems for Jest mocks
+        "@typescript-eslint/no-unsafe-member-access": "warn", // Creating problems for Jest mocks
+        "@typescript-eslint/no-unsafe-argument": "warn", // Creating problems for Jest mocks
+        "@typescript-eslint/no-unsafe-return": "warn", // Creating problems for Jest mocks
+        "@typescript-eslint/no-unsafe-call": "warn", // Creating problems for Jest mocks
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "args": "after-used",
+            "ignoreRestSiblings": false,
+            "argsIgnorePattern": "^_.*?$"
+          }
+        ],
+        "@typescript-eslint/switch-exhaustiveness-check": "error"
+      }
+    },
+    {
+      "files": ["**/*.tsx"],
+      "extends": ["plugin:react/recommended", "plugin:react-hooks/recommended"],
+      "plugins": ["react"],
+      "parserOptions": {
+        "ecmaFeatures": {
+          "jsx": true
+        }
+      },
+      "rules": {
+        "react/prop-types": "off", // Using TypeScript for type checking
+        "react/react-in-jsx-scope": "off", // Not needed with React 17+
+        "react/self-closing-comp": "error",
+        "react/jsx-sort-props": [
+          "error",
+          {
+            "callbacksLast": true,
+            "shorthandFirst": true,
+            "noSortAlphabetically": false,
+            "reservedFirst": true
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.test.ts"],
+      "extends": ["plugin:jest/recommended"]
+    }
+  ]
 }

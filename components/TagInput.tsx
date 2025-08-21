@@ -45,7 +45,7 @@ export default function TagInput({
     <form
       key='add'
       className={`flex w-full gap-2 ${className}`}
-      onSubmit={handleSubmit}
+      onSubmit={e => void handleSubmit(e)}
     >
       <Input
         className={classNames?.name}

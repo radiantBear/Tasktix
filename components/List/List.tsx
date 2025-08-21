@@ -60,7 +60,7 @@ export default function List({
 
           resolve(id);
         })
-        .catch(err => reject(err));
+        .catch((err: Error) => reject(err));
     });
   }
 

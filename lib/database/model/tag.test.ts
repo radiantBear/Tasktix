@@ -1,5 +1,3 @@
-import { describe } from 'node:test';
-
 import { DB_Tag, extractTagFromRow } from './tag';
 
 describe('extractTagFromRow', () => {

@@ -35,7 +35,7 @@ export async function query<T extends RowDataPacket>(
   } catch {
     /* Don't let ending the connection cause an error if it's having issues too */
     try {
-      conn?.end();
+      await conn?.end();
     } catch {}
 
     return false;
@@ -62,7 +62,7 @@ export async function execute(
   } catch {
     /* Don't let ending the connection cause an error if it's having issues too */
     try {
-      conn?.end();
+      await conn?.end();
     } catch {}
 
     return false;

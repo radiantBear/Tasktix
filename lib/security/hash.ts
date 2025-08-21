@@ -1,7 +1,7 @@
 import { BinaryLike, randomFill, scrypt } from 'crypto';
 
 export async function hash(password: string): Promise<string> {
-  function randomString(length: number = 16): Promise<BinaryLike> {
+  function randomString(length: number = 16): Promise<Uint8Array<ArrayBuffer>> {
     return new Promise((resolve, reject) => {
       randomFill(new Uint8Array(length), (err, str) => {
         if (err) reject(err);
@@ -10,9 +10,10 @@ export async function hash(password: string): Promise<string> {
     });
   }
 
+  // TODO: Convert `salt` to a string more concisely: e.g. Array.from(salt).join(',');
   const salt = await randomString();
 
-  return `${salt}:${await _hash(password, salt)}`;
+  return `${salt.toString()}:${await _hash(password, salt)}`;
 }
 
 export async function compare(

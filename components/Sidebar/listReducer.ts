@@ -15,8 +15,5 @@ export default function listReducer(lists: List[], action: Action) {
 
     case 'remove':
       return lists.filter(list => list.id != action.id);
-
-    default:
-      throw Error(`Unknown action ${action.type}`);
   }
 }

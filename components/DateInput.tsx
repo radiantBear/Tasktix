@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@nextui-org/react';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { formatDate } from '@/lib/date';
 
@@ -27,7 +27,7 @@ export default function DateInput({
   label?: string;
   placeholder?: string;
   defaultValue?: Date;
-  displayContent?: ReactNode;
+  displayContent?: string;
   color?:
     | 'default'
     | 'primary'

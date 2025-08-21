@@ -18,7 +18,7 @@ describe('extractListFromRow', () => {
       l_hasDueDates: true,
       l_isAutoOrdered: true,
       constructor: { name: 'RowDataPacket' }
-    } as any;
+    } as never;
 
     const list = extractListFromRow(row);
 
@@ -427,7 +427,7 @@ describe('extractListsFromRows', () => {
         t_color: 'Amber',
         t_i_id: 'item-id',
         constructor: { name: 'RowDataPacket' }
-      } as any
+      } as never
     ];
 
     const list = extractListsFromRows(rows);
@@ -597,7 +597,7 @@ describe('extractListsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any
+      } as never
     ];
 
     const lists = extractListsFromRows(rows);
@@ -894,7 +894,7 @@ describe('extractListsFromRows', () => {
         t_color: 'Amber',
         t_i_id: 'item-id',
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id',
         l_color: 'Amber',
@@ -1137,7 +1137,7 @@ describe('extractListsFromRows', () => {
         t_color: 'Amber',
         t_i_id: 'item-id',
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id-2',
         l_color: 'Emerald',
@@ -1317,7 +1317,7 @@ describe('extractListsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id',
         l_color: 'Amber',
@@ -1543,7 +1543,7 @@ describe('extractListsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id',
         l_color: 'Amber',
@@ -1589,7 +1589,7 @@ describe('extractListsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id-2',
         l_color: 'Emerald',
@@ -1756,7 +1756,7 @@ describe('extractListsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id',
         l_color: 'Amber',
@@ -1982,7 +1982,7 @@ describe('extractListsFromRows', () => {
         t_color: null,
         t_i_id: null,
         constructor: { name: 'RowDataPacket' }
-      } as any,
+      } as never,
       {
         l_id: 'list-id-2',
         l_color: 'Emerald',

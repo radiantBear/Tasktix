@@ -81,7 +81,8 @@ export default function More({
                     isSelected={isComplete}
                     tabIndex={0}
                     onChange={e => {
-                      e.target.checked ? set.complete() : set.incomplete();
+                      if (e.target.checked) set.complete();
+                      else set.incomplete();
                     }}
                   />
                   <span className='flex grow'>

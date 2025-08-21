@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       {}
     );
 
-    let result = await createUser(user);
+    const result = await createUser(user);
 
     if (!result) return ServerError.Internal('Could not create user');
 

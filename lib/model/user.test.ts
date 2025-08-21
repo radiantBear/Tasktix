@@ -12,7 +12,7 @@ beforeEach(() => {
     .mockReturnValue('mock-generated-id');
   jest
     .spyOn(colorModule, 'randomNamedColor')
-    .mockReturnValue('mock-color' as any);
+    .mockReturnValue('mock-color' as never);
 });
 
 afterEach(() => {
@@ -68,7 +68,7 @@ test('Uses the provided color', () => {
     'secret',
     fixedDateCreated,
     fixedDateSignedIn,
-    { color: 'provided-color' as any }
+    { color: 'provided-color' as never }
   );
 
   expect(user.color).toBe('provided-color');
@@ -82,7 +82,7 @@ test('Assigns all properties correctly', () => {
     'secret',
     fixedDateCreated,
     fixedDateSignedIn,
-    { id: 'provided-id', color: 'provided-color' as any }
+    { id: 'provided-id', color: 'provided-color' as never }
   );
 
   expect(user.username).toBe('testUser');

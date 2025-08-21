@@ -143,6 +143,9 @@ function CalendarInputBody({
     case 'success':
       hoverColor = 'data-[hover=true]:text-success';
       break;
+    case 'default':
+      hoverColor = 'data-[hover=true]:text-default';
+      break;
   }
 
   const days = [];

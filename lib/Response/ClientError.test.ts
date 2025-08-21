@@ -35,6 +35,7 @@ describe('BadRequest', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -84,6 +85,7 @@ describe('Unauthenticated', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -133,6 +135,7 @@ describe('Forbidden', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -182,6 +185,7 @@ describe('NotFound', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -231,6 +235,7 @@ describe('Conflict', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -280,6 +285,7 @@ describe('Gone', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
@@ -327,6 +333,7 @@ describe('PayloadTooLarge', () => {
   test('Throws an error when Response.json() fails', () => {
     const message = 'Error message';
 
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalJson = Response.json;
 
     Response.json = jest.fn(() => {
