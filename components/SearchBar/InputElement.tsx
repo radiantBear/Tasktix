@@ -1,4 +1,10 @@
-import { Input, Select, SelectItem, Switch } from '@nextui-org/react';
+import {
+  Input,
+  Select,
+  SelectItem,
+  SharedSelection,
+  Switch
+} from '@nextui-org/react';
 import { ReactElement } from 'react';
 
 import DateInput from '@/components/DateInput';
@@ -18,7 +24,9 @@ export default function InputElement({
   dispatchFilters: (action: InputAction) => unknown;
   onValueChange: (value: Filters) => unknown;
 }): ReactElement {
-  function handleInput(newValue: unknown) {
+  function handleInput(
+    newValue: string | SharedSelection | Date | number | boolean
+  ) {
     if (newValue instanceof Date) newValue.setHours(23, 59, 59, 0);
 
     dispatchFilters({
@@ -38,7 +46,7 @@ export default function InputElement({
           label={`${inputOption.label}:`}
           labelPlacement='outside-left'
           size='sm'
-          value={value[inputOption.label]}
+          value={value[inputOption.label] as string}
           onValueChange={handleInput}
         />
       );
@@ -50,20 +58,24 @@ export default function InputElement({
           className='flex items-center w-52 shrink-0'
           label={`${inputOption.label}:`}
           labelPlacement='outside-left'
-          selectedKeys={value[inputOption.label]}
+          selectedKeys={value[inputOption.label] as SharedSelection}
           selectionMode='multiple'
           size='sm'
           onSelectionChange={handleInput}
         >
-          {inputOption?.selectOptions?.map(option => (
-            <SelectItem
-              key={option.name}
-              className={option.color ? '!' + getTextColor(option.color) : ''}
-              value={option.name}
-            >
-              {option.name}
-            </SelectItem>
-          )) || <></>}
+          {inputOption.type == 'Select' ? (
+            inputOption.selectOptions?.map(option => (
+              <SelectItem
+                key={option.name}
+                className={option.color ? '!' + getTextColor(option.color) : ''}
+                value={option.name}
+              >
+                {option.name}
+              </SelectItem>
+            ))
+          ) : (
+            <></>
+          )}
         </Select>
       );
 
@@ -73,7 +85,7 @@ export default function InputElement({
           autoFocus
           className='!mb-1 h-unit-8 rounded-small'
           label={`${inputOption.label}:`}
-          value={value[inputOption.label]}
+          value={value[inputOption.label] as Date}
           onValueChange={handleInput}
         />
       );
@@ -86,7 +98,7 @@ export default function InputElement({
           label={`${inputOption.label}:`}
           labelPlacement='outside-left'
           size='sm'
-          value={value[inputOption.label]}
+          value={value[inputOption.label] as number}
           onValueChange={handleInput}
         />
       );
@@ -99,7 +111,7 @@ export default function InputElement({
             base: 'flex-row-reverse gap-2 -mr-2',
             label: 'text-tiny'
           }}
-          value={value[inputOption.label]}
+          value={value[inputOption.label] ? 'true' : 'false'}
           onValueChange={handleInput}
         >{`${inputOption.label}:`}</Switch>
       );

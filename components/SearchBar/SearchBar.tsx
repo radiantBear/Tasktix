@@ -64,8 +64,6 @@ export default function SearchBar({
     setUsedOptions(new Set());
     dispatchFilters({
       type: 'Clear',
-      label: '',
-      value: '',
       callback: onValueChange
     });
   }
