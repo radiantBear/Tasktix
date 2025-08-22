@@ -29,7 +29,11 @@ beforeEach(() => {
 describe('setUser', () => {
   test('Creates a session, sets a cookie with the session ID, and returns the session ID', async () => {
     const userId = 'user123';
-    const mockedCookies: typeof cookies = (cookies as jest.Mock)();
+    const mockedCookies = (cookies as jest.Mock)() as {
+      get: jest.Mock;
+      set: jest.Mock;
+      delete: jest.Mock;
+    };
 
     (createSession as jest.Mock).mockResolvedValue(true);
 
