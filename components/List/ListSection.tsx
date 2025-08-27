@@ -326,7 +326,7 @@ function compareFilter(
         value instanceof Set &&
         item.tags
           .map(curr => value.has(curr.name))
-          .reduce((prev: boolean, curr: boolean) => prev || curr)
+          .reduce((prev: boolean, curr: boolean) => prev || curr, false)
       );
 
     case 'user':
@@ -334,7 +334,7 @@ function compareFilter(
         value instanceof Set &&
         item.assignees
           .map(curr => value.has(curr.user.username))
-          .reduce((prev: boolean, curr: boolean) => prev || curr)
+          .reduce((prev: boolean, curr: boolean) => prev || curr, false)
       );
 
     case 'status':
