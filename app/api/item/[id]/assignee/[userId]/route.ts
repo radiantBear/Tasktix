@@ -17,9 +17,9 @@ export async function POST(
 
   const result = await linkAssignee(params.id, params.userId, '');
 
-  if (!result) return ServerError.Internal('Could not add tag');
+  if (!result) return ServerError.Internal('Could not add assignee');
 
-  return Success.OK('Tag added');
+  return Success.OK('Assignee added');
 }
 
 export async function DELETE(
@@ -36,7 +36,7 @@ export async function DELETE(
 
   const result = await unlinkAssignee(params.id, params.userId);
 
-  if (!result) return ServerError.Internal('Could not remove tag');
+  if (!result) return ServerError.Internal('Could not remove assignee');
 
-  return Success.OK('Tag removed');
+  return Success.OK('Assignee removed');
 }
