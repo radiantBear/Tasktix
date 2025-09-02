@@ -1,7 +1,20 @@
+import z from 'zod';
+
 import { randomNamedColor } from '../color';
 import { generateId } from '../generateId';
 
 import { NamedColor } from './color';
+
+export const ZodUser = z.strictObject({
+  id: z.string().length(16),
+  username: z
+    .string()
+    .min(3)
+    .max(32)
+    .regex(/^[a-zA-Z0-9_]*$/),
+  email: z.email().max(128),
+  password: z.string().min(10).max(128)
+});
 
 export default class User {
   id: string;

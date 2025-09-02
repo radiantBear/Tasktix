@@ -6,6 +6,13 @@ import {
   updateListItem
 } from '@/lib/database/listItem';
 import { getUser } from '@/lib/session';
+import { ZodListItem } from '@/lib/model/listItem';
+
+const PatchBody = ZodListItem.omit({
+  id: true,
+  sectionIndex: true,
+  sectionId: true
+}).partial();
 
 export async function PATCH(
   request: Request,
@@ -23,7 +30,12 @@ export async function PATCH(
 
   if (!isMember) return ClientError.BadRequest('List item not found');
 
-  const requestBody = await request.json();
+  const parseResult = PatchBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request data');
+
+  const requestBody = parseResult.data;
 
   if (requestBody.name) item.name = requestBody.name;
   if (requestBody.status) item.status = requestBody.status;

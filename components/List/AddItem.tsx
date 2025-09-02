@@ -39,9 +39,9 @@ export default function AddItem({
   zeroMin.setTime(0);
   const startingInputValues = {
     name: '',
-    dueDate: new Date(),
+    dateDue: new Date(),
     priority: new Set(['Low']),
-    duration: 0
+    expectedMs: 0
   };
 
   const [isSliderOpen, setIsSliderOpen] = useState(false);
@@ -52,9 +52,9 @@ export default function AddItem({
   } = useDisclosure();
   const [values, setValues] = useState<{
     name: string;
-    dueDate?: Date;
+    dateDue?: Date;
     priority: Selection;
-    duration?: number;
+    expectedMs?: number;
   }>(startingInputValues);
   const focusInput = useRef<HTMLInputElement | null>(null);
 
@@ -65,33 +65,33 @@ export default function AddItem({
   function setName(name: string): void {
     setValues({
       name,
-      dueDate: values.dueDate,
+      dateDue: values.dateDue,
       priority: new Set(values.priority),
-      duration: values.duration
+      expectedMs: values.expectedMs
     });
   }
   function setDueDate(date: Date): void {
     setValues({
       name: values.name,
-      dueDate: date,
+      dateDue: date,
       priority: new Set(values.priority),
-      duration: values.duration
+      expectedMs: values.expectedMs
     });
   }
   function setPriority(priority: Selection): void {
     setValues({
       name: values.name,
-      dueDate: values.dueDate,
+      dateDue: values.dateDue,
       priority,
-      duration: values.duration
+      expectedMs: values.expectedMs
     });
   }
-  function setExpectedDuration(duration: number): void {
+  function setExpectedDuration(expectedMs: number): void {
     setValues({
       name: values.name,
-      dueDate: values.dueDate,
+      dateDue: values.dateDue,
       priority: new Set(values.priority),
-      duration: duration
+      expectedMs
     });
   }
 
@@ -106,11 +106,11 @@ export default function AddItem({
           ? 'Medium'
           : 'Low';
 
-    values.dueDate?.setHours(23, 59, 59, 0);
+    values.dateDue?.setHours(23, 59, 59, 0);
     const newItem = { ...values, sectionId, priority, sectionIndex: nextIndex };
 
-    if (!hasTimeTracking) delete newItem.duration;
-    if (!hasDueDates) delete newItem.dueDate;
+    if (!hasTimeTracking) delete newItem.expectedMs;
+    if (!hasDueDates) delete newItem.dateDue;
 
     api
       .post('/item', newItem)
@@ -120,9 +120,9 @@ export default function AddItem({
         const id = res.content?.split('/').at(-1);
         const item = new ListItem(values.name, {
           priority,
-          expectedMs: newItem.duration,
+          expectedMs: newItem.expectedMs,
           sectionIndex: nextIndex,
-          dateDue: newItem.dueDate,
+          dateDue: newItem.dateDue,
           id
         });
 
@@ -169,7 +169,7 @@ export default function AddItem({
                 label='Due'
                 size='sm'
                 tabIndex={isSliderOpen ? 0 : 1}
-                value={values.dueDate}
+                value={values.dateDue}
                 variant='underlined'
                 onValueChange={setDueDate}
               />
@@ -212,7 +212,7 @@ export default function AddItem({
                 label='Time'
                 size='sm'
                 tabIndex={isSliderOpen ? 0 : 1}
-                value={values.duration}
+                value={values.expectedMs}
                 variant='underlined'
                 onValueChange={setExpectedDuration}
               />
@@ -287,7 +287,7 @@ export default function AddItem({
                         color='primary'
                         label='Due'
                         size='sm'
-                        value={values.dueDate}
+                        value={values.dateDue}
                         variant='underlined'
                         onValueChange={setDueDate}
                       />
@@ -331,7 +331,7 @@ export default function AddItem({
                         }}
                         label='Time'
                         size='sm'
-                        value={values.duration}
+                        value={values.expectedMs}
                         variant='underlined'
                         onValueChange={setExpectedDuration}
                       />

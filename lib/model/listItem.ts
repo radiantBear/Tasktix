@@ -1,3 +1,6 @@
+import z from 'zod';
+
+import { DATABASE_LIMITS } from '@/lib/database/constants';
 import { generateId } from '@/lib/generateId';
 
 import Assignee from './assignee';
@@ -5,6 +8,21 @@ import Tag from './tag';
 
 export type Status = 'Unstarted' | 'In Progress' | 'Paused' | 'Completed';
 export type Priority = 'Low' | 'Medium' | 'High';
+
+export const ZodListItem = z.strictObject({
+  id: z.string().length(16),
+  name: z.string().min(1).max(128),
+  status: z.enum(['Unstarted', 'In Progress', 'Paused', 'Completed']),
+  priority: z.enum(['High', 'Medium', 'Low']),
+  isUnclear: z.boolean(),
+  expectedMs: z.number().min(0).max(DATABASE_LIMITS.INT_MAX).nullable(),
+  elapsedMs: z.number().min(0).max(DATABASE_LIMITS.INT_MAX),
+  sectionIndex: z.number().min(0).max(DATABASE_LIMITS.INT_MAX),
+  dateDue: z.iso.datetime({ offset: true }).nullable(),
+  dateStarted: z.iso.datetime({ offset: true }).nullable(),
+  dateCompleted: z.iso.datetime({ offset: true }).nullable(),
+  sectionId: z.string().length(16)
+});
 
 export default class ListItem {
   id: string;

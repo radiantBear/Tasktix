@@ -1,9 +1,11 @@
 import { ClientError, ServerError, Success } from '@/lib/Response';
 import { getIsListAssignee } from '@/lib/database/list';
 import { createListSection } from '@/lib/database/listSection';
-import ListSection from '@/lib/model/listSection';
+import ListSection, { ZodListSection } from '@/lib/model/listSection';
 import { getUser } from '@/lib/session';
 import { validateListSectionName } from '@/lib/validate';
+
+const PostBody = ZodListSection.omit({ id: true });
 
 export async function POST(
   request: Request,
@@ -17,7 +19,12 @@ export async function POST(
 
   if (!isMember) return ClientError.BadRequest('List not found');
 
-  const requestBody = await request.json();
+  const parseResult = PostBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request data');
+
+  const requestBody = parseResult.data;
 
   const name = requestBody.name;
 

@@ -4,23 +4,35 @@ import {
   getListBySectionId
 } from '@/lib/database/list';
 import { createListItem } from '@/lib/database/listItem';
-import ListItem from '@/lib/model/listItem';
+import ListItem, { ZodListItem } from '@/lib/model/listItem';
 import { getUser } from '@/lib/session';
-import { validateListItemName } from '@/lib/validate';
+
+const PostBody = ZodListItem.omit({
+  id: true,
+  status: true,
+  elapsedMs: true,
+  dateStarted: true,
+  dateCompleted: true
+});
 
 export async function POST(request: Request) {
   const user = await getUser();
 
   if (!user) return ClientError.Unauthenticated('Not logged in');
 
-  const requestBody = await request.json();
+  const parseResult = PostBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request data');
+
+  const requestBody = parseResult.data;
 
   const name = requestBody.name;
-  const dueDate = requestBody.dueDate ? new Date(requestBody.dueDate) : null;
+  const dateDue = requestBody.dateDue ? new Date(requestBody.dateDue) : null;
   const priority = requestBody.priority;
   const sectionId = requestBody.sectionId;
   const sectionIndex = requestBody.sectionIndex;
-  const expectedMs = requestBody.duration || null;
+  const expectedMs = requestBody.expectedMs;
 
   const isMember = await getIsListAssigneeBySection(user.id, sectionId);
 
@@ -30,15 +42,8 @@ export async function POST(request: Request) {
 
   if (!list) return ClientError.BadRequest('List not found');
 
-  if (!name) return ClientError.BadRequest('Item name is required');
-  if (!validateListItemName(name))
-    return ClientError.BadRequest('Invalid item name');
-  if (!dueDate && list.hasDueDates)
+  if (!dateDue && list.hasDueDates)
     return ClientError.BadRequest('Invalid due date');
-  if (!priority) return ClientError.BadRequest('Invalid priority');
-  if (!sectionId) return ClientError.BadRequest('Invalid section ID');
-  if (!sectionIndex && sectionIndex !== 0)
-    return ClientError.BadRequest('Invalid section Index');
   if (!expectedMs && list.hasTimeTracking)
     return ClientError.BadRequest('Invalid expected duration');
 
@@ -46,7 +51,7 @@ export async function POST(request: Request) {
     priority,
     expectedMs,
     sectionIndex,
-    dateDue: dueDate
+    dateDue: dateDue
   });
 
   const result = await createListItem(sectionId, listItem);

@@ -1,6 +1,13 @@
+import z from 'zod';
+
 import { generateId } from '../generateId';
 
 import ListItem from './listItem';
+
+export const ZodListSection = z.strictObject({
+  id: z.string().length(16),
+  name: z.string().min(1).max(64)
+});
 
 export default class ListSection {
   id: string;

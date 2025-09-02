@@ -5,7 +5,10 @@ import {
   getListById,
   updateList
 } from '@/lib/database/list';
+import { ZodList } from '@/lib/model/list';
 import { getUser } from '@/lib/session';
+
+const PatchBody = ZodList.omit({ id: true }).partial();
 
 export async function PATCH(
   request: Request,
@@ -23,16 +26,21 @@ export async function PATCH(
 
   if (!isMember) return ClientError.BadRequest('List not found');
 
-  const requestBody = await request.json();
+  const parseResult = PatchBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request data');
+
+  const requestBody = parseResult.data;
 
   if (requestBody.name) list.name = requestBody.name;
-  if (requestBody.hasTimeTracking != undefined)
+  if (requestBody.hasTimeTracking !== undefined)
     list.hasTimeTracking = requestBody.hasTimeTracking;
-  if (requestBody.hasDueDates != undefined)
+  if (requestBody.hasDueDates !== undefined)
     list.hasDueDates = requestBody.hasDueDates;
-  if (requestBody.isAutoOrdered != undefined)
+  if (requestBody.isAutoOrdered !== undefined)
     list.isAutoOrdered = requestBody.isAutoOrdered;
-  if (requestBody.color != undefined) list.color = requestBody.color;
+  if (requestBody.color !== undefined) list.color = requestBody.color;
 
   const result = await updateList(list);
 

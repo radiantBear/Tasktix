@@ -4,7 +4,10 @@ import {
   deleteListSection,
   updateListSection
 } from '@/lib/database/listSection';
+import { ZodListSection } from '@/lib/model/listSection';
 import { getUser } from '@/lib/session';
+
+const PatchBody = ZodListSection.omit({ id: true });
 
 export async function PATCH(
   request: Request,
@@ -18,7 +21,12 @@ export async function PATCH(
 
   if (!isMember) return ClientError.BadRequest('List not found');
 
-  const requestBody = await request.json();
+  const parseResult = PatchBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request data');
+
+  const requestBody = parseResult.data;
 
   const name = requestBody.name;
   const id = params.sectionId;

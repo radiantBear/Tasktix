@@ -2,6 +2,9 @@ import { ClientError, ServerError, Success } from '@/lib/Response';
 import { getUserByUsername, updateUser } from '@/lib/database/user';
 import { compare } from '@/lib/security/hash';
 import { setUser, getUser, clearUser } from '@/lib/session';
+import { ZodUser } from '@/lib/model/user';
+
+const PostBody = ZodUser.pick({ username: true, password: true });
 
 export async function GET(_: Request) {
   const session = await getUser();
@@ -12,7 +15,12 @@ export async function GET(_: Request) {
 }
 
 export async function POST(request: Request) {
-  const requestBody = await request.json();
+  const parseResult = PostBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request body');
+
+  const requestBody = parseResult.data;
 
   const username = requestBody.username;
   const password = requestBody.password;
@@ -21,6 +29,7 @@ export async function POST(request: Request) {
 
   if (!user) return ClientError.BadRequest('Invalid username or password');
 
+  // TODO: should only update login time after successful login
   user.dateSignedIn = new Date();
   /* _ = */ await updateUser(user);
 

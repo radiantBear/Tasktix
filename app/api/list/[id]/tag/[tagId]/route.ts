@@ -5,7 +5,10 @@ import {
   getTagById,
   updateTag
 } from '@/lib/database/list';
+import { ZodTag } from '@/lib/model/tag';
 import { getUser } from '@/lib/session';
+
+const PatchBody = ZodTag.omit({ id: true }).partial();
 
 export async function PATCH(
   request: Request,
@@ -23,7 +26,12 @@ export async function PATCH(
 
   if (!tag) return ClientError.BadRequest('Tag not found');
 
-  const requestBody = await request.json();
+  const parseResult = PatchBody.safeParse(await request.json());
+
+  if (!parseResult.success)
+    return ClientError.BadRequest('Invalid request data');
+
+  const requestBody = parseResult.data;
 
   if (requestBody.name) tag.name = requestBody.name;
   if (requestBody.color) tag.color = requestBody.color;

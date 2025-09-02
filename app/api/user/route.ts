@@ -1,36 +1,31 @@
 import { Success, ClientError, ServerError } from '@/lib/Response';
 import {
-  validateUsername,
-  validateEmail,
-  validatePassword
-} from '@/lib/validate';
-import {
   createUser,
   getUserByUsername,
   getUserByEmail
 } from '@/lib/database/user';
-import User from '@/lib/model/user';
+import User, { ZodUser } from '@/lib/model/user';
 import { hash } from '@/lib/security/hash';
 
 export const dynamic = 'force-dynamic' as const; // defaults to auto
+
+const PostBody = ZodUser.omit({ id: true });
 
 /**
  * Create a new user with `username`, `email`, and `password`
  */
 export async function POST(request: Request) {
   try {
-    const requestBody = await request.json();
+    const parseResult = PostBody.safeParse(await request.json());
+
+    if (!parseResult.success)
+      return ClientError.BadRequest('Invalid request body');
+
+    const requestBody = parseResult.data;
 
     const username = requestBody.username;
     const email = requestBody.email;
     const password = requestBody.password;
-
-    if (!validateUsername(username))
-      return ClientError.BadRequest('Invalid username');
-    if (!validateEmail(email))
-      return ClientError.BadRequest('Invalid email address');
-    if (!validatePassword(password).valid)
-      return ClientError.BadRequest('Invalid password');
 
     if (await getUserByUsername(username))
       return ClientError.BadRequest('Username unavailable');
