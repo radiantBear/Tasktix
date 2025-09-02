@@ -14,10 +14,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const user = await getUser();
 
-  if (!list || !user) redirect('/user');
+  if (!list || !user) redirect('/list');
+
   const isMember = await getIsListAssignee(user.id, list.id);
 
-  if (!isMember) redirect('/user');
+  if (!isMember) redirect('/list');
 
   return (
     <main className='p-8 w-full flex flex-col gap-8 overflow-y-scroll'>
