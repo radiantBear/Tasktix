@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "jest"
   },
   "dependencies": {
@@ -17,7 +17,8 @@
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-bootstrap-icons": "^1.11.6",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zod": "^4.1.5"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
