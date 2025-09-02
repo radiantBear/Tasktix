@@ -2,6 +2,7 @@ CREATE TABLE `users` (
   `u_id` char(16) NOT NULL PRIMARY KEY,
   `u_username` varchar(32) NOT NULL,
   `u_email` varchar(128) NOT NULL,
+  -- TODO: password really should be fixed-width because all hashes are the same length
   `u_password` varchar(256) NOT NULL,
   `u_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
   `u_dateCreated` datetime NOT NULL,
@@ -29,7 +30,7 @@ CREATE TABLE `lists` (
 CREATE TABLE `listSections` (
   `ls_id` char(16) NOT NULL PRIMARY KEY,
   `ls_l_id` char(16) NOT NULL,
-  `ls_name` char(64) NOT NULL,
+  `ls_name` varchar(64) NOT NULL,
   FOREIGN KEY (`ls_l_id`) REFERENCES `lists` (`l_id`)
     ON DELETE CASCADE
 );
