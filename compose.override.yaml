@@ -1,0 +1,45 @@
+services:
+  web:
+    build:
+      target: devseed
+    command: npm run dev
+    depends_on:
+      - mariadb
+    develop:
+      watch:
+        - path: ./app
+          action: sync
+          target: /app/app
+        - path: ./components
+          action: sync
+          target: /app/components
+        - path: ./lib
+          action: sync
+          target: /app/lib
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: package-lock.json
+        - action: rebuild
+          path: next.config.mjs
+        - action: rebuild
+          path: tsconfig.json
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mariadb
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USER=root
+      - DB_PASSWORD=${DB_PASSWORD}
+
+  mariadb:
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./scripts/database/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
+
+volumes:
+  db_data:
