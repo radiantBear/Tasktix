@@ -1,7 +1,10 @@
+include:
+  - compose.db.yaml
+
 services:
   web:
     build:
-      target: devseed
+      target: app
     command: npm run dev
     depends_on:
       - mariadb
@@ -32,14 +35,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
 
   mariadb:
-    image: mariadb:latest
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
     volumes:
       - db_data:/var/lib/mysql
-      - ./scripts/database/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
 
 volumes:
   db_data:

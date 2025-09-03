@@ -11,7 +11,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 # For development, just copy the source over
-FROM base AS devseed
+FROM base AS app
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY ./next.config.mjs ./next.config.mjs
@@ -27,22 +27,10 @@ COPY ./public ./public
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY ./next.config.mjs ./next.config.mjs
-COPY ./tsconfig.json ./tsconfig.json
-COPY ./postcss.config.js ./postcss.config.js
-COPY ./tailwind.config.ts ./tailwind.config.ts
-COPY ./package.json ./package.json
-COPY ./app ./app
-COPY ./components ./components
-COPY ./lib ./lib
-COPY ./public ./public
-
-ENV NEXT_TELEMETRY_DISABLED=1
+FROM app AS builder
 
 RUN npm run build
+RUN npm prune --omit=dev
 
 # Production image, copy all the files and run next
 FROM base AS runner
