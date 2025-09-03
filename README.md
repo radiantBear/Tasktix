@@ -8,6 +8,9 @@ Cypress helpful links:
 - [Cross-browser testing](https://docs.cypress.io/app/guides/cross-browser-testing)
 - [Visual regression testing](https://docs.cypress.io/app/tooling/visual-testing)
 - [Tasks, e.g. database seeding](https://docs.cypress.io/api/commands/task#Seed-a-database)
+  - [Similarly, exec for system commands](https://docs.cypress.io/api/commands/exec)
+- [Writing commands](https://docs.cypress.io/api/cypress-api/custom-commands)
+- [Continuous integration](https://docs.cypress.io/app/continuous-integration/overview)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
