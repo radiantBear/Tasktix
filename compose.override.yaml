@@ -1,11 +1,8 @@
-include:
-  - compose.db.yaml
-
 services:
   web:
     build:
       target: app
-    command: npm run dev
+    command: npm run local:dev
     depends_on:
       - mariadb
     develop:
@@ -33,10 +30,3 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_USER=root
       - DB_PASSWORD=${DB_PASSWORD}
-
-  mariadb:
-    volumes:
-      - db_data:/var/lib/mysql
-
-volumes:
-  db_data:

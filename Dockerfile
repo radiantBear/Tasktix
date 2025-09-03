@@ -29,7 +29,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Rebuild the source code only when needed
 FROM app AS builder
 
-RUN npm run build
+RUN npm run local:build
 RUN npm prune --omit=dev
 
 # Production image, copy all the files and run next
