@@ -1,5 +1,9 @@
 describe('Sign up', () => {
   beforeEach(() => {
+    // ///////////////////////////////////////////////////////////////////////////////////
+    // WARNING: These tests do **NOT** clean up the database between runs. To preserve
+    // test isolation, be sure that the user interactions between tests do not overlap.
+    // ///////////////////////////////////////////////////////////////////////////////////
     cy.visit('/');
   });
 
