@@ -10,10 +10,9 @@ export async function hash(password: string): Promise<string> {
     });
   }
 
-  // TODO: Convert `salt` to a string more concisely: e.g. Array.from(salt).join(',');
-  const salt = await randomString();
+  const salt = Buffer.from(await randomString());
 
-  return `${salt.toString()}:${await _hash(password, salt)}`;
+  return `${salt.toString('hex')}:${await _hash(password, salt)}`;
 }
 
 export async function compare(
@@ -24,7 +23,7 @@ export async function compare(
 
   if (extra.length || !otherPass) return false;
 
-  const salt = Uint8Array.from(saltString.split(',').map(num => Number(num)));
+  const salt = Uint8Array.from(Buffer.from(saltString, 'hex'));
 
   const hashedPassword = await _hash(password, salt);
 

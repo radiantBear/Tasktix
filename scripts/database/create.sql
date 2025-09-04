@@ -2,8 +2,7 @@ CREATE TABLE `users` (
   `u_id` char(16) NOT NULL PRIMARY KEY,
   `u_username` varchar(32) NOT NULL,
   `u_email` varchar(128) NOT NULL,
-  -- TODO: password really should be fixed-width because all hashes are the same length
-  `u_password` varchar(256) NOT NULL,
+  `u_password` char(205) NOT NULL,
   `u_color` ENUM ('Pink', 'Red', 'Orange', 'Amber', 'Yellow', 'Lime', 'Green', 'Emerald', 'Cyan', 'Blue', 'Violet') NOT NULL,
   `u_dateCreated` datetime NOT NULL,
   `u_dateSignedIn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
