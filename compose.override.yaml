@@ -30,3 +30,11 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_USER=root
       - DB_PASSWORD=${DB_PASSWORD}
+
+  mariadb:
+    volumes:
+      - ./scripts/database/create.sql:/docker-entrypoint-initdb.d/create.sql:ro
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
