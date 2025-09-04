@@ -74,7 +74,7 @@
       "plugins": ["@typescript-eslint"],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
-        "project": "./tsconfig.json"
+        "project": ["./tsconfig.json", "./cypress/tsconfig.json"]
       },
       "rules": {
         "@typescript-eslint/no-unsafe-assignment": "warn", // Creating problems for Jest mocks
