@@ -79,7 +79,10 @@ export default function SignUp() {
       .post('/user', inputs)
       .then(() => {
         api
-          .post('/session', inputs)
+          .post('/session', {
+            username: inputs.username,
+            password: inputs.password
+          })
           .then(() => {
             setLoggedIn();
             router.replace('/list');
