@@ -1,3 +1,6 @@
+SET FOREIGN_KEY_CHECKS=0;
+
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `u_id` char(16) NOT NULL PRIMARY KEY,
   `u_username` varchar(32) NOT NULL,
@@ -8,6 +11,7 @@ CREATE TABLE `users` (
   `u_dateSignedIn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `s_id` char(128) NOT NULL PRIMARY KEY,
   `s_u_id` char(16) NOT NULL,
@@ -16,6 +20,7 @@ CREATE TABLE `sessions` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `lists`;
 CREATE TABLE `lists` (
   `l_id` char(16) NOT NULL PRIMARY KEY,
   `l_name` varchar(64) NOT NULL,
@@ -26,6 +31,7 @@ CREATE TABLE `lists` (
   `l_isAutoOrdered` boolean NOT NULL DEFAULT TRUE
 );
 
+DROP TABLE IF EXISTS `listSections`;
 CREATE TABLE `listSections` (
   `ls_id` char(16) NOT NULL PRIMARY KEY,
   `ls_l_id` char(16) NOT NULL,
@@ -34,6 +40,7 @@ CREATE TABLE `listSections` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `items`;
 CREATE TABLE `items` (
   `i_id` char(16) NOT NULL PRIMARY KEY,
   `i_name` varchar(128) NOT NULL,
@@ -55,6 +62,7 @@ CREATE TABLE `items` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `t_id` char(16) NOT NULL PRIMARY KEY,
   `t_name` varchar(32) NOT NULL,
@@ -64,6 +72,7 @@ CREATE TABLE `tags` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `itemTags`;
 CREATE TABLE `itemTags` (
   `it_i_id` char(16) NOT NULL,
   `it_t_id` char(16) NOT NULL,
@@ -74,6 +83,7 @@ CREATE TABLE `itemTags` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `listMembers`;
 CREATE TABLE `listMembers` (
   `lm_u_id` char(16) NOT NULL,
   `lm_l_id` char(16) NOT NULL,
@@ -88,6 +98,7 @@ CREATE TABLE `listMembers` (
     ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `itemAssignees`;
 CREATE TABLE `itemAssignees` (
   `ia_u_id` char(16) NOT NULL,
   `ia_i_id` char(16) NOT NULL,
@@ -98,3 +109,5 @@ CREATE TABLE `itemAssignees` (
   FOREIGN KEY (`ia_i_id`) REFERENCES `items` (`i_id`)
     ON DELETE CASCADE
 );
+
+SET FOREIGN_KEY_CHECKS=1;
