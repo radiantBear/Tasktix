@@ -97,7 +97,7 @@ export default function SignUp() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form aria-label='Sign-Up Form' onSubmit={handleSubmit}>
       <Input
         color={inputMsgs.username.color}
         description={<Message data={inputMsgs.username} />}

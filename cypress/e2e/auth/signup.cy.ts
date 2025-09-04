@@ -11,7 +11,7 @@ describe('Sign up', () => {
     cy.findByLabelText('Email').type(`user${Date.now()}@example.com`);
     cy.findByLabelText('Password').type('password123');
 
-    cy.findAllByRole('button').contains('Sign Up').click();
+    cy.findByRole('form').contains('Sign Up').click();
 
     cy.location('pathname').should('eq', '/list');
   });

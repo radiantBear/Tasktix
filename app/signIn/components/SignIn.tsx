@@ -32,7 +32,7 @@ export default function SignIn() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form aria-label='Sign-In Form' onSubmit={handleSubmit}>
       <Input
         label='Username'
         type='text'
