@@ -58,24 +58,30 @@ export function ListSettings({
   const dispatchEvent = useContext(ListContext);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  function updateHasTimeTracking() {
+  function updateHasTimeTracking(value: boolean) {
+    if (value === hasTimeTracking) return;
+
     api
-      .patch(`/list/${listId}`, { hasTimeTracking: !hasTimeTracking })
-      .then(() => setHasTimeTracking(!hasTimeTracking))
+      .patch(`/list/${listId}`, { hasTimeTracking: value })
+      .then(() => setHasTimeTracking(value))
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  function updateHasDueDates() {
+  function updateHasDueDates(value: boolean) {
+    if (value === hasDueDates) return;
+
     api
-      .patch(`/list/${listId}`, { hasDueDates: !hasDueDates })
-      .then(() => setHasDueDates(!hasDueDates))
+      .patch(`/list/${listId}`, { hasDueDates: value })
+      .then(() => setHasDueDates(value))
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
-  function updateIsAutoOrdered() {
+  function updateIsAutoOrdered(value: boolean) {
+    if (value === isAutoOrdered) return;
+
     api
-      .patch(`/list/${listId}`, { isAutoOrdered: !isAutoOrdered })
-      .then(() => setIsAutoOrdered(!isAutoOrdered))
+      .patch(`/list/${listId}`, { isAutoOrdered: value })
+      .then(() => setIsAutoOrdered(value))
       .catch(err => addSnackbar(err.message, 'error'));
   }
 
