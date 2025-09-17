@@ -11,12 +11,12 @@ export default function TagInput({
   className,
   classNames,
   addNewTag,
-  linkTag
+  linkNewTag
 }: {
   className?: string;
   classNames?: { name: string };
   addNewTag: (name: string, color: NamedColor) => Promise<string>;
-  linkTag?: (id: string) => unknown;
+  linkNewTag?: (id: string, name: string, color: NamedColor) => unknown;
 }) {
   const [newTagName, setNewTagName] = useState('');
   const [newTagColor, setNewTagColor] = useState<NamedColor | null>(null);
@@ -36,7 +36,7 @@ export default function TagInput({
 
     const id = await addNewTag(newTagName, newTagColor);
 
-    if (linkTag) linkTag(id);
+    if (linkNewTag) linkNewTag(id, newTagName, newTagColor);
     setNewTagName('');
     setNewTagColor(null);
   }

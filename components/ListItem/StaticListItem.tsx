@@ -54,6 +54,7 @@ interface SetItem {
   pausedRunning: () => void;
   resetTime: () => void;
   linkedTag: (id: string) => void;
+  linkedNewTag: (id: string, name: string, color: NamedColor) => void;
   unlinkedTag: (id: string) => void;
   deleted: () => void;
 }
@@ -305,6 +306,14 @@ export default function StaticListItem({
         .catch(err => addSnackbar(err.message, 'error'));
     },
 
+    linkedNewTag: (id: string, name: string, color: NamedColor) => {
+      const newTags = structuredClone(tags);
+
+      newTags.push(new Tag(name, color, id));
+
+      setTags(newTags);
+    },
+
     unlinkedTag: (id: string) => {
       api
         .delete(`/item/${_item.id}/tag/${id}`)
@@ -458,6 +467,7 @@ export default function StaticListItem({
           addNewTag={addNewTag}
           className='hidden lg:flex'
           isComplete={_item.status == 'Completed'}
+          linkNewTag={set.linkedNewTag}
           linkTag={set.linkedTag}
           tags={tagsAvailable.filter(tag => tags.find(t => tag.id == t.id))}
           tagsAvailable={tagsAvailable}

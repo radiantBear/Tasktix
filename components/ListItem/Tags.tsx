@@ -24,6 +24,7 @@ export default function Tags({
   className,
   addNewTag,
   linkTag,
+  linkNewTag,
   unlinkTag
 }: {
   tags: TagModel[];
@@ -32,6 +33,7 @@ export default function Tags({
   className?: string;
   addNewTag: (name: string, color: NamedColor) => Promise<string>;
   linkTag: (id: string) => unknown;
+  linkNewTag: (id: string, name: string, color: NamedColor) => unknown;
   unlinkTag: (id: string) => unknown;
 }) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -120,7 +122,7 @@ export default function Tags({
           addNewTag={addNewTag}
           className='p-1.5 pl-1'
           classNames={{ name: 'w-24' }}
-          linkTag={linkTag}
+          linkNewTag={linkNewTag}
         />
       </PopoverContent>
     </Popover>
