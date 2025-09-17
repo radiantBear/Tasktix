@@ -4,6 +4,8 @@ import List from '@/lib/model/list';
 import { DB_ListSection, extractListSectionFromRow } from './listSection';
 import { DB_ListMember, extractListMemberFromRow } from './listMember';
 import { extractListItemFromRow } from './listItem';
+import { extractTagFromRow } from './tag';
+import { extractAssigneeFromRow } from './assignee';
 
 export interface DB_List extends DB_ListMember, DB_ListSection {
   l_id: string;
@@ -35,7 +37,7 @@ export function extractListFromRow(row: DB_List): List {
   return list;
 }
 
-// Expects lists to be sorted by list ID, then list member user ID and list section ID
+// Expects lists to be sorted by list ID, then list member user ID, list section ID, list item ID, assignee user ID, and finally tag ID
 export function extractListsFromRows(rows: DB_List[]): List[] {
   const lists: List[] = [];
 
@@ -43,15 +45,20 @@ export function extractListsFromRows(rows: DB_List[]): List[] {
     const last = lists.at(-1);
 
     if (last?.id == list.l_id) {
+      const lastSection = last.sections.at(-1);
+      const lastItem = lastSection?.items.at(-1);
+
       if (list.lm_u_id && last.members.at(-1)?.user.id != list.lm_u_id)
         last.members.push(extractListMemberFromRow(list));
-
-      const lastSection = last.sections.at(-1);
-
-      if (lastSection?.id != list.ls_id)
+      else if (lastSection?.id != list.ls_id)
         last.sections.push(extractListSectionFromRow(list));
-      else if (lastSection?.items.at(-1)?.id != list.i_id)
+      else if (lastItem?.id != list.i_id)
         lastSection.items.push(extractListItemFromRow(list));
+      else if (lastItem?.assignees.at(-1)?.user.id != list.ia_u_id)
+        lastItem.assignees.push(extractAssigneeFromRow(list));
+      else if (lastItem?.tags.at(-1)?.id != list.t_id)
+        lastItem.tags.push(extractTagFromRow(list));
+      else throw new Error('Unexpected duplication');
     } else {
       lists.push(extractListFromRow(list));
     }
