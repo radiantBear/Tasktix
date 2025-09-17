@@ -10,6 +10,7 @@ import { getUser } from '@/lib/session';
 const PostBody = ZodListItem.omit({
   id: true,
   status: true,
+  isUnclear: true,
   elapsedMs: true,
   dateStarted: true,
   dateCompleted: true
