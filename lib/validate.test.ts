@@ -109,8 +109,8 @@ describe('validatePassword', () => {
     const short_result = validatePassword(short_data);
     const long_result = validatePassword(long_data);
 
-    expect(short_result.strength).toBe('acceptable');
-    expect(long_result.strength).toBe('acceptable');
+    expect(short_result.message).toBe('acceptable');
+    expect(long_result.message).toBe('acceptable');
     expect(short_result.color).toBe('warning');
     expect(short_result.color).toBe('warning');
   });
@@ -120,7 +120,7 @@ describe('validatePassword', () => {
 
     const result = validatePassword(data);
 
-    expect(result.strength).toBe('strong');
+    expect(result.message).toBe('strong');
     expect(result.color).toBe('success');
   });
 
@@ -130,7 +130,7 @@ describe('validatePassword', () => {
     const result = validatePassword(data);
 
     expect(result.valid).toBe(false);
-    expect(result.strength).toBe('weak');
+    expect(result.message).toBe('weak');
     expect(result.color).toBe('danger');
   });
 

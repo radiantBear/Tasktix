@@ -48,7 +48,7 @@ export function getPasswordMessage(input: string): InputMessage {
     const passwordResult = validatePassword(input);
 
     return {
-      message: `Password is ${passwordResult.strength}`,
+      message: `Password is ${passwordResult.message}`,
       color: passwordResult.color
     };
   } else

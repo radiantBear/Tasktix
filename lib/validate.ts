@@ -3,8 +3,7 @@ import { namedColorSet } from './model/color';
 interface PasswordResult {
   valid: boolean;
   color: 'success' | 'warning' | 'danger' | 'default';
-  // TODO: rename `strength` to `message`
-  strength: string;
+  message: string;
 }
 
 export function validateUsername(username: string): boolean {
@@ -23,12 +22,12 @@ export function validateEmail(email: string): boolean {
 
 export function validatePassword(password: string): PasswordResult {
   if (password.length > 128)
-    return { valid: false, color: 'danger', strength: 'too long' };
+    return { valid: false, color: 'danger', message: 'too long' };
   else if (password.length >= 16)
-    return { valid: true, color: 'success', strength: 'strong' };
+    return { valid: true, color: 'success', message: 'strong' };
   else if (password.length >= 10)
-    return { valid: true, color: 'warning', strength: 'acceptable' };
-  else return { valid: false, color: 'danger', strength: 'weak' };
+    return { valid: true, color: 'warning', message: 'acceptable' };
+  else return { valid: false, color: 'danger', message: 'weak' };
 }
 
 export function validateListName(name: string): [boolean, string] {
