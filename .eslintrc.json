@@ -10,7 +10,7 @@
     "plugin:jsx-a11y/recommended",
     "next/core-web-vitals"
   ],
-  "plugins": ["unused-imports", "import", "jsx-a11y", "prettier"],
+  "plugins": ["unused-imports", "import", "jsx-a11y", "prettier", "headers"],
   "parserOptions": {
     "ecmaFeatures": {
       "impliedStrict": true
@@ -30,6 +30,18 @@
     "no-unused-vars": "off",
     "unused-imports/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
+    "headers/header-format": [
+      "error",
+      {
+        "source": "string",
+        "style": "jsdoc",
+        "content": "Tasktix: A powerful and flexible task-tracking tool for all.\nCopyright (C) {year} Nate Baird & other Tasktix contributors\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU Affero General Public License as published\nby the Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>.",
+        "variables": {
+          "year": "2025"
+        },
+        "trailingNewlines": 2
+      }
+    ],
     "import/order": [
       "error",
       {
