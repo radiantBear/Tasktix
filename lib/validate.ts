@@ -18,16 +18,34 @@
 
 import { namedColorSet } from './model/color';
 
-interface PasswordResult {
+interface InputResult {
   valid: boolean;
   color: 'success' | 'warning' | 'danger' | 'default';
   message: string;
 }
 
-export function validateUsername(username: string): boolean {
-  const usernameRegex = /^[a-zA-Z0-9_]+$/;
+export function validateUsername(username: string): InputResult {
+  const usernameRegex = /^[a-zA-Z0-9_]*$/;
 
-  return usernameRegex.test(username) && username.length <= 32;
+  if (!usernameRegex.test(username))
+    return {
+      valid: false,
+      color: 'danger',
+      message: 'Username can only have letters, numbers, and underscores'
+    };
+  else if (username.length < 3)
+    return {
+      valid: false,
+      color: 'danger',
+      message: 'Username must be at least 3 characters'
+    };
+  else if (username.length > 32)
+    return {
+      valid: false,
+      color: 'danger',
+      message: 'Username cannot be more than 32 characters'
+    };
+  else return { valid: true, color: 'success', message: '' };
 }
 
 export function validateEmail(email: string): boolean {
@@ -38,7 +56,7 @@ export function validateEmail(email: string): boolean {
   return emailRegex.test(email) && email.length <= 128;
 }
 
-export function validatePassword(password: string): PasswordResult {
+export function validatePassword(password: string): InputResult {
   if (password.length > 128)
     return { valid: false, color: 'danger', message: 'too long' };
   else if (password.length >= 16)

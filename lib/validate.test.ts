@@ -32,7 +32,8 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(result.message).toBe('');
   });
 
   test('Usernames with numbers are valid', () => {
@@ -40,7 +41,8 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(result.message).toBe('');
   });
 
   test('Usernames with underscores are valid', () => {
@@ -48,7 +50,8 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(result.message).toBe('');
   });
 
   test('Usernames with letters, numbers, and underscores are valid', () => {
@@ -56,7 +59,8 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(result.message).toBe('');
   });
 
   test('Usernames with no more than 32 characters are valid', () => {
@@ -64,7 +68,8 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(result.message).toBe('');
   });
 
   test('Empty usernames are invalid', () => {
@@ -72,7 +77,17 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(false);
+    expect(result.valid).toBe(false);
+    expect(result.message).toBe('Username must be at least 3 characters');
+  });
+
+  test('Short usernames are invalid', () => {
+    const data = '2c';
+
+    const result = validateUsername(data);
+
+    expect(result.valid).toBe(false);
+    expect(result.message).toBe('Username must be at least 3 characters');
   });
 
   test('Usernames with special characters are invalid', () => {
@@ -80,7 +95,10 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(false);
+    expect(result.valid).toBe(false);
+    expect(result.message).toBe(
+      'Username can only have letters, numbers, and underscores'
+    );
   });
 
   test('Usernames with more than 32 characters are invalid', () => {
@@ -88,7 +106,8 @@ describe('validateUsername', () => {
 
     const result = validateUsername(data);
 
-    expect(result).toBe(false);
+    expect(result.valid).toBe(false);
+    expect(result.message).toBe('Username cannot be more than 32 characters');
   });
 });
 

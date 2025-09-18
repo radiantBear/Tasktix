@@ -24,17 +24,7 @@ import {
 } from '@/lib/validate';
 
 export function getUsernameMessage(input: string): InputMessage {
-  if (input)
-    if (!validateUsername(input))
-      return {
-        message: 'Username can only have letters, numbers, and underscores',
-        color: 'danger'
-      };
-    else
-      return {
-        message: '',
-        color: 'success'
-      };
+  if (input) return validateUsername(input);
   else
     return {
       message: 'Username is required',

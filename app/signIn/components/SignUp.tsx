@@ -77,7 +77,7 @@ export default function SignUp() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (
-      !validateUsername(inputs.username) ||
+      !validateUsername(inputs.username).valid ||
       !validateEmail(inputs.email) ||
       !validatePassword(inputs.password).valid
     ) {
