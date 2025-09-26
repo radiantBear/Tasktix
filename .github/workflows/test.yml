@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Upload node_modules
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: node-modules
           path: node_modules
@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 20
       - name: Load node_modules
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: node-modules
       - name: Lint
@@ -49,7 +49,7 @@ jobs:
         with:
           node-version: 20
       - name: Load node_modules
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: node-modules
       - name: Test
@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: 20
       - name: Load node_modules
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: node-modules
       - name: Run Danger
