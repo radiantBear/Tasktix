@@ -1,6 +1,12 @@
 # <center>Tasktix</center>
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=radiantBear_Tasktix&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=radiantBear_Tasktix)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=radiantBear_Tasktix&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=radiantBear_Tasktix)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/cf1631194c2a4320b83570df12b65de9)](https://app.codacy.com/gh/radiantBear/Tasktix/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![DeepSource](https://app.deepsource.com/gh/radiantBear/Tasktix.svg/?label=active+issues&show_trend=true&token=M-Vsi4__XSjUWF4f_7gXjWc7)](https://app.deepsource.com/gh/radiantBear/Tasktix/)
+<br>
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=radiantBear_Tasktix&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=radiantBear_Tasktix)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=radiantBear_Tasktix&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=radiantBear_Tasktix)
 [![Semgrep](https://github.com/radiantBear/Tasktix/actions/workflows/semgrep.yml/badge.svg)](https://github.com/radiantBear/Tasktix/actions/workflows/semgrep.yml)
 
 Most free task tracking tools fall short when it comes to advanced functionality. Flexible
