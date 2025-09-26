@@ -36,7 +36,10 @@ DB_PASSWORD=<development_database_root_password>
 
 To start the development server after following the instructions above, simply run
 `npm start`. Any changes you make to the source will be immediately and automatically
-reflected on the website.
+reflected on the website. To teardown the Docker container the development server is run
+from, run `npm run teardown`. You only need to do this if you want to reclaim the storage
+space that's being used by the container image. To simply halt container execution, press
+<kbd>Ctrl</kbd> + <kbd>C</kbd> from the shell running `npm start` or run `npm stop`.
 
 ### Developing
 
