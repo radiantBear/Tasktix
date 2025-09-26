@@ -27,6 +27,15 @@ jobs:
       - name: Install dependencies if needed
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
+      - name: Cache Cypress binary
+        id: cache-cypress
+        uses: actions/cache@v3
+        with:
+          path: .cache/Cypress
+          key: cypress-${{ runner.os }}-v15.1.0
+      - name: Install Cypress binary if needed
+        if: steps.cache-cypress.outputs.cache-hit != 'true'
+        run: npx cypress install
       - name: Lint
         run: npm run lint
 
@@ -49,6 +58,15 @@ jobs:
       - name: Install dependencies if needed
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
+      - name: Cache Cypress binary
+        id: cache-cypress
+        uses: actions/cache@v3
+        with:
+          path: .cache/Cypress
+          key: cypress-${{ runner.os }}-v15.1.0
+      - name: Install Cypress binary if needed
+        if: steps.cache-cypress.outputs.cache-hit != 'true'
+        run: npx cypress install
       - name: Test
         run: npm test
 
@@ -71,6 +89,15 @@ jobs:
       - name: Install dependencies if needed
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
+      - name: Cache Cypress binary
+        id: cache-cypress
+        uses: actions/cache@v3
+        with:
+          path: .cache/Cypress
+          key: cypress-${{ runner.os }}-v15.1.0
+      - name: Install Cypress binary if needed
+        if: steps.cache-cypress.outputs.cache-hit != 'true'
+        run: npx cypress install
       - name: Run Danger
         run: npm run danger
         env:
