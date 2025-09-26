@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   lint:
+    name: ESLint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,6 +31,7 @@ jobs:
         run: npm run lint
 
   test:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -51,6 +53,7 @@ jobs:
         run: npm test
 
   danger:
+    name: Danger
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
