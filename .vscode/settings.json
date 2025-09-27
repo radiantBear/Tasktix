@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["nextui", "Reorderable", "Tasktix", "Unstarted"],
+  "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
+  "containers.orchestratorClient": "com.microsoft.visualstudio.orchestrators.dockercompose",
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "jest.jestCommandLine": "npm run test:jest --",
+  "jest.useDashedArgs": true
+}

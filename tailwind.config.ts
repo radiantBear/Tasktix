@@ -1,20 +1,104 @@
-import type { Config } from "tailwindcss";
+/**
+ * Tasktix: A powerful and flexible task-tracking tool for all.
+ * Copyright (C) 2025 Nate Baird & other Tasktix contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import type { Config } from 'tailwindcss';
+
+import { nextui } from '@nextui-org/react';
 
 const config: Config = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      keyframes: {
+        slideLeft: {
+          '0%': { right: '-20rem' },
+          '100%': { right: '1rem' }
+        },
+        slideRight: {
+          '0%': { right: '1rem' },
+          '100%': { right: '-20rem' }
+        }
       },
-    },
+      animation: {
+        'slide-from-right': 'slideLeft 0.5s, slideRight 0.5s 4s forwards'
+      },
+      boxShadow: {
+        'l-lg':
+          '0 -3px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color)'
+      }
+    }
   },
-  plugins: [],
+  darkMode: 'class',
+  plugins: [
+    nextui({
+      themes: {
+        light: {
+          colors: {
+            primary: {
+              50: '#05281e',
+              100: '#0a3f30',
+              200: '#115743',
+              300: '#1b6e56',
+              400: '#29856b',
+              500: '#3e9d82',
+              600: '#80cbb6',
+              700: '#97d7c5',
+              800: '#b0e3d4',
+              900: '#e8faf5',
+              DEFAULT: '#29856b',
+              foreground: '#ffffff'
+            }
+          }
+        },
+        dark: {
+          colors: {
+            primary: {
+              50: '#05281e',
+              100: '#0a3f30',
+              200: '#115743',
+              300: '#1b6e56',
+              400: '#29856b',
+              500: '#3e9d82',
+              600: '#80cbb6',
+              700: '#97d7c5',
+              800: '#b0e3d4',
+              900: '#e8faf5',
+              DEFAULT: '#29856b',
+              foreground: '#ffffff'
+            }
+          }
+        }
+      }
+    })
+  ],
+  safelist: [
+    {
+      pattern:
+        /!?(bg|text)-(pink|red|orange|amber|yellow|lime|green|emerald|cyan|blue|violet)-500/
+    },
+    {
+      pattern: /!?(bg|text)-(danger|warning|success)/
+    }
+  ]
 };
+
 export default config;
