@@ -26,6 +26,9 @@ export function sortItemsByCompleted(a: ListItem, b: ListItem): number {
   }
 
   if (a.status === 'Completed' && b.status !== 'Completed') return 1;
+  if (b.status === 'Completed' && a.status !== 'Completed') return -1;
+
+  return 0;
 }
 
 export function sortItemsByIndex(a: ListItem, b: ListItem): number {
