@@ -29,8 +29,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Rebuild the source code only when needed
 FROM app AS builder
 
-RUN npm run local:build
-RUN npm prune --omit=dev
+RUN npm run local:build && npm prune --omit=dev
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -39,8 +38,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 
