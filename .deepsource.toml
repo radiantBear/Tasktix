@@ -11,3 +11,5 @@ name = "javascript"
     "nodejs",
     "browser"
   ]
+
+name = "docker"
