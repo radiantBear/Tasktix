@@ -25,10 +25,7 @@ export function sortItemsByCompleted(a: ListItem, b: ListItem): number {
     else return 0;
   }
 
-  if (a.status == 'Completed' && b.status != 'Completed') return 1;
-  if (b.status == 'Completed' && a.status != 'Completed') return -1;
-
-  return 0;
+  if (a.status === 'Completed' && b.status !== 'Completed') return 1;
 }
 
 export function sortItemsByIndex(a: ListItem, b: ListItem): number {
@@ -46,7 +43,7 @@ export function sortItems(
 ): number {
   const completed_order = sortItemsByCompleted(a, b);
 
-  if (completed_order != 0) return completed_order;
+  if (completed_order !== 0) return completed_order;
 
   if (hasDueDates) {
     if (!a.dateDue) {
@@ -59,13 +56,15 @@ export function sortItems(
   }
 
   if (
-    (a.priority == 'Low' && (b.priority == 'Medium' || b.priority == 'High')) ||
-    (a.priority == 'Medium' && b.priority == 'High')
+    (a.priority === 'Low' &&
+      (b.priority === 'Medium' || b.priority === 'High')) ||
+    (a.priority === 'Medium' && b.priority === 'High')
   )
     return 1;
   if (
-    (b.priority == 'Low' && (a.priority == 'Medium' || a.priority == 'High')) ||
-    (b.priority == 'Medium' && a.priority == 'High')
+    (b.priority === 'Low' &&
+      (a.priority === 'Medium' || a.priority === 'High')) ||
+    (b.priority === 'Medium' && a.priority === 'High')
   )
     return -1;
 

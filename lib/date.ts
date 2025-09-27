@@ -44,9 +44,9 @@ export function formatDate(date: Date, pretty: boolean = true): string {
   const isThisWeek = dayOffset < 7 && date.getDay() > new Date().getDay();
 
   if (!pretty) return date.toLocaleDateString('en-US', distant);
-  else if (dayOffset == 0) return 'Today';
-  else if (dayOffset == 1) return 'Tomorrow';
-  else if (dayOffset == -1) return 'Yesterday';
+  else if (dayOffset === 0) return 'Today';
+  else if (dayOffset === 1) return 'Tomorrow';
+  else if (dayOffset === -1) return 'Yesterday';
   else if (dayOffset > 0 && (dayOffset < 4 || isThisWeek))
     return date.toLocaleDateString('en-US', close);
   else return date.toLocaleDateString('en-US', distant);
@@ -91,17 +91,17 @@ export function parseTime(time: string): number {
       throw Error(`Invalid time to parse: ${time}`);
   }
 
-  if (timeParts.length == 3) {
+  if (timeParts.length === 3) {
     const [hours, minutes, seconds] = timeParts;
 
     return (
       ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000
     );
-  } else if (timeParts.length == 2) {
+  } else if (timeParts.length === 2) {
     const [hours, minutes] = timeParts;
 
     return (Number(hours) * 60 + Number(minutes)) * 60 * 1000;
-  } else if (timeParts.length == 1) {
+  } else if (timeParts.length === 1) {
     const [minutes] = timeParts;
 
     return Number(minutes) * 60 * 1000;

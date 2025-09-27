@@ -71,10 +71,10 @@ export function extractListItemsFromRows(rows: DB_ListItem[]): ListItem[] {
   for (const item of rows) {
     const lastItem = listItems.at(-1);
 
-    if (lastItem?.id == item.i_id) {
-      if (lastItem.assignees.at(-1)?.user.id != item.ia_u_id)
+    if (lastItem?.id === item.i_id) {
+      if (lastItem.assignees.at(-1)?.user.id !== item.ia_u_id)
         lastItem.assignees.push(extractAssigneeFromRow(item));
-      if (lastItem.tags.at(-1)?.id != item.t_id)
+      if (lastItem.tags.at(-1)?.id !== item.t_id)
         lastItem.tags.push(extractTagFromRow(item));
     } else {
       listItems.push(extractListItemFromRow(item));

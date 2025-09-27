@@ -62,19 +62,19 @@ export function extractListsFromRows(rows: DB_List[]): List[] {
   for (const list of rows) {
     const last = lists.at(-1);
 
-    if (last?.id == list.l_id) {
+    if (last?.id === list.l_id) {
       const lastSection = last.sections.at(-1);
       const lastItem = lastSection?.items.at(-1);
 
-      if (list.lm_u_id && last.members.at(-1)?.user.id != list.lm_u_id)
+      if (list.lm_u_id && last.members.at(-1)?.user.id !== list.lm_u_id)
         last.members.push(extractListMemberFromRow(list));
-      else if (lastSection?.id != list.ls_id)
+      else if (lastSection?.id !== list.ls_id)
         last.sections.push(extractListSectionFromRow(list));
-      else if (lastItem?.id != list.i_id)
+      else if (lastItem?.id !== list.i_id)
         lastSection.items.push(extractListItemFromRow(list));
-      else if (lastItem?.assignees.at(-1)?.user.id != list.ia_u_id)
+      else if (lastItem?.assignees.at(-1)?.user.id !== list.ia_u_id)
         lastItem.assignees.push(extractAssigneeFromRow(list));
-      else if (lastItem?.tags.at(-1)?.id != list.t_id)
+      else if (lastItem?.tags.at(-1)?.id !== list.t_id)
         lastItem.tags.push(extractTagFromRow(list));
       else throw new Error('Unexpected duplication');
     } else {
